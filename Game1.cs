@@ -1,4 +1,4 @@
-#region Using Statements
+﻿#region Using Statements
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -16,9 +16,12 @@ namespace SunsetHigh
     /// </summary>
     public class Game1 : Game
     {
+
+        Hero h1;
         Character c1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        KeyboardState priorKeyboardState;
 
         public Game1()
             : base()
@@ -37,7 +40,9 @@ namespace SunsetHigh
         {
             // TODO: Add your initialization logic here
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
+            h1 = new Hero();
             c1 = new Character();
+            c1.getInventory().addItem(Item.LunchMoney);
             base.Initialize();
         }
 
@@ -51,8 +56,11 @@ namespace SunsetHigh
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            h1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
+            h1.setPosition(100, 100);
+            h1.setDimensions(32, 32);
             c1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
-            c1.setPosition(100, 100);
+            c1.setPosition(300, 200);
             c1.setDimensions(32, 32);
         }
 
@@ -77,9 +85,26 @@ namespace SunsetHigh
 
             arrowKeyUpdate();       //controls main character
 
+            //debug debug debug
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && !priorKeyboardState.IsKeyDown(Keys.P))
+            {
+                if (!h1.isPickpocketing() && h1.inRange(c1))
+                {
+                    h1.startPickpocket(c1);
+                }
+                else
+                {
+                    Item item = h1.stopPickpocket();
+                    System.Diagnostics.Debug.WriteLine("Got " + Enum.GetName(typeof(Item), item));
+                }
+            }
+            priorKeyboardState = Keyboard.GetState();
+            //end debug
+
             // TODO: Add your update logic here
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            c1.updateFrame(elapsed);
+            c1.update(elapsed);
+            h1.update(elapsed);
 
             base.Update(gameTime);
         }
@@ -94,9 +119,10 @@ namespace SunsetHigh
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            
+
             c1.draw(spriteBatch);
-            
+            h1.draw(spriteBatch);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -126,19 +152,19 @@ namespace SunsetHigh
             }
             if (!xaxis.Equals(Direction.Undefined) && !yaxis.Equals(Direction.Undefined))
             {
-                c1.move2D(xaxis, yaxis, 3, 4);
+                h1.move2D(xaxis, yaxis, 3, 4);
             }
             else if (!xaxis.Equals(Direction.Undefined))
             {
-                c1.move(xaxis, 5);
+                h1.move(xaxis, 5);
             }
             else if (!yaxis.Equals(Direction.Undefined))
             {
-                c1.move(yaxis, 5);
+                h1.move(yaxis, 5);
             }
             else
             {
-                c1.stop();
+                h1.stop();
             }
         }
     }

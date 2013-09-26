@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace SunsetHigh    //adjust as needed
+namespace SunsetHigh
 {
     /*
      * Specifies which direction a character is facing.
@@ -47,14 +47,19 @@ namespace SunsetHigh    //adjust as needed
         private bool male;                          //male or female
         private string name;                      //character's name
         //private Dialogue script;                  //script given to NPCs
+        private Inventory inventory;                //all the items this character has
 
-        public Character() { }                      //everything is zero/null
+        public Character() 
+        {
+            inventory = new Inventory();
+        }                      //everything is zero/null
         public Character(int x, int y, int w, int h)
         {
             spriteX = x;
             spriteY = y;
             spriteWidth = w;
             spriteHeight = h;
+            inventory = new Inventory();
         }
 
         public int getX() { return this.spriteX; }
@@ -62,6 +67,7 @@ namespace SunsetHigh    //adjust as needed
         public int getWidth() { return this.spriteWidth; }
         public int getHeight() { return this.spriteHeight; }
         public Direction getDirection() { return this.direction; }
+        public Inventory getInventory() { return this.inventory; }
         public bool isMale() { return this.male; }
         public bool isFemale() { return !this.male; }
 
@@ -110,29 +116,29 @@ namespace SunsetHigh    //adjust as needed
         /*
          * Handles 1D movement
          */
-        public void move(Direction dir, int speed)
+        public void move(Direction dir, int dist)
         {
             this.moving = true;
             this.setDirection(dir);
             if (dir.Equals(Direction.North))
-                spriteY -= speed;
+                spriteY -= dist;
             if (dir.Equals(Direction.South))
-                spriteY += speed;
+                spriteY += dist;
             if (dir.Equals(Direction.East))
-                spriteX += speed;
+                spriteX += dist;
             if (dir.Equals(Direction.West))
-                spriteX -= speed;
+                spriteX -= dist;
         }
         
         /*
          * Handles moving diagonally
          */
-        public void move2D(Direction dir1, Direction dir2, int speed1, int speed2)
+        public void move2D(Direction dir1, Direction dir2, int dist1, int dist2)
         {
             this.moving = true;
-            this.move(dir1, speed1);
-            this.move(dir2, speed2);
-            if (speed1 >= speed2) this.setDirection(dir1);
+            this.move(dir1, dist1);
+            this.move(dir2, dist2);
+            if (dist1 >= dist2) this.setDirection(dir1);
             else this.setDirection(dir2);
         }
 
@@ -178,8 +184,9 @@ namespace SunsetHigh    //adjust as needed
         /*
          * Updates which frame on sprite sheet to draw
          * Adapted from MSDN XNA tutorials
+         * Override this in child classes as necessary
          */
-        public void updateFrame(float elapsed)
+        public virtual void update(float elapsed)
         {
             if (this.moving)
             {
@@ -196,8 +203,9 @@ namespace SunsetHigh    //adjust as needed
         /*
          * Draws itself!
          * Adapted from MSDN XNA tutorials
+         * Override this in child classes as necessary
          */
-        public void draw(SpriteBatch sb)
+        public virtual void draw(SpriteBatch sb)
         {
             if (image == null)
                 return;
@@ -211,5 +219,6 @@ namespace SunsetHigh    //adjust as needed
             sb.Draw(this.image, mapPosRect, sourceRect, Color.White);
                 //more features available in sb.Draw(...);
         }
+
     }
 }
