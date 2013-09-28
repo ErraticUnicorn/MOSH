@@ -21,66 +21,53 @@ namespace SunsetHigh
     };
     
     /*
-     * Every character has a sprite drawing box and collision box (which are the same, size-wise).
-     * 
-     * Every character also contains a sprite atlas and information about what drawing/animation to draw
-     * depending on the situation.
+     * Character inherits all the Sprite methods.
+     * New information includes a direction (which way it's facing), a gender,
+     * and an inventory (all its items).
      */
-    public class Character
+    public class Character : Sprite
     {
-        private const int ACTION_OFFSET = 5;        //pixels offset between sprite and action boxes
+        private const int ACTION_OFFSET = 3;        //pixels offset between sprite and action boxes
                                                     //the "action box" being area where character can interact with environment                                       
-        //geometry
-        private int spriteX, spriteY;                   //top-left corner of sprite and collision box
-        private int spriteWidth, spriteHeight;      //size of sprite, collision box
-        private Direction direction;                      //which direction the character is facing
-        private bool moving;
-        //sprite image
-        private Texture2D image;                    //the picture or spritesheet to draw
-        private int imageRows, imageColumns;        //rows and columns in spritesheet
-        private int frameColumn;                       //the current frame in the sheet we are drawing
-        private int frameRow;                       //the current row of the sheet we are drawing
-        private float animationTime;               //speed at which to animate sprite
-        private float totalElapsed;                 //personal timer for animation purposes
-        //private bool visible;                       //sprite visibility
+        //mechanics
+        private Direction direction;                //which direction the character is facing
+        private bool moving;                        //whether character is currently in motion
         //personal data
         private bool male;                          //male or female
-        private string name;                      //character's name
+        private string name;                        //character's name
         //private Dialogue script;                  //script given to NPCs
         private Inventory inventory;                //all the items this character has
 
-        public Character() 
+        public Character()
+            : base()
         {
-            inventory = new Inventory();
-        }                      //everything is zero/null
-        public Character(int x, int y, int w, int h)
+            this.inventory = new Inventory();
+            setName("NAMELESS");
+            setMale(true);
+            setMoving(false);
+            setDirection(Direction.South);
+        }
+        public Character(int x, int y, int width, int height)
+            : base(x, y, width, height)
         {
-            spriteX = x;
-            spriteY = y;
-            spriteWidth = w;
-            spriteHeight = h;
-            inventory = new Inventory();
+            this.inventory = new Inventory();
+            setName("NAMELESS");
+            setMale(true);
+            setMoving(false);
+            setDirection(Direction.South);
         }
 
-        public int getX() { return this.spriteX; }
-        public int getY() { return this.spriteY; }
-        public int getWidth() { return this.spriteWidth; }
-        public int getHeight() { return this.spriteHeight; }
         public Direction getDirection() { return this.direction; }
         public Inventory getInventory() { return this.inventory; }
+        public string getName() { return this.name; }
+        public bool isMoving() { return this.moving; }
         public bool isMale() { return this.male; }
         public bool isFemale() { return !this.male; }
+       
+        public void setMoving(bool moving) { this.moving = moving; }
+        public void setMale(bool male) { this.male = male; }
+        public void setName(string name) { this.name = name; }
 
-        public void setPosition(int x, int y)
-        {
-            this.spriteX = x;
-            this.spriteY = y;
-        }
-        public void setDimensions(int width, int height)
-        {
-            this.spriteWidth = width;
-            this.spriteHeight = height;
-        }
         public void setDirection(Direction dir)
         {
             if (dir.Equals(Direction.Undefined)) return;
@@ -89,28 +76,14 @@ namespace SunsetHigh
             //we should have a standard convention for spritesheets
             //i.e. each row is a direction
             if (this.getDirection().Equals(Direction.North))
-                this.frameRow = 3;
+                this.setFrameRow(3);
             if (this.getDirection().Equals(Direction.East))
-                this.frameRow = 2;
+                this.setFrameRow(2);
             if (this.getDirection().Equals(Direction.South))
-                this.frameRow = 0;
+                this.setFrameRow(0);
             if (this.getDirection().Equals(Direction.West))
-                this.frameRow = 1;
+                this.setFrameRow(1);
 
-        }
-        public void setPersonalData(bool male, string name)
-        {
-            this.male = male;
-            this.name = name;
-        }
-        public void loadImage(ContentManager content, string fileName, int numRows, int numCols, float anTime)
-        {
-            this.image = content.Load<Texture2D>(fileName);
-            this.frameRow = 0;
-            this.frameColumn = 0;
-            this.imageRows = numRows;
-            this.imageColumns = numCols;
-            this.animationTime = anTime;
         }
 
         /*
@@ -118,16 +91,16 @@ namespace SunsetHigh
          */
         public void move(Direction dir, int dist)
         {
-            this.moving = true;
+            this.setMoving(true);
             this.setDirection(dir);
             if (dir.Equals(Direction.North))
-                spriteY -= dist;
+                this.setY(this.getY() - dist);
             if (dir.Equals(Direction.South))
-                spriteY += dist;
+                this.setY(this.getY() + dist);
             if (dir.Equals(Direction.East))
-                spriteX += dist;
+                this.setX(this.getX() + dist);
             if (dir.Equals(Direction.West))
-                spriteX -= dist;
+                this.setX(this.getX() - dist);
         }
         
         /*
@@ -135,7 +108,7 @@ namespace SunsetHigh
          */
         public void move2D(Direction dir1, Direction dir2, int dist1, int dist2)
         {
-            this.moving = true;
+            this.setMoving(true);
             this.move(dir1, dist1);
             this.move(dir2, dist2);
             if (dist1 >= dist2) this.setDirection(dir1);
@@ -143,22 +116,15 @@ namespace SunsetHigh
         }
 
         /*
-         * Stops moving
+         * Checks if this character is close enough with another sprite to perform any action
+         * e.g. talk to other character, pickup item
          */
-        public void stop()
+        public bool inRange(Sprite other)
         {
-            this.moving = false;
-        }
-
-        /*
-         * Checks if this character is close enough with another character to perform any action
-         */
-        public bool inRange(Character other)
-        {
-            return((this.getX()+this.getWidth()+ACTION_OFFSET > other.getX()-ACTION_OFFSET ||
-                    this.getX()-ACTION_OFFSET < other.getX()+other.getWidth()+ACTION_OFFSET) &&
-                   (this.getY()+this.getHeight()+ACTION_OFFSET > other.getY()-ACTION_OFFSET ||
-                    this.getY()-ACTION_OFFSET < other.getY()+other.getHeight()+ACTION_OFFSET));                
+            return(((this.getX() < other.getX() && this.getX()+this.getWidth()+ACTION_OFFSET > other.getX()-ACTION_OFFSET) ||
+                    (this.getX() > other.getX() && this.getX()-ACTION_OFFSET < other.getX()+other.getWidth()+ACTION_OFFSET)) &&
+                   ((this.getY() < other.getY() && this.getY()+this.getHeight()+ACTION_OFFSET > other.getY()-ACTION_OFFSET) ||
+                    (this.getY() > other.getY() && this.getY()-ACTION_OFFSET < other.getY()+other.getHeight()+ACTION_OFFSET)));                
         }
 
         /*
@@ -180,45 +146,23 @@ namespace SunsetHigh
             return this.facing(other) && other.facing(this);
         }
 
+        public void pickup(Pickup p)
+        {
+            this.getInventory().addItem(p.getItemType());
+            p.banish();
+        }
 
         /*
          * Updates which frame on sprite sheet to draw
          * Adapted from MSDN XNA tutorials
          * Override this in child classes as necessary
          */
-        public virtual void update(float elapsed)
+        public override void update(float elapsed)
         {
-            if (this.moving)
+            if (this.isMoving())
             {
-                this.totalElapsed += elapsed;
-                if (this.totalElapsed > this.animationTime)
-                {
-                    this.frameColumn++;
-                    this.frameColumn = this.frameColumn % this.imageColumns;
-                    this.totalElapsed %= this.animationTime;
-                }
+                base.update(elapsed);
             }
         }
-
-        /*
-         * Draws itself!
-         * Adapted from MSDN XNA tutorials
-         * Override this in child classes as necessary
-         */
-        public virtual void draw(SpriteBatch sb)
-        {
-            if (image == null)
-                return;
-
-            int frameWidth = this.image.Width / this.imageColumns;
-            int frameHeight = this.image.Height / this.imageRows;
-            Rectangle sourceRect = new Rectangle(frameWidth * frameColumn, 
-                frameHeight * frameRow, frameWidth, frameHeight);
-            Rectangle mapPosRect = new Rectangle(this.getX(), this.getY(), 
-                this.getWidth(), this.getHeight());
-            sb.Draw(this.image, mapPosRect, sourceRect, Color.White);
-                //more features available in sb.Draw(...);
-        }
-
     }
 }
