@@ -2,3 +2,20 @@ MOSH
 ====
 
 MOnogame Sunset High project. Work here guys.
+
+
+Running and Debugging Instructions
+---
+Until we can figure out if there are viable and easy-to-use Git extensions for Visual Studio, we'll have to manually copy code into our local project folders and run it from there. To do that:
+
+1) If you haven't already done so, create a new project in Visual Studio (C#) and select the Monogame WindowsGL template (it should be visible after downloading Monogame at http://monogame.codeplex.com/)
+
+2) Download the source and assets from Github by either downloading as a ZIP or cloning to Desktop. Both options are on the right side of the Github website. Cloning is preferred; it should be possible after downloading Git for Windows at http://windows.github.com/ . Once you clone the repo, you can find it under Documents/Github/
+
+3) Copy the downloaded content into your newly created project in Visual Studio. Some files may be replaced.
+
+4) The assets should be in the "Content" folder. Once they are copied, inspect their properties and change the "Copy to output directory" attribute to "Copy if newer."
+
+5) Build and run the project. Use "Game1.cs" as your sandbox for new features. When you need to commit code, copy your files back into the repo folder and use the GitHub GUI to commit and sync the changes.
+
+I think that's everything, but if there're any questions, shoot an email.

@@ -9,10 +9,11 @@ namespace SunsetHigh
     {
         Nothing = -1,   //used for showing steal failed (like a null type)
 
-        Shoes = 0,      //any possible items go here!
+        Shoes = 0,      //any possible items go here! (comma delimited)
         Socks,
         Hat,
-        LunchMoney
+        LunchMoney,
+        PokeBall
     };
 
     public class Inventory

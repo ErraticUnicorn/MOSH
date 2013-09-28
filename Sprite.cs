@@ -78,8 +78,8 @@ namespace SunsetHigh
         }
 
         /*
-         * Call this for all sprites in a given room
-         * in the application's load cycle
+         * Call this method from child classes when you know
+         * which spritesheets to load
          */
         public void loadImage(ContentManager content, string fileName, int numRows, int numCols, float anTime)
         {
@@ -89,6 +89,15 @@ namespace SunsetHigh
             this.imageRows = numRows;
             this.imageColumns = numCols;
             this.animationTime = anTime;
+        }
+
+        /*
+         * Call this for all sprites in a given room
+         * in the application's load cycle
+         */
+        public virtual void loadContent(ContentManager content)
+        {
+            //Child classes call loadImage() from here
         }
 
         /*

@@ -6,7 +6,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Media;
+using NAudio;
+using NAudio.Wave;
 #endregion
 
 namespace SunsetHigh
@@ -19,9 +21,11 @@ namespace SunsetHigh
 
         Hero h1;
         Character c1;
+        Pickup p1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState priorKeyboardState;
+        //BackgroundMusic bgmusic;
 
         public Game1()
             : base()
@@ -40,9 +44,14 @@ namespace SunsetHigh
         {
             // TODO: Add your initialization logic here
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
-            h1 = new Hero();
-            c1 = new Character();
+            h1 = new Hero(100, 100, 32, 32);
+            c1 = new Character(300, 200, 32, 32);
             c1.getInventory().addItem(Item.LunchMoney);
+            p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
+
+            //bgmusic = new BackgroundMusic();
+            //bgmusic.playSong();
+
             base.Initialize();
         }
 
@@ -56,12 +65,17 @@ namespace SunsetHigh
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            //In the future, all Sprites will call loadContent(this.Content), and child
+            //classes will override that method to automatically choose the appropriate 
+            //content to load (i.e. both images and sound)
             h1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
-            h1.setPosition(100, 100);
-            h1.setDimensions(32, 32);
+            h1.loadContent(this.Content);
             c1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
-            c1.setPosition(300, 200);
-            c1.setDimensions(32, 32);
+            p1.loadImage(this.Content, "Poke_Ball", 1, 1, 100.0f); //doesn't animate
+            //bgmusic = Content.Load<Song>("MetalmorphosisPt1");
+            //MediaPlayer.Play(bgmusic);
+            
         }
 
         /// <summary>
@@ -71,6 +85,8 @@ namespace SunsetHigh
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            
+            //bgmusic.dispose();
         }
 
         /// <summary>
@@ -92,12 +108,23 @@ namespace SunsetHigh
                 {
                     h1.startPickpocket(c1);
                 }
-                else
+                else if (h1.isPickpocketing())
                 {
                     Item item = h1.stopPickpocket();
-                    System.Diagnostics.Debug.WriteLine("Got " + Enum.GetName(typeof(Item), item));
+                    System.Diagnostics.Debug.WriteLine("Stole " + Enum.GetName(typeof(Item), item));
                 }
             }
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && !priorKeyboardState.IsKeyDown(Keys.P))
+            {
+
+            }
+
+            if (h1.inRange(p1))
+            {
+                h1.pickup(p1);
+                System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
+            }
+
             priorKeyboardState = Keyboard.GetState();
             //end debug
 
@@ -105,6 +132,7 @@ namespace SunsetHigh
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             c1.update(elapsed);
             h1.update(elapsed);
+            p1.update(elapsed);
 
             base.Update(gameTime);
         }
@@ -122,6 +150,7 @@ namespace SunsetHigh
 
             c1.draw(spriteBatch);
             h1.draw(spriteBatch);
+            p1.draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -164,7 +193,7 @@ namespace SunsetHigh
             }
             else
             {
-                h1.stop();
+                h1.setMoving(false);
             }
         }
     }

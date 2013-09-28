@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace SunsetHigh
 {
@@ -12,9 +13,8 @@ namespace SunsetHigh
     {
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
-        //other variables
-
-        //maybe make this a singleton? (there won't be multiple instances of this class)
+        private SoundEffect gotItemSound;
+        //other content (i.e. Texture2D for pickpocket graphics)
 
         public Hero()
             : base()
@@ -28,6 +28,13 @@ namespace SunsetHigh
 
         public void converse(Character c)
         {
+        }
+
+        public override void loadContent(ContentManager content)
+        {
+            base.loadContent(content);
+            this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
+            //this.loadImage( ... );
         }
 
         public override void draw(SpriteBatch sb)
@@ -81,6 +88,7 @@ namespace SunsetHigh
                 {
                     //Got item!
                     this.getInventory().addItem(i, 1);
+                    this.gotItemSound.Play();
                     return i;
                 }
                 else

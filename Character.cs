@@ -146,6 +146,9 @@ namespace SunsetHigh
             return this.facing(other) && other.facing(this);
         }
 
+        /*
+         * Adds the given pickup to this Character's inventory
+         */
         public void pickup(Pickup p)
         {
             this.getInventory().addItem(p.getItemType());
