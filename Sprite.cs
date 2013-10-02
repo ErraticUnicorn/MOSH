@@ -22,17 +22,19 @@ namespace SunsetHigh
         private int spriteWidth, spriteHeight;      //size of sprite, collision box
         //image properties
         private Texture2D image;                    //the picture or spritesheet to draw
-        private int imageRows, imageColumns;        //rows and columns in spritesheet
-        private int frameColumn;                    //the current frame in the sheet we are drawing
-        private int frameRow;                       //the current row of the sheet we are drawing
-        private float animationTime;                //speed at which to animate sprite
+        private int imageRows, imageColumns;        //rows and columns in spritesheet; (1, 1) for static pictures
+        private int frameColumn;                    //the current frame in the sheet we are drawing; 0 for static pictures
+        private int frameRow;                       //the current row of the sheet we are drawing; 0 for static pictures
+        private float animationTime;                //speed at which to animate sprite; arbitrary time for static pictures
         private float totalElapsed;                 //personal timer for animation purposes
         private bool visible;                       //sprite visibility
-
+        private bool useTextureDimensions;          //used for matching width and height to texture's dimensions
+        
         public Sprite()
         {
             setX(0); setY(0);
-            setWidth(1); setHeight(1); //a tiny pixel..
+            setWidth(1); setHeight(1); //a tiny pixel until the image loads
+            useTextureDimensions = true;
             setVisible(true);
         }
 
@@ -42,11 +44,14 @@ namespace SunsetHigh
             setY(y);
             setWidth(width);
             setHeight(height);
+            useTextureDimensions = false;
             setVisible(true);
         }
 
         public int getX() { return this.spriteX; }
         public int getY() { return this.spriteY; }
+        public int getXCenter() { return this.spriteX + this.spriteWidth / 2; }
+        public int getYCenter() { return this.spriteY + this.spriteHeight / 2; }
         public int getWidth() { return this.spriteWidth; }
         public int getHeight() { return this.spriteHeight; }
         public Texture2D getImage() { return this.image; }
@@ -57,6 +62,8 @@ namespace SunsetHigh
 
         public void setX(int x) { this.spriteX = x; }
         public void setY(int y) { this.spriteY = y; }
+        public void setXCenter(int x) { this.spriteX = x - this.spriteWidth / 2; }
+        public void setYCenter(int y) { this.spriteY = y - this.spriteHeight / 2; }
         public void setWidth(int width) { this.spriteWidth = width; }
         public void setHeight(int height) { this.spriteHeight = height; }
         public void setVisible(bool visible) { this.visible = visible; }
@@ -64,6 +71,21 @@ namespace SunsetHigh
         protected void setFrameColumn(int col) { this.frameColumn = col; }
         protected void setImage(Texture2D image) { this.image = image; }
         protected void setAnimationTime(float time) { this.animationTime = time; }
+        protected void matchToTextureDimensions() 
+        { 
+            this.useTextureDimensions = true;
+            if (this.image != null)
+            {
+                setWidth(image.Width);
+                setHeight(image.Height);
+            }
+        }
+
+        public void setCenter(int x, int y)
+        {
+            this.setXCenter(x);
+            this.setYCenter(y);
+        }
 
         public void setPosition(int x, int y)
         {
@@ -89,6 +111,8 @@ namespace SunsetHigh
             this.imageRows = numRows;
             this.imageColumns = numCols;
             this.animationTime = anTime;
+            if (this.useTextureDimensions)
+                matchToTextureDimensions();
         }
 
         /*
