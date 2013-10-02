@@ -18,4 +18,9 @@ Until we can figure out if there are viable and easy-to-use Git extensions for V
 
 5) Build and run the project. Use "Game1.cs" as your sandbox for new features. When you need to commit code, copy your files back into the repo folder and use the GitHub GUI to commit and sync the changes.
 
-I think that's everything, but if there're any questions, shoot an email.
+Importing NAudio (for background music)
+---
+
+In Visual Studio, go to Project->Add reference and find "naudio.dll" (which is on Github under "Resources"). If that doesn't work, email me and I'll figure it out.
+
+BGMusic.cs should compile with the NAudio reference. Use its static methods to manipulate background music. When passing in a filename as a string, do include the file extension.
