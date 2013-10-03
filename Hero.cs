@@ -24,13 +24,6 @@ namespace SunsetHigh
             ppActive = false;
         }
 
-        public Hero(int x, int y)
-            : base(x, y)
-        {
-            ppSystem = new PickpocketSystem();
-            ppActive = false;
-        }
-
         public Hero(int x, int y, int w, int h)
             : base(x, y, w, h)
         {
@@ -120,7 +113,7 @@ namespace SunsetHigh
         private class PickpocketSystem  //A container for three sprites
         {
             private const int NEGATIVE_WIDTH = 100;
-            private const float POSITIVE_WIDTH_FACTOR = 0.25f;
+            private const float POSITIVE_WIDTH_FACTOR = 0.333333f;
             private const int BAR_HEIGHT = 20;
             private const int ARROW_WIDTH = 15;
             private const int ARROW_HEIGHT = 15;

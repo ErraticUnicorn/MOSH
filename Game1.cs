@@ -7,8 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Media;
-using NAudio;
-using NAudio.Wave;
+using Microsoft.Xna.Framework.Audio;
 #endregion
 
 namespace SunsetHigh
@@ -25,7 +24,6 @@ namespace SunsetHigh
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState priorKeyboardState;
-        //BackgroundMusic bgmusic;
 
         public Game1()
             : base()
@@ -46,11 +44,8 @@ namespace SunsetHigh
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
             h1 = new Hero(100, 100, 32, 32);
             c1 = new Character(300, 200, 32, 32);
-            c1.getInventory().addItem(Item.LunchMoney);
+            c1.getInventory().addItem(Item.LunchMoney, 100);
             p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
-
-            //bgmusic = new BackgroundMusic();
-            //bgmusic.playSong();
 
             base.Initialize();
         }
@@ -63,7 +58,7 @@ namespace SunsetHigh
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             // TODO: use this.Content to load your game content here
 
             //In the future, all Sprites will call loadContent(this.Content), and child
@@ -72,10 +67,11 @@ namespace SunsetHigh
             h1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
             h1.loadContent(this.Content);
             c1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
+            c1.loadContent(this.Content);
             p1.loadImage(this.Content, "Poke_Ball", 1, 1, 100.0f); //doesn't animate
-            //bgmusic = Content.Load<Song>("MetalmorphosisPt1");
-            //MediaPlayer.Play(bgmusic);
-            
+            p1.loadContent(this.Content);
+
+            //BGMusic.playSong("Stickerbrush_Symphony.m4a");
         }
 
         /// <summary>
@@ -85,8 +81,8 @@ namespace SunsetHigh
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            
-            //bgmusic.dispose();
+
+            //BGMusic.dispose();
         }
 
         /// <summary>
@@ -104,7 +100,7 @@ namespace SunsetHigh
             //debug debug debug
             if (Keyboard.GetState().IsKeyDown(Keys.P) && !priorKeyboardState.IsKeyDown(Keys.P))
             {
-                if (!h1.isPickpocketing() && h1.inRange(c1))
+                if (!h1.isPickpocketing() && h1.inRangeAction(c1))
                 {
                     h1.startPickpocket(c1);
                 }
@@ -114,12 +110,8 @@ namespace SunsetHigh
                     System.Diagnostics.Debug.WriteLine("Stole " + Enum.GetName(typeof(Item), item));
                 }
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.P) && !priorKeyboardState.IsKeyDown(Keys.P))
-            {
 
-            }
-
-            if (h1.inRange(p1))
+            if (h1.inRangeAction(p1))
             {
                 h1.pickup(p1);
                 System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
