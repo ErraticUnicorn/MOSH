@@ -22,6 +22,16 @@ namespace SunsetHigh
         {
             this.setItemType(Item.Nothing);
         }
+        public Pickup(int x, int y)
+            : base(x, y)
+        {
+            this.setItemType(Item.Nothing);
+        }
+        public Pickup(int x, int y, Item type)
+            : base(x, y)
+        {
+            this.setItemType(type);
+        }
         public Pickup(int x, int y, int width, int height)
             : base(x, y, width, height)  
         {

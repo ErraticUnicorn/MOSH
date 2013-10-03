@@ -39,6 +39,14 @@ namespace SunsetHigh
             setVisible(true);
         }
 
+        public Sprite(int x, int y)
+        {
+            setX(x);
+            setY(y);
+            useTextureDimensions = true;
+            setVisible(true);
+        }
+
         public Sprite(int x, int y, int width, int height)
         {
             setX(x);

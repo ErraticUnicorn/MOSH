@@ -28,7 +28,9 @@ namespace SunsetHigh
     public class Character : Sprite
     {
         private const int ACTION_OFFSET = 3;        //pixels offset between sprite and action boxes
-                                                    //the "action box" being area where character can interact with environment                                       
+                                                    //the "action box" being area where character can interact with environment
+        private const int COLLISION_OFFSET = 0;     //pixels offset between sprite and other sprites for collisions
+
         //mechanics
         private Direction direction;                //which direction the character is facing
         private bool moving;                        //whether character is currently in motion
@@ -47,6 +49,17 @@ namespace SunsetHigh
             setMoving(false);
             setDirection(Direction.South);
         }
+
+        public Character(int x, int y)
+            : base(x, y)
+        {
+            this.inventory = new Inventory();
+            setName("NAMELESS");
+            setMale(true);
+            setMoving(false);
+            setDirection(Direction.South);
+        }
+
         public Character(int x, int y, int width, int height)
             : base(x, y, width, height)
         {
@@ -116,15 +129,24 @@ namespace SunsetHigh
         }
 
         /*
-         * Checks if this character is close enough with another sprite to perform any action
-         * e.g. talk to other character, pickup item
+         * Checks if this character is within a given range with another sprite to perform any action
+         * The range is another rectangle a given number of pixels thicker than the sprite's drawing rectangle
+         * e.g. talk to other character, pickup item, collision detection
          */
-        public bool inRange(Sprite other)
+        public bool inRange(Sprite other, int offset)
         {
-            return(((this.getX() < other.getX() && this.getX()+this.getWidth()+ACTION_OFFSET > other.getX()-ACTION_OFFSET) ||
-                    (this.getX() > other.getX() && this.getX()-ACTION_OFFSET < other.getX()+other.getWidth()+ACTION_OFFSET)) &&
-                   ((this.getY() < other.getY() && this.getY()+this.getHeight()+ACTION_OFFSET > other.getY()-ACTION_OFFSET) ||
-                    (this.getY() > other.getY() && this.getY()-ACTION_OFFSET < other.getY()+other.getHeight()+ACTION_OFFSET)));                
+            return (((this.getX() < other.getX() && this.getX() + this.getWidth() + offset > other.getX() - offset) ||
+                    (this.getX() > other.getX() && this.getX() - offset < other.getX() + other.getWidth() + offset)) &&
+                   ((this.getY() < other.getY() && this.getY() + this.getHeight() + offset > other.getY() - offset) ||
+                    (this.getY() > other.getY() && this.getY() - offset < other.getY() + other.getHeight() + offset)));
+        }
+        public bool inRangeAction(Sprite other)
+        {
+            return inRange(other, ACTION_OFFSET);
+        }
+        public bool inRangeCollide(Sprite other)
+        {
+            return inRange(other, COLLISION_OFFSET);
         }
 
         /*
@@ -137,13 +159,23 @@ namespace SunsetHigh
                    (this.getDirection().Equals(Direction.East) && this.getX() < other.getX()) ||
                    (this.getDirection().Equals(Direction.West) && this.getX() > other.getX()));
         }
-        
         /*
          * Checks if both characters are facing each other
          */
         public bool bothFacing(Character other)
         {
             return this.facing(other) && other.facing(this);
+        }
+        /*
+         * Used for getting NPCs to face a character
+         */
+        public Direction getOppositeDirection()
+        {
+            Direction mDir = this.getDirection();
+            if (mDir == Direction.Undefined)
+                return Direction.Undefined;
+
+            return (Direction)(((int)mDir + 2) % 4);
         }
 
         /*
@@ -162,7 +194,7 @@ namespace SunsetHigh
          */
         public override void update(float elapsed)
         {
-            if (this.isMoving())
+            if (this.isMoving()) //only update walking animation if moving
             {
                 base.update(elapsed);
             }
