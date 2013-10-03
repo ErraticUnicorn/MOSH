@@ -14,32 +14,21 @@ namespace SunsetHigh
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
         private SoundEffect gotItemSound;
-        private PickpocketItem pickpocketnegbar, pickpocketposbar;
-        private PickpocketItem pickpocketarrow;
-        private int arrowYdist = -30;
-        private int arrowXdist = 10;
-        private int barYdist = -17;
-        private int barXdist = -33;
-        private int displacement = 0;
-        private float speed = 0;
-        private bool goingRight = true;
-        //other content (i.e. Texture2D for pickpocket graphics)
+        private PickpocketSystem ppSystem;
 
         public Hero()
             : base()
 
         {
-            pickpocketnegbar = new PickpocketItem(this.getX() + barXdist, this.getY() + barYdist, 100, 20);
-            pickpocketposbar = new PickpocketItem(this.getX() + barXdist, this.getY() + barYdist, 33, 20);
-            pickpocketarrow = new PickpocketItem(this.getX() + arrowXdist, this.getY() + arrowYdist, 15, 15);
+            ppSystem = new PickpocketSystem();
+            ppActive = false;
         }
 
         public Hero(int x, int y, int w, int h)
             : base(x, y, w, h)
         {
-            pickpocketnegbar = new PickpocketItem(this.getX() + barXdist, this.getY() + barYdist, 100, 20);
-            pickpocketposbar = new PickpocketItem(this.getX() + barXdist, this.getY() + barYdist, 33, 20);
-            pickpocketarrow = new PickpocketItem(this.getX() + arrowXdist, this.getY() + arrowYdist, 15, 15); //difference from the bar is 43, and 15
+            ppSystem = new PickpocketSystem();
+            ppActive = false;
         }
 
         public void converse(Character c)
@@ -49,11 +38,8 @@ namespace SunsetHigh
         public override void loadContent(ContentManager content)
         {
             base.loadContent(content);
+            ppSystem.loadContent(content);
             this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
-            //this.loadImage( ... );
-            this.pickpocketnegbar.loadImage(content, "pickpocketnegativebar", 1, 1, 100);
-            this.pickpocketposbar.loadImage(content, "pickpocketpositivebar", 1, 1, 100);
-            this.pickpocketarrow.loadImage(content, "pickpocketarrow", 1, 1, 100.0f);
         }
 
         public override void draw(SpriteBatch sb)
@@ -61,41 +47,16 @@ namespace SunsetHigh
             base.draw(sb);
             if (ppActive)
             {
-                this.pickpocketnegbar.draw(sb);
-                this.pickpocketposbar.draw(sb);
-                this.pickpocketarrow.draw(sb);
+                ppSystem.draw(sb);
             }
         }
 
         public override void update(float elapsed) 
         {
             base.update(elapsed);
-            this.pickpocketarrow.setXCenter(this.getX());
-            this.pickpocketarrow.setYCenter(this.getY() + arrowYdist/2);
-            this.pickpocketnegbar.setXCenter(this.getX());
-            this.pickpocketnegbar.setYCenter(this.getY() + barYdist/2);
-            this.pickpocketposbar.setXCenter(this.getX());
-            this.pickpocketposbar.setYCenter(this.getY() + barYdist / 2);
             if (ppActive)
             {
-                //update needle location based on time elapsed
-                //speed = pickpocketarrow.getX() / elapsed
-                if (displacement >= pickpocketnegbar.getWidth() / 2)
-                {
-                    goingRight = false;
-                }
-                else if (displacement <= -(pickpocketnegbar.getWidth() / 2))
-                {
-                    goingRight = true;
-                }
-                if (goingRight) speed = 1.0f;
-                if (!goingRight) speed = -1.0f;
-                displacement += (int)speed;
-                this.pickpocketarrow.setX(this.pickpocketarrow.getX() + displacement);
-                
-                
-
-
+                ppSystem.update(this, elapsed);
             }
         }
 
@@ -124,9 +85,8 @@ namespace SunsetHigh
             if (ppActive)
             {
                 ppActive = false;
-                
-                //test for success; if successful...
-                if (pickpocketarrow.getXCenter() > pickpocketposbar.getX() && pickpocketarrow.getXCenter() < pickpocketposbar.getX() + pickpocketposbar.getWidth())
+
+                if (ppSystem.success())
                 {
                     Item i = ppTarget.getInventory().removeRandomItem();
                     if (!i.Equals(Item.Nothing))
@@ -138,37 +98,104 @@ namespace SunsetHigh
                     }
                     else
                     {
-                        //Character c has nothing! Cry...
+                        //Character c has nothing to steal! Cry...
                         return i;
                     }
                 }
-                //if fail, do something here
+                else
+                {
+                    //if fail, do something here (play sound)
+                }
             }
             return Item.Nothing;
         }
-    }
 
-    public class PickpocketItem : Sprite
-    {
-        public PickpocketItem() : base()
+        private class PickpocketSystem  //A container for three sprites
         {
-        }
+            private const int NEGATIVE_WIDTH = 100;
+            private const float POSITIVE_WIDTH_FACTOR = 0.333333f;
+            private const int BAR_HEIGHT = 20;
+            private const int ARROW_WIDTH = 15;
+            private const int ARROW_HEIGHT = 15;
+            private const int ARROW_Y_OFFSET = -40;
+            private const int BAR_Y_OFFSET = -27;
+            private const float DEFAULT_SPEED = 31.0f;  //for linear
+            private const float DEFAULT_SPEED_FACTOR = 3.0f; //for sinusoidal
 
-        public PickpocketItem(int x, int y, int width, int height)
-            : base(x, y, width, height)
-        {
+            private Sprite negativeBar;
+            private Sprite positiveBar;
+            private Sprite arrow;
+            private int displacement;
+            private float speed;
+            private bool goingRight;
+            private float arrowTimer;
 
-        }
-
-        public Boolean collision(PickpocketItem a)
-        {
-            if (this.getX() == a.getX())
+            public PickpocketSystem() : base()
             {
-                return true;
+                negativeBar = new Sprite(0, 0, NEGATIVE_WIDTH, BAR_HEIGHT);
+                positiveBar = new Sprite(0, 0, (int)(NEGATIVE_WIDTH * POSITIVE_WIDTH_FACTOR), BAR_HEIGHT);
+                arrow = new Sprite(0, 0, ARROW_WIDTH, ARROW_HEIGHT);
+                displacement = 0;
+                speed = DEFAULT_SPEED;
+                goingRight = true;
             }
-            else
+
+            public void loadContent(ContentManager content)
             {
-                return false;
+                negativeBar.loadImage(content, "pickpocketnegativebar");
+                positiveBar.loadImage(content, "pickpocketpositivebar");
+                arrow.loadImage(content, "pickpocketarrow");
+            }
+
+            public void update(Hero h, float elapsed)
+            {
+                //set initial positions
+                arrow.setXCenter(h.getXCenter());
+                arrow.setYCenter(h.getYCenter() + ARROW_Y_OFFSET);
+                negativeBar.setXCenter(h.getXCenter());
+                negativeBar.setYCenter(h.getYCenter() + BAR_Y_OFFSET);
+                positiveBar.setXCenter(h.getXCenter());
+                positiveBar.setYCenter(h.getYCenter() + BAR_Y_OFFSET);
+
+                //update moving arrow
+
+                //moves linearly
+                /*
+                float velocity = 0;
+                if (displacement >= negativeBar.getWidth() / 2)
+                {
+                    goingRight = false;
+                }
+                else if (displacement <= -(negativeBar.getWidth() / 2))
+                {
+                    goingRight = true;
+                }
+                if (goingRight) 
+                    velocity = speed;
+                if (!goingRight) 
+                    velocity = -speed;
+                displacement += (int)(velocity * elapsed);
+                arrow.setX(arrow.getX() + displacement);
+                 */
+
+                //moves sinusoidally
+                arrowTimer += elapsed;
+                if (arrowTimer > Math.PI * 2)
+                    arrowTimer -= (float)(Math.PI * 2);
+                displacement = (int)(NEGATIVE_WIDTH / 2 * Math.Sin(arrowTimer * DEFAULT_SPEED_FACTOR));
+                arrow.setX(arrow.getX() + displacement);
+            }
+
+            public void draw(SpriteBatch sb)
+            {
+                negativeBar.draw(sb);
+                positiveBar.draw(sb);
+                arrow.draw(sb);
+            }
+
+            public bool success()
+            {
+                return arrow.getXCenter() > positiveBar.getX() && arrow.getXCenter() < positiveBar.getX() + positiveBar.getWidth();
             }
         }
     }

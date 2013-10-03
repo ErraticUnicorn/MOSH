@@ -9,13 +9,14 @@ using Microsoft.Xna.Framework.Content;
 namespace SunsetHigh
 {
     /*
-     * Abstract class for anything that can be drawn 
+     * Class for anything that can be drawn 
      * with a sprite
      * 
      * Characters and Pickups (and other drawable game 
-     * components) can extend from this class
+     * components) can extend from this class (or just use this
+     * class for simple or static drawings)
      */
-    public abstract class Sprite
+    public class Sprite
     {
         //geometry
         private int spriteX, spriteY;               //top-left corner of sprite and collision box
@@ -111,6 +112,18 @@ namespace SunsetHigh
             this.imageRows = numRows;
             this.imageColumns = numCols;
             this.animationTime = anTime;
+            if (this.useTextureDimensions)
+                matchToTextureDimensions();
+        }
+
+        public void loadImage(ContentManager content, string fileName)
+        {
+            this.image = content.Load<Texture2D>(fileName);
+            this.frameRow = 0;
+            this.frameColumn = 0;
+            this.imageRows = 1;
+            this.imageColumns = 1;
+            this.animationTime = 100.0f;
             if (this.useTextureDimensions)
                 matchToTextureDimensions();
         }
