@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="library stuff" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/library stuff.png" trans="ffffff" width="768" height="512"/>
+ </tileset>
+ <tileset firstgid="385" name="Various objects" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/Various objects.png" trans="ffffff" width="718" height="1214"/>
+ </tileset>
+ <tileset firstgid="1199" name="School objects" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/School objects.png" trans="ffffff" width="490" height="898"/>
+ </tileset>
+ <layer name="Floor" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2MsKgzAQBVAXflq/yu797uIiEIqPjJnQIudAFoILyeVm1GniiZb510/wHO95fy0Nq76PHK17f7XIcdSHTX296sdwr8DZpCPjlTzuZHLUKfqUPIpIHt+Z0K/s67ozM6IdoV/0vDqb//S5O7flMU7Lu25LPuTwPfg/6nkQ/VdSn1v6kUcvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8n0APshz+g==
+  </data>
+ </layer>
+ <layer name="Tables" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2DEOwjAQBMD7bMgrgH/wDCT+B5Yo3KSIvElczEinuEqxqyvspapugVl/sxSjWoaPwDxLHwnJDPUxTh9zuYf+8yp9XOGzcdbH+Vr+7/+3Pzf6yNibof041p4M7cfx7MdcUhnqI0Mfc3EfnEvqPtjoY1z/PpsYxvTvs4kBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACu8wVnvT3v
+  </data>
+ </layer>
+ <layer name="Books" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt10EKgCAQAEC795f+EHUI//+frnZQK0QjZk6CIsvKumwIQMnxkTu4mit7pX3Gi8l6GRbFf8X6kax9ahYGD2yZvKuPvmq9Q32MsSZ5T99AfbSnf/yH+ujDzDHGm/k6/d/M5wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBdJ/9fBOk=
+  </data>
+ </layer>
+ <layer name="Shelves" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt10kNwDAQBEHzZ+XEJHKAyUDwJz6kKqkfi2C0pQDsp6Yjnal13PzrSnd60ttxA8xiL9ZiL4Bd+D/W4v8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARvgA8MIzoQ==
+  </data>
+ </layer>
+</map>
