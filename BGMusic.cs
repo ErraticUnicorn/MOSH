@@ -7,6 +7,7 @@ using System.Timers;
 //must have the naudio.dll reference to build this file!
 using NAudio;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 
 namespace SunsetHigh
 {
@@ -31,7 +32,8 @@ namespace SunsetHigh
 
         private static IWavePlayer wavePlayer;
         private static AudioFileReader file;
-        private static FadeInOutSampleProvider fadeInOut;
+        private static FadeInOutSampleProviderAdapted fadeInOut;
+        private static SampleToWaveProvider sampleToWave;
         private static bool playing = false;
         private static Timer transitionTimer;
         private static string queuedSongName;
@@ -51,9 +53,10 @@ namespace SunsetHigh
             if (wavePlayer == null)
                 wavePlayer = new WaveOutEvent(); //initialize wavePlayer
 
-            fadeInOut = new FadeInOutSampleProvider(file);
-            wavePlayer.Init(fadeInOut);
-            
+            fadeInOut = new FadeInOutSampleProviderAdapted(file);
+            sampleToWave = new SampleToWaveProvider(fadeInOut);
+            wavePlayer.Init(sampleToWave);
+
             wavePlayer.Play();
             playing = true;
         }
@@ -115,7 +118,7 @@ namespace SunsetHigh
 
         /*
          * Stops song and disposes of it (cannot be resumed afterward)
-         */ 
+         */
         public static void stopSong()
         {
             if (wavePlayer != null)
@@ -153,7 +156,7 @@ namespace SunsetHigh
          */
         public static void setVolume(float volume)
         {
-            if(file != null)
+            if (file != null)
                 file.Volume = volume;
         }
 
@@ -162,7 +165,7 @@ namespace SunsetHigh
          */
         public static void fadeIn(double fadeTime)
         {
-            if(fadeInOut != null)
+            if (fadeInOut != null)
                 fadeInOut.BeginFadeIn(fadeTime);
         }
 
@@ -176,7 +179,7 @@ namespace SunsetHigh
          */
         public static void fadeOut(double fadeTime)
         {
-            if(fadeInOut != null)
+            if (fadeInOut != null)
                 fadeInOut.BeginFadeOut(fadeTime);
         }
 
@@ -190,13 +193,13 @@ namespace SunsetHigh
          */
         public static void setLooping(bool looping)
         {
-            if(fadeInOut != null)
+            if (fadeInOut != null)
                 fadeInOut.setLooping(looping);
         }
 
         public static bool isLooping()
         {
-            if(fadeInOut != null)
+            if (fadeInOut != null)
                 return fadeInOut.isLooping();
             return false;
         }
@@ -261,7 +264,7 @@ namespace SunsetHigh
         /// This helper class is lifted straight out of NAudio samples (with minor edits)
         /// to allow for fading/looping
         /// </summary>
-        private class FadeInOutSampleProvider : ISampleProvider
+        private class FadeInOutSampleProviderAdapted : ISampleProvider
         {
             enum FadeState
             {
@@ -283,7 +286,7 @@ namespace SunsetHigh
             /// </summary>
             /// <param name="source">The source stream with the audio to be faded in or out</param>
             /// <param name="initiallySilent">If true, we start faded out</param>
-            public FadeInOutSampleProvider(AudioFileReader source, bool initiallySilent = false)
+            public FadeInOutSampleProviderAdapted(AudioFileReader source, bool initiallySilent = false)
             {
                 this.source = source;
                 this.fadeState = initiallySilent ? FadeState.Silence : FadeState.FullVolume;
@@ -407,18 +410,25 @@ namespace SunsetHigh
                 get { return source.WaveFormat; }
             }
 
-            /*
-             * Sets looping 
-             */
+            /// <summary>
+            /// Sets whether the current song should loop or not.
+            /// Default is "true"
+            /// </summary>
+            /// <param name="looping"></param>
             public void setLooping(bool looping)
             {
                 this.looping = looping;
             }
+
+            /// <summary>
+            /// Returns whether the current song is looping.
+            /// Default is "true"
+            /// </summary>
+            /// <returns></returns>
             public bool isLooping()
             {
                 return this.looping;
             }
         }
-
     }
 }
