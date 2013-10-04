@@ -45,11 +45,11 @@ namespace SunsetHigh
             if (playing)
                 stopSong(); //cut off current song
 
-            if (wavePlayer == null)
-                wavePlayer = new WaveOutEvent(); //initialize wavePlayer
-
             if (!tryAllFileTypes(fileName))
                 return; //file could not be found, AudioFileReader did not load
+
+            if (wavePlayer == null)
+                wavePlayer = new WaveOutEvent(); //initialize wavePlayer
 
             fadeInOut = new FadeInOutSampleProvider(file);
             wavePlayer.Init(fadeInOut);
@@ -61,8 +61,6 @@ namespace SunsetHigh
         /*
          * Fades out the current song and starts playing the 
          * new song after a little wait
-         * 
-         * Lagtime between songs must be greater than time to fade out
          */
         public static void transitionToSong(string fileName, double fadeTime, double lagTime)
         {
@@ -83,8 +81,6 @@ namespace SunsetHigh
         /*
          * Fades out the current song and starts fading into the
          * new song after a little wait
-         * 
-         * Lagtime between songs must be greater than time to fade out
          */
         public static void transitionToSongWithFadeIn(string fileName, double fadeTime, double lagTime)
         {
