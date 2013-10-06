@@ -3,6 +3,19 @@ MOSH
 
 MOnogame Sunset High project. Work here guys.
 
+Organization
+---
+Some pointers on file organization in this repo:
+
+1) Source files go in the top directory.
+
+2) All "raw" or unconverted content (.png, .jpg, .wav) go into the "RawContent" folder.
+
+3) All converted content (.xnb), compressed audio files (.mp3, .wma, .m4a) and game data files (.xml) go into the "Content" folder.
+
+4) All outside libraries and utilities (e.g. NAudio.dll) go into the "Resources" folder.
+
+5) All save game states (coming soon!) go into "SaveData" folder.
 
 Running and Debugging Instructions
 ---
@@ -20,7 +33,6 @@ Until we can figure out if there are viable and easy-to-use Git extensions for V
 
 Importing NAudio (for background music)
 ---
-
 In Visual Studio, go to Project->Add reference and find "naudio.dll" (which is in this repo under "Resources"). NOTE: Do NOT get the NAudio release DLL from online, as that is an earlier version. Either try the one in this repo or build it from the source code. Email me if there are questions.
 
 BGMusic.cs should compile with the NAudio reference. Use its static methods to manipulate background music. When passing in a filename as a string, do include the file extension.
