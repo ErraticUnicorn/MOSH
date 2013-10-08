@@ -12,9 +12,6 @@
  <tileset firstgid="1619" name="door" tilewidth="32" tileheight="32">
   <image source="../../../GitHub/sunsethigh-sgd/assets/images/door.png" trans="ffffff" width="318" height="798"/>
  </tileset>
- <tileset firstgid="1835" name="ScreenshotSchool" tilewidth="32" tileheight="32">
-  <image source="../../../GitHub/sunsethigh-sgd/assets/images/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
- </tileset>
  <layer name="Floor" width="100" height="100">
   <data encoding="base64" compression="zlib">
    eJzt10EKhDAMBVAXHs1T6eVnJQzSNhkahy7eg4JCcZHf1Hbb6lz7ePA/Z5CFPPJ69TsT43o8y2NeVPtRVt/v8qjR64dRbZ9ZyKPG0cgi0w+tDOUx79jbaz6qt/54T/Z/Hs2TR41fs2j9y+VRJzrj9vap7LlKHnm9u0Rr/bfm6o96o9pm7oDZHiGntw9l7obOu7Wi+0YvD/3xjlHto73qHvd35DEvezaqGMTksRZ5rEUea5EHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwJo+WQH0KA==
@@ -32,7 +29,7 @@
  </layer>
  <layer name="Books" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt19EGwzAUBuCWUbq3mrUvUX2SvfzsIkyrKsnZMvN95CaEIyfOL10HfMPj0rqC/zb1rSuAtpZhv/eaOyWzx7yqd9SPEvoR6+w+b5l5svYyqIb3/XtqeqKf8UqzPJ0l3lh4bt5kRW7eAHxKypr3Rbz0Z7hXzP9rTCkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECGJ0yODAo=
+   eJzt10EKgzAQBVCFruqtRHsLT+LlSxeBIookGZsi74HLwOCE/0nXAb+wPlpPcG9z33oCaGvayZhP7pRkj7yqd7SPEvYR6+x/jpl9svQ6qIb7/X9qdmKf8Uq7PJ0l3rPw3GvTFbl9A3CV1DXfH/HSm2GqyP8hZhQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDDG0yyC9Y=
   </data>
  </layer>
 </map>

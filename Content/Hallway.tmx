@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="locker" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/sunsethigh-sgd/assets/images/locker.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="217" name="Various objects" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/Various objects.png" trans="ffffff" width="718" height="1214"/>
+ </tileset>
+ <tileset firstgid="1031" name="School objects" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/School objects.png" trans="ffffff" width="490" height="898"/>
+ </tileset>
+ <tileset firstgid="1451" name="Stairs chalkboard etc" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="1707" name="Weird objects" tilewidth="32" tileheight="32">
+  <image source="../../../../../../Program Files (x86)/Tiled/examples/Weird objects.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <layer name="Floor" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0bEJACAMAEHB/TdwWLFXiKAQ5Q7SJU2+lD2t3t1njx5v0yMXPXLRIxc97hh/nU3kjrjVn08OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwlw6pIRjZ
+  </data>
+ </layer>
+ <layer name="Lockers and doors" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1rsKwzAMBdA0bZe+lj7y/39aGezFOHFwt3IOXIS4aNc8TdMxcoqcI3POIc+6K1pd74a+a+QWuUceeU+5rHRbd70b+l6Rd+QTWfKe8lzptu56NwD8j9Y/NLLXM/Xl32K/1j80stcz9eXfYr/WPzSy1zP15d8CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBffQHJEAbH
+  </data>
+ </layer>
+ <layer name="Books etc" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1bENgDAMBMAUoIyYEShgTEZiAAraYJS4QrprX+/mC5cy7lzjfKsTR5l2fexB3rG8Z3uQ9bT6dEZ79EXb8D/2zGt+MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKTduzkFig==
+  </data>
+ </layer>
+</map>
