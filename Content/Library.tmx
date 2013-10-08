@@ -9,24 +9,30 @@
  <tileset firstgid="1199" name="School objects" tilewidth="32" tileheight="32">
   <image source="../../../../../../Program Files (x86)/Tiled/examples/School objects.png" trans="ffffff" width="490" height="898"/>
  </tileset>
+ <tileset firstgid="1619" name="door" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/sunsethigh-sgd/assets/images/door.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="1835" name="ScreenshotSchool" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/sunsethigh-sgd/assets/images/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
+ </tileset>
  <layer name="Floor" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2MsKgzAQBVAXflq/yu797uIiEIqPjJnQIudAFoILyeVm1GniiZb510/wHO95fy0Nq76PHK17f7XIcdSHTX296sdwr8DZpCPjlTzuZHLUKfqUPIpIHt+Z0K/s67ozM6IdoV/0vDqb//S5O7flMU7Lu25LPuTwPfg/6nkQ/VdSn1v6kUcvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8n0APshz+g==
+   eJzt10EKhDAMBVAXHs1T6eVnJQzSNhkahy7eg4JCcZHf1Hbb6lz7ePA/Z5CFPPJ69TsT43o8y2NeVPtRVt/v8qjR64dRbZ9ZyKPG0cgi0w+tDOUx79jbaz6qt/54T/Z/Hs2TR41fs2j9y+VRJzrj9vap7LlKHnm9u0Rr/bfm6o96o9pm7oDZHiGntw9l7obOu7Wi+0YvD/3xjlHto73qHvd35DEvezaqGMTksRZ5rEUea5EHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwJo+WQH0KA==
   </data>
  </layer>
  <layer name="Tables" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2DEOwjAQBMD7bMgrgH/wDCT+B5Yo3KSIvElczEinuEqxqyvspapugVl/sxSjWoaPwDxLHwnJDPUxTh9zuYf+8yp9XOGzcdbH+Vr+7/+3Pzf6yNibof041p4M7cfx7MdcUhnqI0Mfc3EfnEvqPtjoY1z/PpsYxvTvs4kBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACu8wVnvT3v
-  </data>
- </layer>
- <layer name="Books" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJzt10EKgCAQAEC795f+EHUI//+frnZQK0QjZk6CIsvKumwIQMnxkTu4mit7pX3Gi8l6GRbFf8X6kax9ahYGD2yZvKuPvmq9Q32MsSZ5T99AfbSnf/yH+ujDzDHGm/k6/d/M5wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBdJ/9fBOk=
+   eJzt2UEKwjAQAMBc9B3+wINvUm961Iv6J8H/2aBiEWm3pQ05zMCS0EMKu9kGmm1KadfE/j2250PGHKtF9xr02zZxbeL2HtvzIWOO9aJ7DfpdCrxjk151p98nT4dlSsfl/O+h26c/Tk0tzhPVY/PnmXrUpcR3kW6P1lx/xMyVp1yLe/rWRD1i5syT/hiu1Hfd+RGjP+oy1779PT/0R4z+qEupfaseMaXypB4x+qMuOU///jdNKa/vPI/RH3UZex849E5Rf8SMvQ8cc6cIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQNwTBC5GVg==
   </data>
  </layer>
  <layer name="Shelves" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt10kNwDAQBEHzZ+XEJHKAyUDwJz6kKqkfi2C0pQDsp6Yjnal13PzrSnd60ttxA8xiL9ZiL4Bd+D/W4v8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARvgA8MIzoQ==
+   eJzt18lpw1AARVF98CZDBd5laCJOmrCdJhKnySRuwkMTGQrIW2ulHwkZ5HPgLh4CIfRBoKYZzmw24M3obe48OAPv6SN9pm2HfVOa5jbdpftymmeesl3ap0M6dtgPOYNFekxPzgMYyVf6Tj/p9x+bYV3k+3+ZrtJ1qd8AY2n/S9RuhtX+l6jdAGNZ5puzSuv0XOp2+xr9veQ9vqZNeit1u30NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDp+wP/VDj5
+  </data>
+ </layer>
+ <layer name="Books" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt19EGwzAUBuCWUbq3mrUvUX2SvfzsIkyrKsnZMvN95CaEIyfOL10HfMPj0rqC/zb1rSuAtpZhv/eaOyWzx7yqd9SPEvoR6+w+b5l5svYyqIb3/XtqeqKf8UqzPJ0l3lh4bt5kRW7eAHxKypr3Rbz0Z7hXzP9rTCkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECGJ0yODAo=
   </data>
  </layer>
 </map>

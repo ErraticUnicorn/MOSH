@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Stairs chalkboard etc" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/MOSH/Content/Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="257" name="ScreenshotSchool" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/sunsethigh-sgd/assets/images/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
+ </tileset>
+ <tileset firstgid="392" name="Various objects" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/MOSH/Content/Various objects.png" trans="ffffff" width="718" height="1214"/>
+ </tileset>
+ <tileset firstgid="1206" name="Appliances" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/MOSH/Content/Appliances.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="1462" name="cafeteria" tilewidth="32" tileheight="32">
+  <image source="../../../GitHub/sunsethigh-sgd/assets/images/cafeteria.png" trans="ffffff" width="320" height="320"/>
+ </tileset>
+ <layer name="Floor" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2cENgzAQRUEoiQrSIaEIx3WCK8ieln+YkbYBr59kyee+bd+GuZ7hv/Gc069hpn2UrHv7aZjTPkpm0z6GfZToI4s+snTsQh91XfvQR40+sugji/dVFu+rLPrIoo8s+siijyz6yKKPLKuPo2H0UTOb9qGPmnVv/Z/n8H8OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAm25Au8OF
+  </data>
+ </layer>
+ <layer name="Tables" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2LEJgDAUBFARrZzCTZ3CKdzQxkqw+4afqMh7kO5A4YoL6br2puGBj3DbrI/PWPq3/4CrVR9p+xCfKHvSR940xifKnvTxLZs++JHsbuzutlVld+OaAXhCjR2xJfXU2BFbArRU8nYV5ckrebuK8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALRzflkTP
+  </data>
+ </layer>
+ <layer name="Chairs" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1zEOwCAIBVCH3v96vY5DF0KQyYm+lxjBwPzjWgDAVO/zndhXdezzDcC/nPKgyhDZAUAWM6H7f+TZbg6AmbrMyG/VXrULAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHDTBo3OGoY=
+  </data>
+ </layer>
+ <layer name="Food etc" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2FEKgjAcB+A96CU6SnWC6sZ1g8Ln8FF69BApJA3TFaEQ9n0wkG0M+U/8sYUw7piFcMpe+1cfzF0n1iVt07TtQP+5qe9lYD+G9OfupnixP7Vv2mGmta/5TAvzlZv9mExby66eVVTX+JuP+4vHc20PflZlb4CZlfkzD4rEP6fsjckOAOqBc8bY+a4bj/Okny0ALFd8NxVnRZslbR6k7j/qNxkDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDy3AExEyDp
+  </data>
+ </layer>
+</map>
