@@ -11,16 +11,11 @@ using NAudio.Wave.SampleProviders;
 
 namespace SunsetHigh
 {
-    /*
-     * Controls all the background music for the game. The whole class is static;
-     * there are no instantiations. To play a song, call BGMusic.playSong(<filename in Content directory>)
-     * When providing the filename, the extension is preferred (but not necessary, the class will automatically
-     * check for .mp3, .m4a, and .wma files of the given name). This is different from ContentManager.LoadContent,
-     * which does NOT want the file extension (.xnb)
-     * 
-     * The class currently supports pausing and resuming music, stopping, fading in and out, and looping (true by default).
-     * That should be all that's necessary for this game. Fading effects are recommended when changing screens/songs.
-     */
+    /// <summary>
+    /// Static class for managing all the background music for the game, using the NAudio library. Currently supports playing, pausing,
+    /// resuming, stopping, fading in and out, and looping. Fading effects are recommended when changing screens/songs. When providing
+    /// song file names, please specify the file extension (it's not necessary, but recommended).
+    /// </summary>
     public static class BGMusic
     {
         public const float FULL_VOLUME = 1.0f;
@@ -37,15 +32,19 @@ namespace SunsetHigh
         private static bool playing = false;
         private static Timer transitionTimer;
         private static string queuedSongName;
+        private static double queuedFadeTime;
 
-        /*
-         * Starts playing the song.
-         * Assumed to be in the "Content" directory
-         */
+        /// <summary>
+        /// Begins playing a song with the specified file name. Only .mp3, .wma, and .m4a are supported.
+        /// </summary>
+        /// <param name="fileName">File name of the song in the "Content" directory</param>
         public static void playSong(string fileName)
         {
             if (playing)
                 stopSong(); //cut off current song
+
+            if (fileName.StartsWith(CONTENT_DIRECTORY))
+                fileName = fileName.Substring(CONTENT_DIRECTORY.Length);
 
             if (!tryAllFileTypes(fileName))
                 return; //file could not be found, AudioFileReader did not load
@@ -61,14 +60,14 @@ namespace SunsetHigh
             playing = true;
         }
 
-        /*
-         * Fades out the current song and starts playing the 
-         * new song after a little wait
-         */
+        /// <summary>
+        /// Fades out the current song and starts playing the new song after a short lag
+        /// </summary>
+        /// <param name="fileName">File name of the new song to play in the "Content" folder</param>
+        /// <param name="fadeTime">Time to fade out, in milliseconds</param>
+        /// <param name="lagTime">Lag time between the two songs (excluding fade time), in milliseconds</param>
         public static void transitionToSong(string fileName, double fadeTime, double lagTime)
         {
-            if (lagTime < fadeTime)
-                return;    //don't try this yet
             queuedSongName = fileName;
             fadeOut(fadeTime);
             transitionTimer = new Timer(fadeTime + lagTime);
@@ -76,34 +75,48 @@ namespace SunsetHigh
             transitionTimer.Start();
         }
 
+        /// <summary>
+        /// Fades out the current song and starts playing the new song after a short lag.
+        /// Default fade time and lag times are used.
+        /// </summary>
+        /// <param name="fileName">File name of the new song to play in the "Content" folder</param>
         public static void transitionToSong(string fileName)
         {
             transitionToSong(fileName, DEFAULT_FADE_TIME, DEFAULT_LAG_BETWEEN_SONGS);
         }
 
-        /*
-         * Fades out the current song and starts fading into the
-         * new song after a little wait
-         */
+        /// <summary>
+        /// Fades out the current song and starts fading into the new song after a short lag
+        /// </summary>
+        /// <param name="fileName">File name of the new song to play in the "Content" folder</param>
+        /// <param name="fadeTime">Time to fade out and fade in (each), in milliseconds</param>
+        /// <param name="lagTime">Lag time between the two songs (excluding fade time), in milliseconds</param>
         public static void transitionToSongWithFadeIn(string fileName, double fadeTime, double lagTime)
         {
             if (lagTime < fadeTime)
                 return;    //don't try this yet
             queuedSongName = fileName;
+            queuedFadeTime = fadeTime;
             fadeOut(fadeTime);
             transitionTimer = new Timer(fadeTime + lagTime);
             transitionTimer.Elapsed += new ElapsedEventHandler(OnFadeOverFadeIn);
             transitionTimer.Start();
         }
 
+        /// <summary>
+        /// Fades out the current song and starts fading into the new song after a short lag.
+        /// Default fade and lag times are used.
+        /// </summary>
+        /// <param name="fileName">File name of the new song to play in the "Content" folder</param>
         public static void transitionToSongWithFadeIn(string fileName)
         {
             transitionToSongWithFadeIn(fileName, DEFAULT_FADE_TIME, DEFAULT_LAG_BETWEEN_SONGS);
         }
 
-        /*
-         * Switches between pause and play
-         */
+        /// <summary>
+        /// Switches between a play and pause state (i.e. if the song is playing, it will pause,
+        /// and vice-versa)
+        /// </summary>
         public static void togglePlay()
         {
             if (wavePlayer != null && file != null)
@@ -116,9 +129,9 @@ namespace SunsetHigh
             }
         }
 
-        /*
-         * Stops song and disposes of it (cannot be resumed afterward)
-         */
+        /// <summary>
+        /// Stops song and disposes of it (cannot be resumed afterward)
+        /// </summary>
         public static void stopSong()
         {
             if (wavePlayer != null)
@@ -133,9 +146,10 @@ namespace SunsetHigh
             }
         }
 
-        /*
-         * Disposes of everything. Call this at end of application's life
-         */
+        /// <summary>
+        /// Disposes of all resources contained in BGMusic. Call this method at the 
+        /// end of the Game's life.
+        /// </summary>
         public static void dispose()
         {
             if (file != null)
@@ -151,52 +165,64 @@ namespace SunsetHigh
             fadeInOut = null;
         }
 
-        /*
-         * Changes the volume of this file
-         */
+        /// <summary>
+        /// Changes the volume of playback; BGMusic.SILENCE can be used for muting
+        /// the song, while BGMusic.FULL_VOLUME can unmute.
+        /// </summary>
+        /// <param name="volume"></param>
         public static void setVolume(float volume)
         {
             if (file != null)
                 file.Volume = volume;
         }
 
-        /*
-         * Song starts from silence and fades in to full volume
-         */
+        /// <summary>
+        /// Song starts from silence and fades in to full volume
+        /// </summary>
+        /// <param name="fadeTime">Time to fade in, in milliseconds</param>
         public static void fadeIn(double fadeTime)
         {
             if (fadeInOut != null)
                 fadeInOut.BeginFadeIn(fadeTime);
         }
-
+        /// <summary>
+        /// Song starts from silence and fades in to full volume. Default fade in time.
+        /// </summary>
         public static void fadeIn()
         {
             fadeIn(DEFAULT_FADE_TIME);
         }
 
-        /*
-         * Song starts from full volume and fades out to silence
-         */
+        /// <summary>
+        /// Song starts from full volume and fades out to silence
+        /// </summary>
+        /// <param name="fadeTime">Time to fade out, in milliseconds</param>
         public static void fadeOut(double fadeTime)
         {
             if (fadeInOut != null)
                 fadeInOut.BeginFadeOut(fadeTime);
         }
-
+        /// <summary>
+        /// Song starts from full volume and fades out to silence. Default fade out time.
+        /// </summary>
         public static void fadeOut()
         {
             fadeOut(DEFAULT_FADE_TIME);
         }
 
-        /*
-         * Sets whether Song should loop upon ending
-         */
+        /// <summary>
+        /// Sets whether a song should loop upon ending (true by default)
+        /// </summary>
+        /// <param name="looping">True if the song should loop, false otherwise</param>
         public static void setLooping(bool looping)
         {
             if (fadeInOut != null)
                 fadeInOut.setLooping(looping);
         }
-
+        /// <summary>
+        /// Specifies whether a song is looping (true by default)
+        /// </summary>
+        /// <returns>True if the song is looping, false if not</returns>
         public static bool isLooping()
         {
             if (fadeInOut != null)
@@ -257,7 +283,7 @@ namespace SunsetHigh
             transitionTimer.Stop(); //event is single fire
             stopSong(); //dispose of old song
             playSong(queuedSongName);
-            fadeInOut.BeginFadeIn(DEFAULT_FADE_TIME);
+            fadeInOut.BeginFadeIn(queuedFadeTime);
         }
 
         /// <summary>
@@ -411,8 +437,7 @@ namespace SunsetHigh
             }
 
             /// <summary>
-            /// Sets whether the current song should loop or not.
-            /// Default is "true"
+            /// Sets whether the current song should loop or not (true by default)
             /// </summary>
             /// <param name="looping"></param>
             public void setLooping(bool looping)
@@ -421,8 +446,7 @@ namespace SunsetHigh
             }
 
             /// <summary>
-            /// Returns whether the current song is looping.
-            /// Default is "true"
+            /// Returns whether the current song is looping (true by default)
             /// </summary>
             /// <returns></returns>
             public bool isLooping()

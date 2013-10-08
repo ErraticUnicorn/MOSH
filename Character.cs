@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace SunsetHigh
 {
-    /*
-     * Specifies which direction a character is facing.
-     */
+    /// <summary>
+    /// Specifies which direction a Character is facing
+    /// </summary>
     public enum Direction                       
     {
         Undefined = -1,
@@ -20,11 +20,10 @@ namespace SunsetHigh
         West
     };
     
-    /*
-     * Character inherits all the Sprite methods.
-     * New information includes a direction (which way it's facing), a gender,
-     * and an inventory (all its items).
-     */
+    /// <summary>
+    /// Character extends from Sprite, adding behavior for movement and inventory.
+    /// Each character also has an Inventory (all his/her items).
+    /// </summary>
     public class Character : Sprite
     {
         private const int ACTION_OFFSET = 3;        //pixels offset between sprite and action boxes
@@ -39,7 +38,11 @@ namespace SunsetHigh
         private string name;                        //character's name
         //private Dialogue script;                  //script given to NPCs
         private Inventory inventory;                //all the items this character has
-
+        
+        /// <summary>
+        /// Initializes a default Character at the origin which matches the dimensions
+        /// of its sprite (when loaded)
+        /// </summary>
         public Character()
             : base()
         {
@@ -50,6 +53,12 @@ namespace SunsetHigh
             setDirection(Direction.South);
         }
 
+        /// <summary>
+        /// Initializes a Character at the given position which matches the dimensions
+        /// of its sprite (when loaded)
+        /// </summary>
+        /// <param name="x">X coordinate of the top-left corner</param>
+        /// <param name="y">Y coordinate of the top-left corner</param>
         public Character(int x, int y)
             : base(x, y)
         {
@@ -60,6 +69,13 @@ namespace SunsetHigh
             setDirection(Direction.South);
         }
 
+        /// <summary>
+        /// Initializes a Character at the given position with the given dimensions
+        /// </summary>
+        /// <param name="x">X coordinate of the top-left corner</param>
+        /// <param name="y">Y coordinate of the top-left corner</param>
+        /// <param name="width">Width in pixels</param>
+        /// <param name="height">Height in pixels</param>
         public Character(int x, int y, int width, int height)
             : base(x, y, width, height)
         {
@@ -81,6 +97,11 @@ namespace SunsetHigh
         public void setMale(bool male) { this.male = male; }
         public void setName(string name) { this.name = name; }
 
+        /// <summary>
+        /// Sets the direction of this Character and updates which row on the 
+        /// spritesheet to animate
+        /// </summary>
+        /// <param name="dir">Direction of this Character</param>
         public void setDirection(Direction dir)
         {
             if (dir.Equals(Direction.Undefined)) return;
@@ -88,20 +109,24 @@ namespace SunsetHigh
             this.direction = dir;
             //we should have a standard convention for spritesheets
             //i.e. each row is a direction
-            if (this.getDirection().Equals(Direction.North))
-                this.setFrameRow(3);
-            if (this.getDirection().Equals(Direction.East))
-                this.setFrameRow(2);
-            if (this.getDirection().Equals(Direction.South))
-                this.setFrameRow(0);
-            if (this.getDirection().Equals(Direction.West))
-                this.setFrameRow(1);
-
+            if (this.getImageRows() >= 4)
+            {
+                if (this.getDirection().Equals(Direction.North))
+                    this.setFrameRow(3);
+                if (this.getDirection().Equals(Direction.East))
+                    this.setFrameRow(2);
+                if (this.getDirection().Equals(Direction.South))
+                    this.setFrameRow(0);
+                if (this.getDirection().Equals(Direction.West))
+                    this.setFrameRow(1);
+            }
         }
 
-        /*
-         * Handles 1D movement
-         */
+        /// <summary>
+        /// Moves this Character a given distance in pixels; also sets Character's direction
+        /// </summary>
+        /// <param name="dir">Direction to move the Character</param>
+        /// <param name="dist">Distance to move in pixels</param>
         public void move(Direction dir, int dist)
         {
             this.setMoving(true);
@@ -116,9 +141,13 @@ namespace SunsetHigh
                 this.setX(this.getX() - dist);
         }
         
-        /*
-         * Handles moving diagonally
-         */
+        /// <summary>
+        /// Moves the Character in two directions (for diagonal movement)
+        /// </summary>
+        /// <param name="dir1">First direction to move</param>
+        /// <param name="dir2">Second direction to move</param>
+        /// <param name="dist1">Distance to move in first direction</param>
+        /// <param name="dist2">Distance to move in second direction</param>
         public void move2D(Direction dir1, Direction dir2, int dist1, int dist2)
         {
             this.setMoving(true);
@@ -128,30 +157,45 @@ namespace SunsetHigh
             else this.setDirection(dir2);
         }
 
-        /*
-         * Checks if this character is within a given range with another sprite to perform any action
-         * The range is another rectangle a given number of pixels thicker than the sprite's drawing rectangle
-         * e.g. talk to other character, pickup item, collision detection
-         */
+        /// <summary>
+        /// Checks in this Character is within a given range with another Sprite to perform any action.
+        /// The range is another rectangle a given number of pixels thicker than the sprite's drawing rectangle.
+        /// E.g. talk to another character, pickup an item, collision detection
+        /// </summary>
+        /// <param name="other">The other Sprite to range check against</param>
+        /// <param name="offset">The pixels offset for the range check</param>
+        /// <returns>True if the Character is in range, false if not</returns>
         public bool inRange(Sprite other, int offset)
         {
-            return (((this.getX() < other.getX() && this.getX() + this.getWidth() + offset > other.getX() - offset) ||
-                    (this.getX() > other.getX() && this.getX() - offset < other.getX() + other.getWidth() + offset)) &&
-                   ((this.getY() < other.getY() && this.getY() + this.getHeight() + offset > other.getY() - offset) ||
-                    (this.getY() > other.getY() && this.getY() - offset < other.getY() + other.getHeight() + offset)));
+            return (((this.getX() <= other.getX() && this.getX() + this.getWidth() + offset >= other.getX() - offset) ||
+                    (this.getX() >= other.getX() && this.getX() - offset <= other.getX() + other.getWidth() + offset)) &&
+                   ((this.getY() <= other.getY() && this.getY() + this.getHeight() + offset >= other.getY() - offset) ||
+                    (this.getY() >= other.getY() && this.getY() - offset <= other.getY() + other.getHeight() + offset)));
         }
+        /// <summary>
+        /// Checks if this Character is in a given range to perform an action such as talking or pickpocketing
+        /// </summary>
+        /// <param name="other">The other Sprite to range check against</param>
+        /// <returns>True if the Character is in range, false if not</returns>
         public bool inRangeAction(Sprite other)
         {
             return inRange(other, ACTION_OFFSET);
         }
+        /// <summary>
+        /// Checks if this Character is in a given range for collisions
+        /// </summary>
+        /// <param name="other">The other Sprite to range check against</param>
+        /// <returns>True if the Character is in range, false if not</returns>
         public bool inRangeCollide(Sprite other)
         {
             return inRange(other, COLLISION_OFFSET);
         }
 
-        /*
-         * Checks if this character is facing another character
-         */
+        /// <summary>
+        /// Checks if this Character is facing another Character; used as a check for talking action
+        /// </summary>
+        /// <param name="other">The other Character</param>
+        /// <returns>True if this character is facing the other, false if not</returns>
         public bool facing(Character other)
         {
             return ((this.getDirection().Equals(Direction.North) && this.getY() > other.getY()) ||
@@ -159,16 +203,22 @@ namespace SunsetHigh
                    (this.getDirection().Equals(Direction.East) && this.getX() < other.getX()) ||
                    (this.getDirection().Equals(Direction.West) && this.getX() > other.getX()));
         }
-        /*
-         * Checks if both characters are facing each other
-         */
+
+        /// <summary>
+        /// Checks if both Characters are facing each other
+        /// </summary>
+        /// <param name="other">The other Character</param>
+        /// <returns>True if both characters are facing each other, false if not</returns>
         public bool bothFacing(Character other)
         {
             return this.facing(other) && other.facing(this);
         }
-        /*
-         * Used for getting NPCs to face a character
-         */
+
+        /// <summary>
+        /// Returns the reverse direction of this Character's current direction; used for making
+        /// Characters face each other when talking
+        /// </summary>
+        /// <returns>The opposite direction</returns>
         public Direction getOppositeDirection()
         {
             Direction mDir = this.getDirection();
@@ -178,20 +228,20 @@ namespace SunsetHigh
             return (Direction)(((int)mDir + 2) % 4);
         }
 
-        /*
-         * Adds the given pickup to this Character's inventory
-         */
+        /// <summary>
+        /// Adds the given Pickup to this Character's inventory (and the Pickup disappears)
+        /// </summary>
+        /// <param name="p">The Pickup to add</param>
         public void pickup(Pickup p)
         {
             this.getInventory().addItem(p.getItemType());
             p.banish();
         }
 
-        /*
-         * Updates which frame on sprite sheet to draw
-         * Adapted from MSDN XNA tutorials
-         * Override this in child classes as necessary
-         */
+        /// <summary>
+        /// Updates the animation, only if the Character is moving
+        /// </summary>
+        /// <param name="elapsed">Time (in seconds) that has elasped since last update</param>
         public override void update(float elapsed)
         {
             if (this.isMoving()) //only update walking animation if moving

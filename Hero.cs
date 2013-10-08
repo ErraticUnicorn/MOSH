@@ -9,13 +9,20 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace SunsetHigh
 {
+    /// <summary>
+    /// Hero extends from Character, and is used for the main character
+    /// </summary>
     public class Hero : Character
     {
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
+        private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
         private SoundEffect gotItemSound;
-        private PickpocketSystem ppSystem;
 
+        /// <summary>
+        /// Initializes a Hero at the origin which will match the dimensions
+        /// of its texture (when loaded)
+        /// </summary>
         public Hero()
             : base()
 
@@ -24,6 +31,12 @@ namespace SunsetHigh
             ppActive = false;
         }
 
+        /// <summary>
+        /// Initalizes a Hero at the given positon which will match the dimensions
+        /// of its texture (when loaded)
+        /// </summary>
+        /// <param name="x">X coordinate of the top-left corner</param>
+        /// <param name="y">Y coordinate of the top-left corner</param>
         public Hero(int x, int y)
             : base(x, y)
         {
@@ -31,6 +44,13 @@ namespace SunsetHigh
             ppActive = false;
         }
 
+        /// <summary>
+        /// Initializes a Hero at the given position with the given dimensions
+        /// </summary>
+        /// <param name="x">X coordinate of the top-left corner</param>
+        /// <param name="y">Y coordinate of the top-left corner</param>
+        /// <param name="w">Width in pixels</param>
+        /// <param name="h">Height in pixels</param>
         public Hero(int x, int y, int w, int h)
             : base(x, y, w, h)
         {
@@ -72,21 +92,24 @@ namespace SunsetHigh
             return ppActive;
         }
 
-        /*
-         * Triggered by a keystroke when close to Character c
-         */
-        public void startPickpocket(Character c) //need content manager?
+        /// <summary>
+        /// Begins the pickpocketing minigame with the given character as the target
+        /// </summary>
+        /// <param name="character">The targeted Character</param>
+        public void startPickpocket(Character character) //need content manager?
         {
             if (!ppActive)
             {
                 ppActive = true;
-                ppTarget = c;   //assigns pointer
+                ppTarget = character;   //assigns pointer
             }
         }
 
-        /*
-         * Triggered by a keystroke to stop the pickpocket needle
-         */
+        /// <summary>
+        /// Stops the pickpocketing minigame and checks for success. If successful,
+        /// an Item is returned; if not, Item.Nothing is returned
+        /// </summary>
+        /// <returns>An Item, or Item.Nothing if the pickpocket fails</returns>
         public Item stopPickpocket()
         {
             if (ppActive)
@@ -133,8 +156,9 @@ namespace SunsetHigh
             private Sprite positiveBar;
             private Sprite arrow;
             private int displacement;
-            private float speed;
-            private bool goingRight;
+            //private float speed;
+            //private bool goingRight;
+            private float speedFactor;
             private float arrowTimer;
 
             public PickpocketSystem() : base()
@@ -143,8 +167,9 @@ namespace SunsetHigh
                 positiveBar = new Sprite(0, 0, (int)(NEGATIVE_WIDTH * POSITIVE_WIDTH_FACTOR), BAR_HEIGHT);
                 arrow = new Sprite(0, 0, ARROW_WIDTH, ARROW_HEIGHT);
                 displacement = 0;
-                speed = DEFAULT_SPEED;
-                goingRight = true;
+                //speed = DEFAULT_SPEED;
+                //goingRight = true;
+                speedFactor = DEFAULT_SPEED_FACTOR;
             }
 
             public void loadContent(ContentManager content)
@@ -188,8 +213,8 @@ namespace SunsetHigh
                 //moves sinusoidally
                 arrowTimer += elapsed;
                 if (arrowTimer > Math.PI * 2)
-                    arrowTimer -= (float)(Math.PI * 2);
-                displacement = (int)(NEGATIVE_WIDTH / 2 * Math.Sin(arrowTimer * DEFAULT_SPEED_FACTOR));
+                    arrowTimer -= (float)(Math.PI * 2);     //keep timer between 0 and 2*PI
+                displacement = (int)(NEGATIVE_WIDTH / 2 * Math.Sin(arrowTimer * speedFactor));
                 arrow.setX(arrow.getX() + displacement);
             }
 

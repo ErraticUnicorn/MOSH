@@ -19,11 +19,11 @@ namespace SunsetHigh
     {
 
         Hero h1;
+        List<Character> npcs;
         Character c1;
         Pickup p1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        KeyboardState priorKeyboardState;
 
         public Game1()
             : base()
@@ -45,6 +45,8 @@ namespace SunsetHigh
             h1 = new Hero(100, 100, 32, 32);
             c1 = new Character(300, 200, 32, 32);
             c1.getInventory().addItem(Item.LunchMoney, 100);
+            npcs = new List<Character>();
+            npcs.Add(c1);
             p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
 
             base.Initialize();
@@ -71,7 +73,7 @@ namespace SunsetHigh
             p1.loadImage(this.Content, "Poke_Ball", 1, 1, 100.0f); //doesn't animate
             p1.loadContent(this.Content);
 
-            //BGMusic.playSong("Stickerbrush_Symphony.m4a");
+            //BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace SunsetHigh
         {
             // TODO: Unload any non ContentManager content here
 
-            //BGMusic.dispose();
+            BGMusic.dispose();
         }
 
         /// <summary>
@@ -95,30 +97,48 @@ namespace SunsetHigh
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            arrowKeyUpdate();       //controls main character
+            KeyboardManager.update();
+            KeyboardManager.handleCharacterMovement(h1);
+            KeyboardManager.handlePickpocketing(h1, npcs);
 
-            //debug debug debug
-            if (Keyboard.GetState().IsKeyDown(Keys.P) && !priorKeyboardState.IsKeyDown(Keys.P))
+            /*
+            if (KeyboardManager.isKeyPressed(Keys.S))
             {
-                if (!h1.isPickpocketing() && h1.inRangeAction(c1))
-                {
-                    h1.startPickpocket(c1);
-                }
-                else if (h1.isPickpocketing())
-                {
-                    Item item = h1.stopPickpocket();
-                    System.Diagnostics.Debug.WriteLine("Stole " + Enum.GetName(typeof(Item), item));
-                }
+                SaveGameData data = new SaveGameData();
+                data.fileName = "savegame.sav";
+                data.heroInventory = h1.getInventory().toIntArray();
+                data.heroName = "JAY";
+                data.heroX = h1.getX();
+                data.heroY = h1.getY();
+                data.heroDirection = h1.getDirection();
+                data.inputKeys = KeyboardManager.getKeyControls();
+                data.questTriggers = Quest.getTriggers();
+                SaveManager.saveGame("savegame.sav", data);
             }
+
+            if (KeyboardManager.isKeyPressed(Keys.D))
+            {
+                SaveGameData data = SaveManager.loadGame("savegame.sav");
+                h1.getInventory().loadIntArray(data.heroInventory);
+                h1.setName(data.heroName);
+                h1.setX(data.heroX);
+                h1.setY(data.heroY);
+                h1.setDirection(data.heroDirection);
+                KeyboardManager.loadKeyControls(data.inputKeys);
+                Quest.loadTriggers(data.questTriggers);
+            }
+
+            if (KeyboardManager.isKeyPressed(Keys.F))
+            {
+                SaveManager.loadAllGames();
+            }
+            */
 
             if (h1.inRangeAction(p1))
             {
                 h1.pickup(p1);
                 System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
             }
-
-            priorKeyboardState = Keyboard.GetState();
-            //end debug
 
             // TODO: Add your update logic here
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -146,47 +166,6 @@ namespace SunsetHigh
 
             spriteBatch.End();
             base.Draw(gameTime);
-        }
-
-        private void arrowKeyUpdate()
-        {
-            int dirFlags = 0;
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                dirFlags |= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                dirFlags |= 2;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                dirFlags |= 4;
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                dirFlags |= 8;
-            Direction xaxis = Direction.Undefined;
-            Direction yaxis = Direction.Undefined;
-            if ((dirFlags & 1) > 0 ^ (dirFlags & 2) > 0)
-            {
-                if ((dirFlags & 1) > 0) yaxis = Direction.North;
-                else yaxis = Direction.South;
-            }
-            if ((dirFlags & 4) > 0 ^ (dirFlags & 8) > 0)
-            {
-                if ((dirFlags & 4) > 0) xaxis = Direction.East;
-                else xaxis = Direction.West;
-            }
-            if (!xaxis.Equals(Direction.Undefined) && !yaxis.Equals(Direction.Undefined))
-            {
-                h1.move2D(xaxis, yaxis, 3, 4);
-            }
-            else if (!xaxis.Equals(Direction.Undefined))
-            {
-                h1.move(xaxis, 5);
-            }
-            else if (!yaxis.Equals(Direction.Undefined))
-            {
-                h1.move(yaxis, 5);
-            }
-            else
-            {
-                h1.setMoving(false);
-            }
         }
     }
 }
