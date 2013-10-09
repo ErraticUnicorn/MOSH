@@ -9,9 +9,7 @@ Some pointers on file organization in this repo:
 
 1) Source files go in the top directory.
 
-2) All "raw" or unconverted content (.png, .jpg, .wav) go into the "RawContent" folder.
-
-3) All converted content (.xnb), compressed audio files (.mp3, .wma, .m4a) and game data files (.xml) go into the "Content" folder.
+2) All content (.png, .wav), compressed audio files (.mp3, .wma, .m4a) and game data files (.xml, .tmx) go into the "Content" folder.
 
 4) All outside libraries and utilities (e.g. NAudio.dll) go into the "Resources" folder.
 
