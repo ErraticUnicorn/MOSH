@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="locker" tilewidth="32" tileheight="32">
-  <image source="../../../GitHub/sunsethigh-sgd/assets/images/locker.png" trans="ffffff" width="318" height="798"/>
+  <image source="locker.png" trans="ffffff" width="318" height="798"/>
  </tileset>
  <tileset firstgid="217" name="Various objects" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Program Files (x86)/Tiled/examples/Various objects.png" trans="ffffff" width="718" height="1214"/>
+  <image source="Various objects.png" trans="ffffff" width="718" height="1214"/>
  </tileset>
  <tileset firstgid="1031" name="School objects" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Program Files (x86)/Tiled/examples/School objects.png" trans="ffffff" width="490" height="898"/>
+  <image source="School objects.png" trans="ffffff" width="490" height="898"/>
  </tileset>
  <tileset firstgid="1451" name="Stairs chalkboard etc" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Program Files (x86)/Tiled/examples/Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
+  <image source="Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
  </tileset>
  <tileset firstgid="1707" name="Weird objects" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Program Files (x86)/Tiled/examples/Weird objects.png" trans="ffffff" width="512" height="512"/>
+  <image source="Weird objects.png" trans="ffffff" width="512" height="512"/>
  </tileset>
  <layer name="Floor" width="100" height="100">
   <data encoding="base64" compression="zlib">
