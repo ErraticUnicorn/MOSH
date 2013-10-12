@@ -100,6 +100,7 @@ namespace SunsetHigh
             KeyboardManager.update();
             KeyboardManager.handleCharacterMovement(h1);
             KeyboardManager.handlePickpocketing(h1, npcs);
+            KeyboardManager.shootProjectile(h1);
 
             /*
             if (KeyboardManager.isKeyPressed(Keys.S))

@@ -183,6 +183,13 @@ namespace SunsetHigh
             }
         }
 
+        public static void shootProjectile(Hero hero)
+        {
+            if(KeyboardManager.isKeyPressed(Keys.E)){
+            hero.shoot();
+            }
+        }
+
         /// <summary>
         /// Handles the Hero's pickpocketing ability; call this method in the Game's update
         /// cycle (AFTER calling KeyboardManager.update())
