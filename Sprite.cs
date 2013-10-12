@@ -98,11 +98,10 @@ namespace SunsetHigh
         public void setWidth(int width) { this.spriteWidth = width; }
         public void setHeight(int height) { this.spriteHeight = height; }
         public void setVisible(bool visible) { this.visible = visible; }
-        protected void setFrameRow(int row) { this.frameRow = row; }
-        protected void setFrameColumn(int col) { this.frameColumn = col; }
-        protected void setImage(Texture2D image) { this.image = image; }
-        protected void setAnimationTime(float time) { this.animationTime = time; }
-        protected void matchToTextureDimensions() 
+        public void setFrameRow(int row) { this.frameRow = row; }
+        public void setFrameColumn(int col) { this.frameColumn = col; }
+        public void setAnimationTime(float time) { this.animationTime = time; }
+        public void matchToTextureDimensions() 
         { 
             this.useTextureDimensions = true;
             if (this.image != null)
@@ -185,6 +184,20 @@ namespace SunsetHigh
         }
 
         /// <summary>
+        /// Sets a static 2D texture that has already been loaded
+        /// </summary>
+        public void setImage(Texture2D image)
+        {
+            this.image = image;
+            this.frameColumn = 0;
+            this.frameRow = 0;
+            this.animationTime = 100.0f;
+            this.imageColumns = 1;
+            this.imageRows = 1;
+            this.matchToTextureDimensions();
+        }
+
+        /// <summary>
         /// Loads all content necessary for this Sprite. Call this method on every Sprite
         /// in the Game's load cycle. Override this method when writing the classes that must
         /// load specific sprites and sound effects.
@@ -208,7 +221,7 @@ namespace SunsetHigh
             {
                 this.frameColumn++;
                 this.frameColumn = this.frameColumn % this.imageColumns;
-                this.totalElapsed %= this.animationTime;
+                this.totalElapsed -= this.animationTime;
             }
         }
 

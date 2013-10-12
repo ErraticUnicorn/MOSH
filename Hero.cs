@@ -18,6 +18,8 @@ namespace SunsetHigh
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
         private SoundEffect gotItemSound;
+        private List<Projectile> projectiles;
+        private Texture2D paperball;
 
         /// <summary>
         /// Initializes a Hero at the origin which will match the dimensions
@@ -29,6 +31,7 @@ namespace SunsetHigh
         {
             ppSystem = new PickpocketSystem();
             ppActive = false;
+            projectiles = new List<Projectile>();
         }
 
         /// <summary>
@@ -42,6 +45,7 @@ namespace SunsetHigh
         {
             ppSystem = new PickpocketSystem();
             ppActive = false;
+            projectiles = new List<Projectile>();
         }
 
         /// <summary>
@@ -56,6 +60,7 @@ namespace SunsetHigh
         {
             ppSystem = new PickpocketSystem();
             ppActive = false;
+            projectiles = new List<Projectile>();
         }
 
         public void converse(Character c)
@@ -67,6 +72,7 @@ namespace SunsetHigh
             base.loadContent(content);
             ppSystem.loadContent(content);
             this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
+            this.paperball = content.Load<Texture2D>("projectile");
         }
 
         public override void draw(SpriteBatch sb)
@@ -76,6 +82,10 @@ namespace SunsetHigh
             {
                 ppSystem.draw(sb);
             }
+            foreach(Projectile p in projectiles)
+            {
+                p.draw(sb);
+            }
         }
 
         public override void update(float elapsed) 
@@ -84,6 +94,10 @@ namespace SunsetHigh
             if (ppActive)
             {
                 ppSystem.update(this, elapsed);
+            }
+            foreach (Projectile p in projectiles)
+            {
+                p.update(elapsed);
             }
         }
 
@@ -140,6 +154,29 @@ namespace SunsetHigh
             return Item.Nothing;
         }
 
+        public void shoot()
+        {
+            int x = 0;
+            int y = 0;
+            if(this.getDirection().Equals(Direction.North)){
+                y = -10;
+            }
+            if(this.getDirection().Equals(Direction.South)){
+                y = 10;
+            }
+            if(this.getDirection().Equals(Direction.East)){
+                x = 10;
+            }
+            if(this.getDirection().Equals(Direction.West)){
+                x = -10;
+            }
+            Projectile bullet = new Projectile(this.getX() + x, this.getY() + y);
+            bullet.setImage(paperball);
+            bullet.setSpeed(5);
+            bullet.setDirection(this.getDirection());
+            projectiles.Add(bullet);
+            
+        }
         private class PickpocketSystem  //A container for three sprites
         {
             private const int NEGATIVE_WIDTH = 100;
