@@ -18,8 +18,9 @@ namespace SunsetHigh
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
         private SoundEffect gotItemSound;
-        private List<Projectile> projectiles;
-        private Texture2D paperball;
+        private List<Projectile> projectiles; //List of all projectiles
+        private Texture2D paperball; //paperball texture
+        private bool canShoot; //Boolean for tinkering with parameters of how often a player can shoot
 
         /// <summary>
         /// Initializes a Hero at the origin which will match the dimensions
@@ -32,6 +33,7 @@ namespace SunsetHigh
             ppSystem = new PickpocketSystem();
             ppActive = false;
             projectiles = new List<Projectile>();
+            canShoot = true;
         }
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace SunsetHigh
             ppSystem = new PickpocketSystem();
             ppActive = false;
             projectiles = new List<Projectile>();
+            canShoot = true;
         }
 
         /// <summary>
@@ -61,6 +64,7 @@ namespace SunsetHigh
             ppSystem = new PickpocketSystem();
             ppActive = false;
             projectiles = new List<Projectile>();
+            canShoot = true;
         }
 
         public void converse(Character c)
@@ -95,9 +99,18 @@ namespace SunsetHigh
             {
                 ppSystem.update(this, elapsed);
             }
+
+            Projectile temp = new Projectile(); //Dummy projectile to figure out most recent projectile fired
             foreach (Projectile p in projectiles)
             {
                 p.update(elapsed);
+                temp = p; //makes temp the last projectile fired
+            }
+
+            if (temp.getX() > this.getX() + 100 || temp.getY() > this.getY() + 100 
+                || temp.getX() < this.getX() - 100 || temp.getY() < this.getY() - 100) //allows for shooting again once a certain range has been met
+            {
+                canShoot = true;
             }
         }
 
@@ -158,24 +171,36 @@ namespace SunsetHigh
         {
             int x = 0;
             int y = 0;
-            if(this.getDirection().Equals(Direction.North)){
-                y = -10;
+            if (canShoot)
+            {
+                if (this.getDirection().Equals(Direction.North))
+                {
+                    y = -10;
+                    canShoot = false;
+                }
+                if (this.getDirection().Equals(Direction.South))
+                {
+                    y = 10;
+                    canShoot = false;
+                }
+                if (this.getDirection().Equals(Direction.East))
+                {
+                    x = 10;
+                    canShoot = false;
+                }
+                if (this.getDirection().Equals(Direction.West))
+                {
+                    x = -10;
+                    canShoot = false;
+                }
+
+                Projectile bullet = new Projectile(this.getX() + x, this.getY() + y);
+                bullet.setImage(paperball);
+                bullet.setSpeed(5);
+                bullet.setDirection(this.getDirection());
+                projectiles.Add(bullet);
             }
-            if(this.getDirection().Equals(Direction.South)){
-                y = 10;
-            }
-            if(this.getDirection().Equals(Direction.East)){
-                x = 10;
-            }
-            if(this.getDirection().Equals(Direction.West)){
-                x = -10;
-            }
-            Projectile bullet = new Projectile(this.getX() + x, this.getY() + y);
-            bullet.setImage(paperball);
-            bullet.setSpeed(5);
-            bullet.setDirection(this.getDirection());
-            projectiles.Add(bullet);
-            
+
         }
         private class PickpocketSystem  //A container for three sprites
         {
