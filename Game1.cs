@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using TiledLib;
 #endregion
 
 namespace SunsetHigh
@@ -24,6 +25,9 @@ namespace SunsetHigh
         Pickup p1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        List<Map> maps;
+        Map map;
 
         public Game1()
             : base()
@@ -60,8 +64,11 @@ namespace SunsetHigh
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             // TODO: use this.Content to load your game content here
+            maps = new List<Map>();
+            maps.Add(Content.Load<Map>("Map"));
+            map = maps[0];
 
             //In the future, all Sprites will call loadContent(this.Content), and child
             //classes will override that method to automatically choose the appropriate 
@@ -161,6 +168,7 @@ namespace SunsetHigh
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
+            map.Draw(spriteBatch);
             c1.draw(spriteBatch);
             h1.draw(spriteBatch);
             p1.draw(spriteBatch);
