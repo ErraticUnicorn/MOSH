@@ -16,10 +16,10 @@
   <image source="Weird objects.png" trans="ffffff" width="512" height="512"/>
  </tileset>
  <tileset firstgid="1963" name="ScreenshotSchool" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Program Files (x86)/Tiled/examples/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
+  <image source="ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
  </tileset>
  <tileset firstgid="2098" name="door" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Program Files (x86)/Tiled/examples/door.png" trans="ffffff" width="318" height="798"/>
+  <image source="door.png" trans="ffffff" width="318" height="798"/>
  </tileset>
  <layer name="Floor" width="100" height="100">
   <data encoding="base64" compression="zlib">
