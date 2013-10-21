@@ -1,0 +1,7 @@
+"HELP!!!" -> ["What's wrong?" -> 2, "You're annoying." -> End]
+
+"My friend Lucas is stuck in the cafeteria and there's a massive food fight going on! Will you go rescue him?" -> ["Sure, I can try!" -> 3, "I'm busy right now." -> 4]
+
+"Rescue or don't rescue, there is no try! Good luck!" -> [Quest #1]
+
+"May you die a thousand frozen deaths. I will find the chosen one yet!" -> [End]
