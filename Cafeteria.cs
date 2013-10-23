@@ -12,6 +12,10 @@ namespace SunsetHigh
     public class Cafeteria : Room
     {
         private Texture2D apple;
+        private Texture2D cow;
+        private Texture2D hamburger;
+        private Texture2D cheese;
+        private int foodType;
         private bool isFoodFight;
         private float FC1timer;
         private float FC2timer;
@@ -29,12 +33,16 @@ namespace SunsetHigh
             FC4timer = 0;
             FC2counter = 0;
             FC4counter = 0;
+            foodType = 0;
         }
 
         public override void loadContent(ContentManager content, string filename)
         {
             base.loadContent(content, filename);
             apple = content.Load<Texture2D>("apple");
+            cow = content.Load<Texture2D>("cattle");
+            hamburger = content.Load<Texture2D>("burger");
+            cheese = content.Load<Texture2D>("cheese");
 
         }
         public override void updateState()
@@ -59,11 +67,21 @@ namespace SunsetHigh
                 FC2timer += elapsed;
                 FC3timer += elapsed;
                 FC4timer += elapsed;
+                
                 if (FC1timer > 1)
                 {
+                    foodType++;
                     FC1timer = 0;
                     Projectile food = new Projectile(5 * 32, 21 * 32, 5, Direction.North);
-                    food.setImage(apple);
+                    
+                    if (foodType % 3 == 0)
+                    {
+                        food.setImage(hamburger);
+                    }
+                    if (foodType % 3 != 0)
+                    {
+                        food.setImage(apple);
+                    }
                     Interactables.Add(food);
 
                 }
@@ -74,7 +92,14 @@ namespace SunsetHigh
                     if (FC2counter >= 0 && FC2counter <= 5)
                     {
                         Projectile food = new Projectile(10 * 32, 0, 3, Direction.South);
-                        food.setImage(apple);
+                        if (foodType % 3 == 0)
+                        {
+                            food.setImage(hamburger);
+                        }
+                        if (foodType % 3 != 0)
+                        {
+                            food.setImage(apple);
+                        }
                         Interactables.Add(food);
                     }
                     if (FC2counter > 7)
@@ -89,7 +114,14 @@ namespace SunsetHigh
                 {
                     FC3timer = 0;
                     Projectile food = new Projectile(15 * 32, 21 * 32, 10, Direction.North);
-                    food.setImage(apple);
+                    if (foodType % 3 == 0)
+                    {
+                        food.setImage(hamburger);
+                    }
+                    if (foodType % 3 != 0)
+                    {
+                        food.setImage(apple);
+                    }
                     Interactables.Add(food);
 
                 }
@@ -100,7 +132,19 @@ namespace SunsetHigh
                     if (FC4counter >= 0 && FC4counter <= 15)
                     {
                         Projectile food = new Projectile(20 * 32, 0, 4, Direction.South);
-                        food.setImage(apple);
+                        if (FC4counter == 13)
+                        {
+                            food.setImage(cow);
+                            food.setXCenter(20*32);
+                        }
+                        else if (foodType % 3 == 0)
+                        {
+                            food.setImage(hamburger);
+                        }
+                        else if (foodType % 3 != 0)
+                        {
+                            food.setImage(apple);
+                        }
                         Interactables.Add(food);
                     }
                     if (FC4counter >= 17)
