@@ -25,7 +25,7 @@ public static class CollisionManager {
     public static MapObject collisionWithObjectAtRelative(Sprite p_sprite, Point p_offset, String p_layer) {
         MapObject l_collidedObject = null;
 
-        foreach (MapObject m in ((MapObjectLayer) WorldManager.m_currentMap.GetLayer(p_layer)).Objects) {
+        foreach (MapObject m in ((MapObjectLayer) WorldManager.m_currentRoom.background.GetLayer(p_layer)).Objects) {
             Rectangle l_spriteBounds = new Rectangle(
                 p_sprite.getX() + p_offset.X,
                 p_sprite.getY() + p_offset.Y,

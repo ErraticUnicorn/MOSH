@@ -49,7 +49,7 @@ namespace SunsetHigh
             npcs = new List<Character>();
             npcs.Add(c1);
             p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
-
+            Quest.setTrigger(QuestID.FoodFight1);
             base.Initialize();
         }
 
@@ -100,11 +100,11 @@ namespace SunsetHigh
                 Exit();
 
             WorldManager.handleWarp(h1);
-
+            
             KeyboardManager.update();
             KeyboardManager.handleCharacterMovement(h1);
             KeyboardManager.handlePickpocketing(h1, npcs);
-            KeyboardManager.shootProjectile(h1);
+            KeyboardManager.handleShooting(h1);
 
             /*
             if (KeyboardManager.isKeyPressed(Keys.S))
@@ -150,7 +150,7 @@ namespace SunsetHigh
             c1.update(elapsed);
             h1.update(elapsed);
             p1.update(elapsed);
-
+            WorldManager.update(elapsed);
             base.Update(gameTime);
         }
 
