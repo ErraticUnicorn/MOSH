@@ -17,18 +17,22 @@ namespace SunsetHigh
     /// </summary>
     public class Sprite
     {
+        //class objects
+        private static Dictionary<string, Texture2D> textureFinder;
+
         //geometry
         private int spriteX, spriteY;               //top-left corner of sprite and collision box
         private int spriteWidth, spriteHeight;      //size of sprite, collision box
         //image properties
         private Texture2D image;                    //the picture or spritesheet to draw
-        private Rectangle sourceRect;               //Source rectangle (if drawing from a texture with a collection of sprites)
+        private Rectangle srcRect;                  //Source rectangle (if drawing from a texture with a collection of sprites)
         private int imageRows, imageColumns;        //rows and columns in spritesheet; (1, 1) for static pictures
         private int frameColumn;                    //the current frame in the sheet we are drawing; 0 for static pictures
         private int frameRow;                       //the current row of the sheet we are drawing; 0 for static pictures
         private float animationTime;                //speed at which to animate sprite; arbitrary time for static pictures
-        private float totalElapsed;                 //personal timer for animation purposes
+        private float frameElapsed;                 //personal timer for animation purposes
         private bool visible;                       //sprite visibility
+        private Color color;                        //Color to add to this sprite (white for default color)
         private bool useTextureDimensions;          //used for matching width and height to texture's dimensions
         
         /// <summary>
@@ -36,12 +40,7 @@ namespace SunsetHigh
         /// of its texture when the texture is loaded
         /// </summary>
         public Sprite()
-        {
-            setX(0); setY(0);
-            setWidth(1); setHeight(1); //a tiny pixel until the image loads
-            useTextureDimensions = true;
-            setVisible(true);
-        }
+            : this(0, 0, 0, 0) {}
 
         /// <summary>
         /// Initializes a Sprite at the given position. It will match the dimensions
@@ -50,34 +49,31 @@ namespace SunsetHigh
         /// <param name="x">X coordinate of top-left corner</param>
         /// <param name="y">Y coordinate of top-left corner</param>
         public Sprite(int x, int y)
-        {
-            setX(x);
-            setY(y);
-            useTextureDimensions = true;
-            setVisible(true);
-        }
+            : this(x, y, 0, 0) { }
 
         /// <summary>
         /// Initializes a Sprite at the given position with the given dimensions
         /// </summary>
         /// <param name="x">X coordinate of top-left corner</param>
         /// <param name="y">Y coordinate of top-left corner</param>
-        /// <param name="width">Width in pixels</param>
-        /// <param name="height">Height in pixels</param>
+        /// <param name="width">Width in pixels; specify 0 to use texture dimensions</param>
+        /// <param name="height">Height in pixels; specify 0 to use texture dimensions</param>
         public Sprite(int x, int y, int width, int height)
         {
             setX(x);
             setY(y);
-            setWidth(width);
-            setHeight(height);
-            useTextureDimensions = false;
+            if (width > 0 && height > 0)
+            {
+                setWidth(width);
+                setHeight(height);
+                useTextureDimensions = false;
+            }
+            else
+                useTextureDimensions = true;
             setVisible(true);
+            setColor(Color.White);
+            setImage(null); //initializes animation variables, but not image (that will come later)
         }
-
-        /// <summary>
-        /// Initializes a Sprite at the given position with the 
-        /// </summary>
-        /// <returns></returns>
 
         public int getX() { return this.spriteX; }
         public int getY() { return this.spriteY; }
@@ -90,6 +86,7 @@ namespace SunsetHigh
         public int getImageColumns() { return this.imageColumns; }
         public float getAnimationTime() { return this.animationTime; }
         public bool isVisible() { return this.visible;  }
+        public Color getColor() { return this.color; }
 
         public void setX(int x) { this.spriteX = x; }
         public void setY(int y) { this.spriteY = y; }
@@ -98,17 +95,73 @@ namespace SunsetHigh
         public void setWidth(int width) { this.spriteWidth = width; }
         public void setHeight(int height) { this.spriteHeight = height; }
         public void setVisible(bool visible) { this.visible = visible; }
-        public void setFrameRow(int row) { this.frameRow = row; }
-        public void setFrameColumn(int col) { this.frameColumn = col; }
-        public void setAnimationTime(float time) { this.animationTime = time; }
-        public void matchToTextureDimensions() 
+        public void setColor(Color color) { this.color = color; }
+        protected void setImageRows(int rows) { this.imageRows = rows; }
+        protected void setImageColumns(int cols) { this.imageColumns = cols; }
+        protected void setFrameRow(int row) { this.frameRow = row; }
+        protected void setFrameColumn(int col) { this.frameColumn = col; }
+        protected void setAnimationTime(float time) { this.animationTime = time; }
+        protected void matchToTextureDimensions() 
         { 
             this.useTextureDimensions = true;
             if (this.image != null)
             {
-                setWidth(image.Width / this.getImageColumns());
-                setHeight(image.Height / this.getImageRows());
+                if (!this.srcRect.IsEmpty)
+                {
+                    setWidth(srcRect.Width / this.getImageColumns());
+                    setHeight(srcRect.Height / this.getImageRows());
+                }
+                else
+                {
+                    setWidth(image.Width / this.getImageColumns());
+                    setHeight(image.Height / this.getImageRows());
+                    srcRect = new Rectangle(0, 0, image.Width, image.Height);   //use whole texture
+                }
             }
+        }
+
+        /// <summary>
+        /// Sets an animating 2D texture that has already been loaded to be used
+        /// to draw this Sprite
+        /// </summary>
+        /// <param name="image">The pre-loaded image</param>
+        /// <param name="numRows">Number of rows in this spritesheet</param>
+        /// <param name="numCols">Number of columns in this spritesheet</param>
+        /// <param name="anTime">Time between frames (in seconds) when animating the sprite</param>
+        public void setImage(Texture2D image, int numRows, int numCols, float anTime)
+        {
+            this.image = image;
+            setFrameRow(0);
+            setFrameColumn(0);
+            setImageRows(numRows);
+            setImageColumns(numCols);
+            setAnimationTime(anTime);
+            //if (this.image != null)
+            //    setSourceRect(0, 0, this.image.Width, this.image.Height);
+            if (this.useTextureDimensions)
+                this.matchToTextureDimensions();
+        }
+
+        /// <summary>
+        /// Sets a static 2D texture that has already been loaded to be used
+        /// to draw this Sprite
+        /// </summary>
+        public void setImage(Texture2D image)
+        {
+            this.setImage(image, 1, 1, 100.0f);
+        }
+
+        /// <summary>
+        /// Sets the source rectangle of a loaded texture for this Sprite (if the particular texture
+        /// is a collection of different sprites).
+        /// </summary>
+        /// <param name="x">X coordinate of top-left corner</param>
+        /// <param name="y">Y coordinate of top-left corner</param>
+        /// <param name="width">Width in pixels</param>
+        /// <param name="height">Height in pixels</param>
+        public void setSourceRect(int x, int y, int width, int height)
+        {
+            this.srcRect = new Rectangle(x, y, width, height);
         }
 
         /// <summary>
@@ -154,23 +207,12 @@ namespace SunsetHigh
         /// <param name="anTime">Time between frames (in seconds) when animating the sprite</param>
         public void loadImage(ContentManager content, string fileName, int numRows, int numCols, float anTime)
         {
-            if (fileName.EndsWith(".xnb"))
-                fileName = fileName.Substring(0, fileName.Length - 4); //.xnb extension is not neccesary
-            try
-            {
-                this.image = content.Load<Texture2D>(fileName);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Load texture failed!\n" + e.StackTrace);
-            }
-            this.frameRow = 0;
-            this.frameColumn = 0;
-            this.imageRows = numRows;
-            this.imageColumns = numCols;
-            this.animationTime = anTime;
-            if (this.useTextureDimensions)
-                matchToTextureDimensions();
+            if (fileName.EndsWith(".xnb") || fileName.EndsWith(".png"))
+                fileName = fileName.Substring(0, fileName.Length - 4); //file extension is not necessary
+            
+            Texture2D nImage = content.Load<Texture2D>(fileName);  //NOTE: throws exception here if file cannot be found in "Content" directory
+                                                                   //be sure "Copy to output directory" settings are "Copy if newer"
+            this.setImage(nImage, numRows, numCols, anTime);
         }
 
         /// <summary>
@@ -181,20 +223,6 @@ namespace SunsetHigh
         public void loadImage(ContentManager content, string fileName)
         {
             this.loadImage(content, fileName, 1, 1, 100.0f);
-        }
-
-        /// <summary>
-        /// Sets a static 2D texture that has already been loaded
-        /// </summary>
-        public void setImage(Texture2D image)
-        {
-            this.image = image;
-            this.frameColumn = 0;
-            this.frameRow = 0;
-            this.animationTime = 100.0f;
-            this.imageColumns = 1;
-            this.imageRows = 1;
-            this.matchToTextureDimensions();
         }
 
         /// <summary>
@@ -216,12 +244,12 @@ namespace SunsetHigh
         /// <param name="elapsed">Time (in seconds) that has elapsed since the last update</param>
         public virtual void update(float elapsed)
         {
-            this.totalElapsed += elapsed;
-            if (this.totalElapsed > this.animationTime)
+            this.frameElapsed += elapsed;
+            if (this.frameElapsed > this.animationTime)
             {
                 this.frameColumn++;
                 this.frameColumn = this.frameColumn % this.imageColumns;
-                this.totalElapsed -= this.animationTime;
+                this.frameElapsed -= this.animationTime;
             }
         }
 
@@ -233,17 +261,77 @@ namespace SunsetHigh
         /// <param name="sb">SpriteBatch passed in through Game</param>
         public virtual void draw(SpriteBatch sb)
         {
-            if (image == null || !this.isVisible())
+            if (this.getImage() == null || !this.isVisible())
+            {
+                //System.Diagnostics.Debug.WriteLine(this.ToString() + " is not drawing.");
                 return;
+            }
 
-            int frameWidth = this.getImage().Width / this.getImageColumns();
-            int frameHeight = this.getImage().Height / this.getImageRows();
-            Rectangle sourceRect = new Rectangle(frameWidth * this.frameColumn,
-                frameHeight * this.frameRow, frameWidth, frameHeight);
+            Rectangle sourceRect;
+            if (!this.srcRect.IsEmpty)
+            {
+                int frameWidth = this.srcRect.Width / this.getImageColumns();
+                int frameHeight = this.srcRect.Height / this.getImageRows();
+                sourceRect = new Rectangle(this.srcRect.X + frameWidth * this.frameColumn,
+                    this.srcRect.Y + frameHeight * this.frameRow, 
+                    frameWidth, frameHeight);
+            }
+            else
+            {
+                int frameWidth = this.getImage().Width / this.getImageColumns();
+                int frameHeight = this.getImage().Height / this.getImageRows();
+                sourceRect = new Rectangle(frameWidth * this.frameColumn,
+                    frameHeight * this.frameRow, frameWidth, frameHeight);
+            }
             Rectangle mapPosRect = new Rectangle(this.getX(), this.getY(),
                 this.getWidth(), this.getHeight());
-            sb.Draw(this.getImage(), mapPosRect, sourceRect, Color.White);
+            sb.Draw(this.getImage(), mapPosRect, sourceRect, this.color);
             //more features available in sb.Draw(...);
+        }
+
+        /// <summary>
+        /// Loads a 2D texture in the "Content" directory for use by multiple 
+        /// Sprite objects. Call this method in the loading content cycle, and when
+        /// instantiating new objects in-game, call getCommonImage()
+        /// </summary>
+        /// <param name="content">The content manager</param>
+        /// <param name="imageFileName">The file name of the image, without the extension</param>
+        public static void loadCommonImage(ContentManager content, string imageFileName)
+        {
+            nullCheck();
+            if (textureFinder.ContainsKey(imageFileName))
+                return;     //image already exists
+            Texture2D nImage = content.Load<Texture2D>(imageFileName);
+            textureFinder[imageFileName] = nImage;
+        }
+
+        /// <summary>
+        /// Clears memory of all loaded textures. Be sure to call unload on the ContentManager as well.
+        /// </summary>
+        public static void unloadCommonImages()
+        {
+            nullCheck();
+            textureFinder.Clear();
+        }
+
+        /// <summary>
+        /// Retrieves a pre-loaded 2D texture to associate with an instantiated
+        /// Sprite object. Good for multiple objects using the same texture
+        /// </summary>
+        /// <param name="imageFileName">The file name of the image that was previously loaded</param>
+        /// <returns>The texture for the appropriate file; null if it was not loaded earlier</returns>
+        public static Texture2D getCommonImage(string imageFileName)
+        {
+            nullCheck();
+            if (!textureFinder.ContainsKey(imageFileName))
+                return null;
+            return textureFinder[imageFileName];
+        }
+
+        private static void nullCheck()
+        {
+            if (textureFinder == null)
+                textureFinder = new Dictionary<string, Texture2D>();
         }
     }
 }

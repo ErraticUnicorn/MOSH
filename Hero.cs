@@ -14,12 +14,16 @@ namespace SunsetHigh
     /// </summary>
     public class Hero : Character
     {
+        private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
+        private const string PROJECTILE_IMAGE_NAME = "projectile";
+
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
         private SoundEffect gotItemSound;
         private List<Projectile> projectiles; //List of all projectiles
-        private Texture2D paperball; //paperball texture
+        //private Texture2D paperball; //paperball texture
+        private float shootTimer;   // For recharge time
         private bool canShoot; //Boolean for tinkering with parameters of how often a player can shoot
 
         /// <summary>
@@ -27,14 +31,7 @@ namespace SunsetHigh
         /// of its texture (when loaded)
         /// </summary>
         public Hero()
-            : base()
-
-        {
-            ppSystem = new PickpocketSystem();
-            ppActive = false;
-            projectiles = new List<Projectile>();
-            canShoot = true;
-        }
+            : this(0, 0, 0, 0) { }
 
         /// <summary>
         /// Initalizes a Hero at the given positon which will match the dimensions
@@ -43,13 +40,7 @@ namespace SunsetHigh
         /// <param name="x">X coordinate of the top-left corner</param>
         /// <param name="y">Y coordinate of the top-left corner</param>
         public Hero(int x, int y)
-            : base(x, y)
-        {
-            ppSystem = new PickpocketSystem();
-            ppActive = false;
-            projectiles = new List<Projectile>();
-            canShoot = true;
-        }
+            : this(x, y, 0, 0) { }
 
         /// <summary>
         /// Initializes a Hero at the given position with the given dimensions
@@ -65,6 +56,7 @@ namespace SunsetHigh
             ppActive = false;
             projectiles = new List<Projectile>();
             canShoot = true;
+            shootTimer = 0.0f;
         }
 
         public void converse(Character c)
@@ -76,7 +68,7 @@ namespace SunsetHigh
             base.loadContent(content);
             ppSystem.loadContent(content);
             this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
-            this.paperball = content.Load<Texture2D>("projectile");
+            Sprite.loadCommonImage(content, PROJECTILE_IMAGE_NAME);
         }
 
         public override void draw(SpriteBatch sb)
@@ -100,17 +92,13 @@ namespace SunsetHigh
                 ppSystem.update(this, elapsed);
             }
 
-            Projectile temp = new Projectile(); //Dummy projectile to figure out most recent projectile fired
+            shootTimer += elapsed;
+            if (shootTimer >= RECHARGE_TIME)
+                canShoot = true;
+
             foreach (Projectile p in projectiles)
             {
-                p.update(elapsed);
-                temp = p; //makes temp the last projectile fired
-            }
-
-            if (temp.getX() > this.getX() + 100 || temp.getY() > this.getY() + 100 
-                || temp.getX() < this.getX() - 100 || temp.getY() < this.getY() - 100) //allows for shooting again once a certain range has been met
-            {
-                canShoot = true;
+                p.update(elapsed);  //TODO: remove if off the screen
             }
         }
 
@@ -127,6 +115,7 @@ namespace SunsetHigh
         {
             if (!ppActive)
             {
+                ppSystem.randomize();
                 ppActive = true;
                 ppTarget = character;   //assigns pointer
             }
@@ -167,52 +156,45 @@ namespace SunsetHigh
             return Item.Nothing;
         }
 
+        /// <summary>
+        /// Causes the Hero to create a projectile and fire it in the direction
+        /// he is facing; Hero is then responsible for updating and drawing this projectile
+        /// </summary>
         public void shoot()
         {
-            int x = 0;
-            int y = 0;
             if (canShoot)
             {
+                int x = 0;
+                int y = 0;
                 if (this.getDirection().Equals(Direction.North))
-                {
-                    y = -10;
-                    canShoot = false;
-                }
+                    y = -this.getHeight() / 2;
                 if (this.getDirection().Equals(Direction.South))
-                {
-                    y = 10;
-                    canShoot = false;
-                }
+                    y = this.getHeight() / 2;
                 if (this.getDirection().Equals(Direction.East))
-                {
-                    x = 10;
-                    canShoot = false;
-                }
+                    x = this.getWidth() / 2;
                 if (this.getDirection().Equals(Direction.West))
-                {
-                    x = -10;
-                    canShoot = false;
-                }
+                    x = -this.getWidth() / 2;
 
-                Projectile bullet = new Projectile(this.getX() + x, this.getY() + y);
-                bullet.setImage(paperball);
-                bullet.setSpeed(5);
-                bullet.setDirection(this.getDirection());
+                Projectile bullet = new Projectile(this.getX() + x, this.getY() + y, 10, this.getDirection());
+                bullet.setImage(Sprite.getCommonImage(PROJECTILE_IMAGE_NAME));
                 projectiles.Add(bullet);
+                canShoot = false;
+                shootTimer = 0.0f;
             }
-
         }
+
         private class PickpocketSystem  //A container for three sprites
         {
             private const int NEGATIVE_WIDTH = 100;
-            private const float POSITIVE_WIDTH_FACTOR = 0.25f;
+            private const float DEFAULT_POSITIVE_WIDTH_FACTOR = 0.25f; 
             private const int BAR_HEIGHT = 20;
             private const int ARROW_WIDTH = 15;
             private const int ARROW_HEIGHT = 15;
             private const int ARROW_Y_OFFSET = -40;
             private const int BAR_Y_OFFSET = -27;
             private const float DEFAULT_SPEED = 31.0f;  //for linear
-            private const float DEFAULT_SPEED_FACTOR = 3.0f; //for sinusoidal
+            private const float DEFAULT_SPEED_FACTOR = 2.5f; //for sinusoidal
+            private const float SPEED_FACTOR_RANGE = 3.5f;
 
             private Sprite negativeBar;
             private Sprite positiveBar;
@@ -222,16 +204,19 @@ namespace SunsetHigh
             //private bool goingRight;
             private float speedFactor;
             private float arrowTimer;
+            private float randomOffset;
 
-            public PickpocketSystem() : base()
+            public PickpocketSystem()
             {
                 negativeBar = new Sprite(0, 0, NEGATIVE_WIDTH, BAR_HEIGHT);
-                positiveBar = new Sprite(0, 0, (int)(NEGATIVE_WIDTH * POSITIVE_WIDTH_FACTOR), BAR_HEIGHT);
+                positiveBar = new Sprite(0, 0, (int)(NEGATIVE_WIDTH * DEFAULT_POSITIVE_WIDTH_FACTOR), BAR_HEIGHT);
                 arrow = new Sprite(0, 0, ARROW_WIDTH, ARROW_HEIGHT);
                 displacement = 0;
                 //speed = DEFAULT_SPEED;
                 //goingRight = true;
                 speedFactor = DEFAULT_SPEED_FACTOR;
+                randomOffset = 0;
+                arrowTimer = 0;
             }
 
             public void loadContent(ContentManager content)
@@ -274,9 +259,9 @@ namespace SunsetHigh
 
                 //moves sinusoidally
                 arrowTimer += elapsed;
-                if (arrowTimer > Math.PI * 2)
-                    arrowTimer -= (float)(Math.PI * 2);     //keep timer between 0 and 2*PI
-                displacement = (int)(NEGATIVE_WIDTH / 2 * Math.Sin(arrowTimer * speedFactor));
+                //if (arrowTimer > Math.PI * 2)
+                //    arrowTimer -= (float)(Math.PI * 2);     //keep timer between 0 and 2*PI
+                displacement = (int)(NEGATIVE_WIDTH / 2 * Math.Sin(arrowTimer * speedFactor + randomOffset));
                 arrow.setX(arrow.getX() + displacement);
             }
 
@@ -287,6 +272,30 @@ namespace SunsetHigh
                 arrow.draw(sb);
             }
 
+            /// <summary>
+            /// Randomizes the speed and starting position of the arrow (to keep the game unpredictable)
+            /// </summary>
+            public void randomize()
+            {
+                Random rand = new Random();
+                randomOffset = (float)(rand.NextDouble() * (Math.PI * 2));
+                speedFactor = (float)(DEFAULT_SPEED_FACTOR + (rand.NextDouble() * SPEED_FACTOR_RANGE));
+                arrowTimer = 0.0f;
+            }
+
+            /// <summary>
+            /// Sets bar width in terms of "difficulty"
+            /// </summary>
+            /// <param name="difficulty">0.0 to 1.0, 0.0 for impossible, 1.0 for always win</param>
+            public void setBarDifficulty(float difficulty)
+            {
+                this.positiveBar.setWidth((int)(negativeBar.getWidth() * difficulty));
+            }
+
+            /// <summary>
+            /// Checks if the arrow is within the positive region (i.e. if pickpocket is successful
+            /// </summary>
+            /// <returns>True if pickpocket was successful, false otherwise</returns>
             public bool success()
             {
                 return arrow.getXCenter() > positiveBar.getX() && arrow.getXCenter() < positiveBar.getX() + positiveBar.getWidth();

@@ -16,6 +16,7 @@ namespace SunsetHigh
         MoveSouth,
         MoveWest,
         Pickpocket,
+        Shoot,
         //others
     }
 
@@ -124,6 +125,7 @@ namespace SunsetHigh
             keyTypes[(int)KeyInputType.MoveSouth] = Keys.Down;
             keyTypes[(int)KeyInputType.MoveWest] = Keys.Left;
             keyTypes[(int)KeyInputType.Pickpocket] = Keys.P;
+            keyTypes[(int)KeyInputType.Shoot] = Keys.O;
         }
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace SunsetHigh
         /// Handles Character movement in 8 directions; call this method in the Game's update
         /// cycle (AFTER calling KeyboardManager.update())
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character to control (presumably main character)</param>
         public static void handleCharacterMovement(Character character)
         {
             nullCheck();
@@ -183,10 +185,16 @@ namespace SunsetHigh
             }
         }
 
-        public static void shootProjectile(Hero hero)
+        /// <summary>
+        /// Handles Hero's "weapon" ability; call this method in the Game's update cycle (AFTER
+        /// calling KeyboardManager.update())
+        /// </summary>
+        /// <param name="character">The main character</param>
+        public static void handleShooting(Hero hero)
         {
-            if(KeyboardManager.isKeyPressed(Keys.E)){
-            hero.shoot();
+            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Shoot]))
+            {
+                hero.shoot();
             }
         }
 
