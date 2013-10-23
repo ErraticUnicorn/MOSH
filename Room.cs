@@ -37,6 +37,10 @@ namespace SunsetHigh
             {
                 a.update(elapsed);
             }
+            foreach (Character c in CharList)
+            {
+                c.update(elapsed);
+            }
         }
 
         public virtual void draw(SpriteBatch sb)
@@ -44,6 +48,10 @@ namespace SunsetHigh
             foreach (Sprite a in Interactables)
             {
                 a.draw(sb);
+            }
+            foreach (Character c in CharList)
+            {
+                c.draw(sb);
             }
         }
 

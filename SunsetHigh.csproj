@@ -40,6 +40,7 @@
     <Compile Include="Character.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Interaction.cs" />
+    <Compile Include="Library.cs" />
     <Compile Include="LightingArt.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Game1.cs" />

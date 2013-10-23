@@ -17,9 +17,9 @@ public static class WorldManager {
         m_rooms = new Dictionary<String, Room>();
         
         // there's probably a way to do this using loops but listing everything out is safer
-        Room library = new Room();
+        Room library = new Library();
         library.loadContent(p_content, "map_Library");
-        Cafeteria cafeteria = new Cafeteria();
+        Room cafeteria = new Cafeteria();
         cafeteria.loadContent(p_content, "map_Cafeteria");
         Room hallway = new Room();
         hallway.loadContent(p_content, "map_Hallway");

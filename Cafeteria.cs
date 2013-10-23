@@ -11,6 +11,7 @@ namespace SunsetHigh
 {
     public class Cafeteria : Room
     {
+        private Character npcHiding;
         private Texture2D apple;
         private Texture2D cow;
         private Texture2D hamburger;
@@ -34,6 +35,9 @@ namespace SunsetHigh
             FC2counter = 0;
             FC4counter = 0;
             foodType = 0;
+            npcHiding = new Character(23 * 32, 7 * 32);
+            npcHiding.getInventory().addItem(Item.PokeBall, 5);
+            CharList.Add(npcHiding);
         }
 
         public override void loadContent(ContentManager content, string filename)
@@ -43,6 +47,7 @@ namespace SunsetHigh
             cow = content.Load<Texture2D>("cattle");
             hamburger = content.Load<Texture2D>("burger");
             cheese = content.Load<Texture2D>("cheese");
+            npcHiding.loadImage(content, "sprite_sheet_herbert", 4, 3, 0.25f);
 
         }
         public override void updateState()
