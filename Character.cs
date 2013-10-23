@@ -127,18 +127,30 @@ namespace SunsetHigh
         /// </summary>
         /// <param name="dir">Direction to move the Character</param>
         /// <param name="dist">Distance to move in pixels</param>
-        public void move(Direction dir, int dist)
-        {
-            this.setMoving(true);
+        public void move(Direction dir, int dist) {
             this.setDirection(dir);
-            if (dir.Equals(Direction.North))
-                this.setY(this.getY() - dist);
-            if (dir.Equals(Direction.South))
-                this.setY(this.getY() + dist);
-            if (dir.Equals(Direction.East))
-                this.setX(this.getX() + dist);
-            if (dir.Equals(Direction.West))
-                this.setX(this.getX() - dist);
+
+            Point l_offset = new Point(0, 0);
+
+            switch (dir) {
+                case Direction.North: l_offset.Y = -dist; break;
+                case Direction.South: l_offset.Y =  dist; break;
+                case Direction.East:  l_offset.X =  dist; break;
+                case Direction.West:  l_offset.X = -dist; break;
+                default: break;
+            }
+
+            if ((l_offset.X != 0 || l_offset.Y != 0) && !CollisionManager.collisionWithSolidAtRelative(this, l_offset)) {
+                this.setMoving(true);
+
+                switch (dir) {
+                    case Direction.North: this.setY(this.getY() - dist); break;
+                    case Direction.South: this.setY(this.getY() + dist); break;
+                    case Direction.East:  this.setX(this.getX() + dist); break;
+                    case Direction.West:  this.setX(this.getX() - dist); break;
+                    default: break;
+                }
+            }
         }
         
         /// <summary>
@@ -153,7 +165,7 @@ namespace SunsetHigh
             this.setMoving(true);
             this.move(dir1, dist1);
             this.move(dir2, dist2);
-            if (dist1 >= dist2) this.setDirection(dir1);
+            if (dist1 > dist2) this.setDirection(dir1);
             else this.setDirection(dir2);
         }
 

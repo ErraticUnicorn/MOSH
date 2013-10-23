@@ -169,15 +169,18 @@ namespace SunsetHigh
             }
             if (!xaxis.Equals(Direction.Undefined) && !yaxis.Equals(Direction.Undefined))
             {
-                character.move2D(xaxis, yaxis, 3, 4);
+                character.move2D(xaxis, yaxis, 4, 4);
+                //character.move2D(xaxis, yaxis, 3, 4);
             }
             else if (!xaxis.Equals(Direction.Undefined))
             {
-                character.move(xaxis, 5);
+                character.move(xaxis, 4);
+                //character.move(xaxis, 5);
             }
             else if (!yaxis.Equals(Direction.Undefined))
             {
-                character.move(yaxis, 5);
+                character.move(yaxis, 4);
+                //character.move(yaxis, 5);
             }
             else
             {

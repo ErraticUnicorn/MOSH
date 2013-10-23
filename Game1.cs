@@ -26,9 +26,6 @@ namespace SunsetHigh
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        List<Map> maps;
-        Map map;
-
         public Game1()
             : base()
         {
@@ -46,7 +43,7 @@ namespace SunsetHigh
         {
             // TODO: Add your initialization logic here
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
-            h1 = new Hero(100, 100, 32, 32);
+            h1 = new Hero(32 * 2, 32 * 6, 32, 32);
             c1 = new Character(300, 200, 32, 32);
             c1.getInventory().addItem(Item.LunchMoney, 100);
             npcs = new List<Character>();
@@ -66,9 +63,7 @@ namespace SunsetHigh
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            maps = new List<Map>();
-            maps.Add(Content.Load<Map>("Map"));
-            map = maps[0];
+            WorldManager.loadMaps(Content);
 
             //In the future, all Sprites will call loadContent(this.Content), and child
             //classes will override that method to automatically choose the appropriate 
@@ -103,6 +98,8 @@ namespace SunsetHigh
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            WorldManager.handleWarp(h1);
 
             KeyboardManager.update();
             KeyboardManager.handleCharacterMovement(h1);
@@ -165,10 +162,16 @@ namespace SunsetHigh
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            double l_scaleFactor = 1.0;
+            Point l_cameraOffset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
+            Matrix l_cameraMatrix = Matrix.CreateTranslation(-l_cameraOffset.X, -l_cameraOffset.Y, 0) * Matrix.CreateScale((float) l_scaleFactor);
 
-            map.Draw(spriteBatch);
+            spriteBatch.Begin(0, null, null, null, null, null, l_cameraMatrix);
+
+            Rectangle l_visibleArea = new Rectangle(l_cameraOffset.X, l_cameraOffset.Y, (int) (GraphicsDevice.Viewport.Width / l_scaleFactor),
+                (int) (GraphicsDevice.Viewport.Height / l_scaleFactor));
+            WorldManager.drawMap(spriteBatch, l_visibleArea);
+
             c1.draw(spriteBatch);
             h1.draw(spriteBatch);
             p1.draw(spriteBatch);
