@@ -65,6 +65,13 @@ namespace SunsetHigh
         public Projectile(int x, int y, int width, int height)
             : this(x, y, width, height, DEFAULT_SPEED, DEFAULT_ANGLE) { }
 
+        public bool inRange(Sprite other, int offset)
+        {
+            return (((this.getX() <= other.getX() && this.getX() + this.getWidth() + offset >= other.getX() - offset) ||
+                    (this.getX() >= other.getX() && this.getX() - offset <= other.getX() + other.getWidth() + offset)) &&
+                   ((this.getY() <= other.getY() && this.getY() + this.getHeight() + offset >= other.getY() - offset) ||
+                    (this.getY() >= other.getY() && this.getY() - offset <= other.getY() + other.getHeight() + offset)));
+        }
         /// <summary>
         /// Initializes a Projectile with a given position, dimensions, speed, and angle
         /// </summary>

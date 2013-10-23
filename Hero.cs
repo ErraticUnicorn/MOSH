@@ -30,6 +30,11 @@ namespace SunsetHigh
         /// Initializes a Hero at the origin which will match the dimensions
         /// of its texture (when loaded)
         /// </summary>
+        /// 
+        public List<Projectile> getProjectiles()
+        {
+            return this.projectiles;
+        }
         public Hero()
             : this(0, 0, 0, 0) { }
 
@@ -62,7 +67,7 @@ namespace SunsetHigh
         public void converse(Character c)
         {
         }
-
+        
         public override void loadContent(ContentManager content)
         {
             base.loadContent(content);
@@ -178,10 +183,12 @@ namespace SunsetHigh
                 Projectile bullet = new Projectile(this.getX() + x, this.getY() + y, 10, this.getDirection());
                 bullet.setImage(Sprite.getCommonImage(PROJECTILE_IMAGE_NAME));
                 projectiles.Add(bullet);
+                
                 canShoot = false;
                 shootTimer = 0.0f;
             }
         }
+      
 
         private class PickpocketSystem  //A container for three sprites
         {
