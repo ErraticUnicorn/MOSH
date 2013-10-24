@@ -9,7 +9,7 @@ namespace SunsetHigh
     /// <summary>
     /// Enumeration of the valid event types for a line.
     /// </summary>
-    enum Events
+    public enum Events
     {
         None, End, Quest, Fight
     }
@@ -17,7 +17,7 @@ namespace SunsetHigh
     /// <summary>
     /// The basic interaction node type. Consists of a NPC line, an event type, and a list of conditional targets.
     /// </summary>
-    class InteractionTreeNode
+    public class InteractionTreeNode
     {
         public Events eventType;
         public string line;
@@ -57,9 +57,9 @@ namespace SunsetHigh
     /// </summary>
     public class Interaction
     {
-        private const string matcherString = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight)(, )*)*(?<end>End)??,??(?<quest>Quest -> \d+)??,??(?<fight>Fight)??\]";
+        private const string matcherString = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight)(, )*)*(?<end>End)??,??(?<quest>Quest #\d+)??,??(?<fight>Fight)??\]";
         private static Regex lineMatcher = new Regex(matcherString, RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.Singleline);
-        List<InteractionTreeNode> dialogue;   
+        public List<InteractionTreeNode> dialogue;   
         public Interaction(string interactionFile)
         {
             string[] lines = System.IO.File.ReadAllLines(interactionFile);
@@ -78,7 +78,7 @@ namespace SunsetHigh
                 {
                     temp.eventType = Events.Quest;
                     var questLine = groups["quest"].Value;
-                    temp.responses.Add(new Tuple<string, Events, int>("quest", Events.Quest, int.Parse(questLine.Substring(questLine.IndexOf('#')))));
+                    temp.responses.Add(new Tuple<string, Events, int>("quest", Events.Quest, int.Parse(questLine.Substring(questLine.IndexOf('#')+1))));
                 }
                 else if (groups["fight"].Success)
                     temp.eventType = Events.Fight;
@@ -104,7 +104,7 @@ namespace SunsetHigh
                                 break;
                             default:
                                 eventType = Events.None;
-                                next = int.Parse(responseparts[1]);
+                                next = parseNext(responseparts[1]);
                                 break;
                         }
                         temp.responses.Add(new Tuple<string, Events, int>(response, eventType, next));
@@ -114,6 +114,17 @@ namespace SunsetHigh
                     throw new LineException(string.Format("No valid continuation: {0}", line));
                 this.dialogue.Add(temp);
             }
+        }
+        private int parseNext(string next)
+        {
+            int val = 0, temp = 0;
+            foreach(var c in next)
+            {
+                if (int.TryParse(c.ToString(), out temp))
+                    val = 10*val + temp;
+            }
+
+            return val;
         }
     }
 }

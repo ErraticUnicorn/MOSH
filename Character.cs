@@ -36,7 +36,7 @@ namespace SunsetHigh
         //personal data
         private bool male;                          //male or female
         private string name;                        //character's name
-        //private Dialogue script;                  //script given to NPCs
+        public Interaction script;                  //script given to NPCs
         private Inventory inventory;                //all the items this character has
         
         /// <summary>
@@ -76,7 +76,7 @@ namespace SunsetHigh
         /// <param name="y">Y coordinate of the top-left corner</param>
         /// <param name="width">Width in pixels</param>
         /// <param name="height">Height in pixels</param>
-        public Character(int x, int y, int width, int height)
+        public Character(int x, int y, int width, int height, string file)
             : base(x, y, width, height)
         {
             this.inventory = new Inventory();
@@ -84,6 +84,8 @@ namespace SunsetHigh
             setMale(true);
             setMoving(false);
             setDirection(Direction.South);
+            if(file != string.Empty)
+                setScript(file);
         }
 
         public Direction getDirection() { return this.direction; }
@@ -96,6 +98,7 @@ namespace SunsetHigh
         public void setMoving(bool moving) { this.moving = moving; }
         public void setMale(bool male) { this.male = male; }
         public void setName(string name) { this.name = name; }
+        public void setScript(string file) { this.script = new Interaction(file); }
 
         /// <summary>
         /// Sets the direction of this Character and updates which row on the 

@@ -21,10 +21,13 @@ namespace SunsetHigh
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
         private SoundEffect gotItemSound;
+        private SpriteFont font;
         private List<Projectile> projectiles; //List of all projectiles
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
         private bool canShoot; //Boolean for tinkering with parameters of how often a player can shoot
+        private bool talking;
+        private Dialogue dialogue;
 
         /// <summary>
         /// Initializes a Hero at the origin which will match the dimensions
@@ -50,17 +53,22 @@ namespace SunsetHigh
         /// <param name="w">Width in pixels</param>
         /// <param name="h">Height in pixels</param>
         public Hero(int x, int y, int w, int h)
-            : base(x, y, w, h)
+            : base(x, y, w, h, string.Empty)
         {
             ppSystem = new PickpocketSystem();
             ppActive = false;
             projectiles = new List<Projectile>();
             canShoot = true;
             shootTimer = 0.0f;
+            talking = false;
+            dialogue = new Dialogue();
         }
 
         public void converse(Character c)
         {
+            talking = true;
+            dialogue.loadInteraction(c);
+            System.Diagnostics.Debug.WriteLine("Spoke!");
         }
 
         public override void loadContent(ContentManager content)
@@ -69,6 +77,7 @@ namespace SunsetHigh
             ppSystem.loadContent(content);
             this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
             Sprite.loadCommonImage(content, PROJECTILE_IMAGE_NAME);
+            font = content.Load<SpriteFont>("Arial");
         }
 
         public override void draw(SpriteBatch sb)
@@ -78,6 +87,11 @@ namespace SunsetHigh
             {
                 ppSystem.draw(sb);
             }
+            if (talking)
+            {
+                dialogue.draw(sb, font);
+            }
+
             foreach(Projectile p in projectiles)
             {
                 p.draw(sb);
@@ -183,6 +197,29 @@ namespace SunsetHigh
             }
         }
 
+        private class Dialogue
+        {
+            private Interaction current;
+            private int index = 0;
+            public Dialogue()
+            {
+            }
+
+            public void draw(SpriteBatch sb, SpriteFont font)
+            {
+                int width = sb.GraphicsDevice.Viewport.Width;
+                int height = sb.GraphicsDevice.Viewport.Height;
+                sb.Draw(new Texture2D(sb.GraphicsDevice, width, height), new Rectangle(width / 3, height - 60, 200, 50), Color.GhostWhite);
+                sb.DrawString(font, current.dialogue[index].line, new Vector2(width / 3, height - 55), Color.Black);
+
+            }
+
+            public void loadInteraction(Character c)
+            {
+                current = c.script;
+                index = 0;
+            }
+        }
         private class PickpocketSystem  //A container for three sprites
         {
             private const int NEGATIVE_WIDTH = 100;

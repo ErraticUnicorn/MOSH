@@ -17,6 +17,7 @@ namespace SunsetHigh
         MoveWest,
         Pickpocket,
         Shoot,
+        Talk
         //others
     }
 
@@ -126,6 +127,7 @@ namespace SunsetHigh
             keyTypes[(int)KeyInputType.MoveWest] = Keys.Left;
             keyTypes[(int)KeyInputType.Pickpocket] = Keys.P;
             keyTypes[(int)KeyInputType.Shoot] = Keys.O;
+            keyTypes[(int)KeyInputType.Talk] = Keys.F;
         }
 
         /// <summary>
@@ -220,6 +222,8 @@ namespace SunsetHigh
                 else if (!hero.isPickpocketing())
                 {
                     //naive search through a list of characters
+                    // We should probably do this on a per-room basis later, for efficiency.
+                    // And/or use some sort of "expanding circle" search.
                     for(int i = 0; i < targets.Count; i++)
                     {
                         if (hero.inRangeAction(targets[i]))
@@ -229,6 +233,22 @@ namespace SunsetHigh
                         }
                     }
                 }
+            }
+        }
+
+        public static void handleTalking(Hero hero, List<Character> targets)
+        {
+            nullCheck();
+            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk]))
+            {
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (hero.inRangeAction(targets[i]))
+                        {
+                            hero.converse(targets[i]);
+                            break;
+                        }
+                    }
             }
         }
 

@@ -44,7 +44,7 @@ namespace SunsetHigh
             // TODO: Add your initialization logic here
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
             h1 = new Hero(32 * 2, 32 * 6, 32, 32);
-            c1 = new Character(300, 200, 32, 32);
+            c1 = new Character(300, 200, 32, 32, "Content\\Phil.libraryQuestInteraction.txt");
             c1.getInventory().addItem(Item.LunchMoney, 100);
             npcs = new List<Character>();
             npcs.Add(c1);
@@ -104,7 +104,8 @@ namespace SunsetHigh
             KeyboardManager.update();
             KeyboardManager.handleCharacterMovement(h1);
             KeyboardManager.handlePickpocketing(h1, npcs);
-            KeyboardManager.shootProjectile(h1);
+            KeyboardManager.handleShooting(h1);
+            KeyboardManager.handleTalking(h1, npcs);
 
             /*
             if (KeyboardManager.isKeyPressed(Keys.S))
