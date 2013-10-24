@@ -20,12 +20,37 @@ public static class CollisionManager {
         return collisionWithObjectAtRelative(p_sprite, p_offset, "Solid") != null;
     }
 
+    public static void CollisionWithCharacter(Hero h, Character c)
+    {
+
+        if (h.inRange(c, 0))
+        {
+            h.move(h.getDirection(), -5);
+        }
+    }
+    
+    public static void CollisionWithProjectiles(Hero h, Character c)
+    {
+
+        List<Projectile> shots = h.getProjectiles();
+
+        for (int i = 0; i < shots.Count; i++)
+        {
+            if (shots[i].inRange(c, 0))
+            {
+                shots.Remove(shots[i]);
+            }
+
+        }
+    }
+
+
     // returns an object in the specified Tiled map object layer that the given sprite collides with
     // throws exception if the specified layer does not exist!
     public static MapObject collisionWithObjectAtRelative(Sprite p_sprite, Point p_offset, String p_layer) {
         MapObject l_collidedObject = null;
 
-        foreach (MapObject m in ((MapObjectLayer) WorldManager.m_currentMap.GetLayer(p_layer)).Objects) {
+        foreach (MapObject m in ((MapObjectLayer) WorldManager.m_currentRoom.background.GetLayer(p_layer)).Objects) {
             Rectangle l_spriteBounds = new Rectangle(
                 p_sprite.getX() + p_offset.X,
                 p_sprite.getY() + p_offset.Y,

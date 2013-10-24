@@ -47,8 +47,12 @@ namespace SunsetHigh
             c1 = new Character(300, 200, 32, 32, "Content\\Phil.libraryQuestInteraction.txt");
             c1.getInventory().addItem(Item.LunchMoney, 100);
             npcs = new List<Character>();
-            npcs.Add(c1);
-            p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
+            //npcs.Add(c1);
+            //p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
+
+            //InGameMenu.init();
+            Quest.setTrigger(QuestID.FoodFight1);
+
 
             base.Initialize();
         }
@@ -70,12 +74,14 @@ namespace SunsetHigh
             //content to load (i.e. both images and sound)
             h1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
             h1.loadContent(this.Content);
-            c1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
-            c1.loadContent(this.Content);
-            p1.loadImage(this.Content, "Poke_Ball", 1, 1, 100.0f); //doesn't animate
-            p1.loadContent(this.Content);
+            //c1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
+            //c1.loadContent(this.Content);
+            //p1.loadImage(this.Content, "Poke_Ball", 1, 1, 100.0f); //doesn't animate
+            //p1.loadContent(this.Content);
 
-            //BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
+            //InGameMenu.loadContent(Content);
+
+            BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
 
         /// <summary>
@@ -140,17 +146,62 @@ namespace SunsetHigh
             }
             */
 
-            if (h1.inRangeAction(p1))
+            /*
+            if (KeyboardManager.isKeyPressed(Keys.Space))
             {
-                h1.pickup(p1);
-                System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
+                if (InGameMenu.isOpen())
+                    InGameMenu.close();
+                else
+                    InGameMenu.open();
             }
+            if (KeyboardManager.isKeyPressed(Keys.W))
+                InGameMenu.moveCursor(Direction.North);
+            if (KeyboardManager.isKeyPressed(Keys.A))
+                InGameMenu.moveCursor(Direction.West);
+            if (KeyboardManager.isKeyPressed(Keys.S))
+                InGameMenu.moveCursor(Direction.South);
+            if (KeyboardManager.isKeyPressed(Keys.D))
+                InGameMenu.moveCursor(Direction.East);
+            if (KeyboardManager.isKeyPressed(Keys.Z))
+                InGameMenu.confirm();
+            if (KeyboardManager.isKeyPressed(Keys.X))
+                InGameMenu.goBack();
+             */
+
+            //CollisionManager.CollisionWithCharacter(h1, c1);
+            //CollisionManager.CollisionWithProjectiles(h1, c1);
+
+            //if (h1.inRangeCollide(p1))
+            //{
+            //    h1.pickup(p1);
+            //    System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
+            //}
 
             // TODO: Add your update logic here
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            c1.update(elapsed);
+            //c1.update(elapsed);
             h1.update(elapsed);
-            p1.update(elapsed);
+            //p1.update(elapsed);
+            WorldManager.update(elapsed);
+
+            foreach (Character c in WorldManager.m_currentRoom.CharList)
+            {
+                CollisionManager.CollisionWithCharacter(h1, c);
+            }
+            foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
+            {
+                if (h1.inRangeCollide(s))
+                {
+                    WorldManager.setMap("map_Hallway");     //NOTE HARD CODED
+                    h1.setX(12 * 32);
+                    h1.setY(3 * 32);
+                }
+            }
+
+            //InGameMenu.update(elapsed);
+            double l_scaleFactor = 1.0;
+            Point camera_offset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
+            //InGameMenu.updateOffsets(camera_offset.X, camera_offset.Y);
 
             base.Update(gameTime);
         }
@@ -173,9 +224,11 @@ namespace SunsetHigh
                 (int) (GraphicsDevice.Viewport.Height / l_scaleFactor));
             WorldManager.drawMap(spriteBatch, l_visibleArea);
 
-            c1.draw(spriteBatch);
+            //c1.draw(spriteBatch);
             h1.draw(spriteBatch);
-            p1.draw(spriteBatch);
+            //p1.draw(spriteBatch);
+
+            //InGameMenu.draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
