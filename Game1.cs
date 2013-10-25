@@ -184,10 +184,6 @@ namespace SunsetHigh
             //p1.update(elapsed);
             WorldManager.update(elapsed);
 
-            foreach (Character c in WorldManager.m_currentRoom.CharList)
-            {
-                CollisionManager.CollisionWithCharacter(h1, c);
-            }
             foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
             {
                 if (h1.inRangeCollide(s))

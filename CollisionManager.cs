@@ -19,15 +19,6 @@ public static class CollisionManager {
     public static bool collisionWithSolidAtRelative(Sprite p_sprite, Point p_offset) {
         return collisionWithObjectAtRelative(p_sprite, p_offset, "Solid") != null;
     }
-
-    public static void CollisionWithCharacter(Hero h, Character c)
-    {
-
-        if (h.inRange(c, 0))
-        {
-            h.move(h.getDirection(), -4);
-        }
-    }
     
     public static void CollisionWithProjectiles(Hero h, Character c)
     {
@@ -58,6 +49,31 @@ public static class CollisionManager {
                 p_sprite.getHeight());
             if (l_spriteBounds.Intersects(m.Bounds)) {
                 l_collidedObject = m;
+                break;
+            }
+        }
+
+        return l_collidedObject;
+    }
+
+    // returns a Character that p_sprite collides with if its position were changed
+    // if p_sprite is colliding with p_exclude, that collision doesn't count
+    // (i.e. it doesn't make sense to check whether something is colliding with itself)
+    public static Character collisionWithCharacterAtRelative(Sprite p_sprite, Point p_offset, Character p_exclude) {
+        Character l_collidedObject = null;
+
+        foreach (Character c in WorldManager.m_currentRoom.CharList) {
+            if (c == p_exclude) {
+                continue;
+            }
+            Rectangle l_spriteBounds = new Rectangle(
+                p_sprite.getX() + p_offset.X,
+                p_sprite.getY() + p_offset.Y,
+                p_sprite.getWidth(),
+                p_sprite.getHeight());
+            Rectangle l_charBounds = new Rectangle(c.getX(), c.getY(), c.getWidth(), c.getHeight());
+            if (l_spriteBounds.Intersects(l_charBounds)) {
+                l_collidedObject = c;
                 break;
             }
         }

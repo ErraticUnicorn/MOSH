@@ -144,7 +144,8 @@ namespace SunsetHigh
                 default: break;
             }
 
-            if ((l_offset.X != 0 || l_offset.Y != 0) && !CollisionManager.collisionWithSolidAtRelative(this, l_offset)) {
+            if ((l_offset.X != 0 || l_offset.Y != 0) && !CollisionManager.collisionWithSolidAtRelative(this, l_offset) &&
+                    CollisionManager.collisionWithCharacterAtRelative(this, l_offset, this) == null) {
                 this.setMoving(true);
 
                 switch (dir) {
