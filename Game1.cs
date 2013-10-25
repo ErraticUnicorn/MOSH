@@ -26,6 +26,12 @@ namespace SunsetHigh
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        //Stuff for start screen
+        //Don't know the best way to put the start screen stuff so they will be in here for now
+        enum GameState { startScreen, inGame }
+        GameState gameState;
+        List<StartElement> main = new List<StartElement>();
+
         public Game1()
             : base()
         {
@@ -53,6 +59,8 @@ namespace SunsetHigh
             //InGameMenu.init();
             //Quest.setTrigger(QuestID.FoodFight1);
 
+            main.Add(new StartElement("background"));
+            main.Add(new StartElement("startButton"));
 
             base.Initialize();
         }
@@ -81,7 +89,16 @@ namespace SunsetHigh
 
             //InGameMenu.loadContent(Content);
 
-           // BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
+            //loading each element
+            foreach (StartElement element in main)
+            {
+                element.LoadContent(this.Content);
+                element.CenterElement(600, 800);
+                element.clickEvent += OnClick;
+            }
+
+
+           BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
 
         /// <summary>
@@ -105,101 +122,114 @@ namespace SunsetHigh
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            WorldManager.handleWarp(h1);
-
-            KeyboardManager.update();
-            KeyboardManager.handleCharacterMovement(h1);
-            KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
-            KeyboardManager.handleShooting(h1);
-            KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
-
-            /*
-            if (KeyboardManager.isKeyPressed(Keys.S))
+            if (gameState == GameState.startScreen)
             {
-                SaveGameData data = new SaveGameData();
-                data.fileName = "savegame.sav";
-                data.heroInventory = h1.getInventory().toIntArray();
-                data.heroName = "JAY";
-                data.heroX = h1.getX();
-                data.heroY = h1.getY();
-                data.heroDirection = h1.getDirection();
-                data.inputKeys = KeyboardManager.getKeyControls();
-                data.questTriggers = Quest.getTriggers();
-                SaveManager.saveGame("savegame.sav", data);
-            }
-
-            if (KeyboardManager.isKeyPressed(Keys.D))
-            {
-                SaveGameData data = SaveManager.loadGame("savegame.sav");
-                h1.getInventory().loadIntArray(data.heroInventory);
-                h1.setName(data.heroName);
-                h1.setX(data.heroX);
-                h1.setY(data.heroY);
-                h1.setDirection(data.heroDirection);
-                KeyboardManager.loadKeyControls(data.inputKeys);
-                Quest.loadTriggers(data.questTriggers);
-            }
-
-            if (KeyboardManager.isKeyPressed(Keys.F))
-            {
-                SaveManager.loadAllGames();
-            }
-            */
-
-            /*
-            if (KeyboardManager.isKeyPressed(Keys.Space))
-            {
-                if (InGameMenu.isOpen())
-                    InGameMenu.close();
-                else
-                    InGameMenu.open();
-            }
-            if (KeyboardManager.isKeyPressed(Keys.W))
-                InGameMenu.moveCursor(Direction.North);
-            if (KeyboardManager.isKeyPressed(Keys.A))
-                InGameMenu.moveCursor(Direction.West);
-            if (KeyboardManager.isKeyPressed(Keys.S))
-                InGameMenu.moveCursor(Direction.South);
-            if (KeyboardManager.isKeyPressed(Keys.D))
-                InGameMenu.moveCursor(Direction.East);
-            if (KeyboardManager.isKeyPressed(Keys.Z))
-                InGameMenu.confirm();
-            if (KeyboardManager.isKeyPressed(Keys.X))
-                InGameMenu.goBack();
-             */
-
-            //CollisionManager.CollisionWithCharacter(h1, c1);
-            //CollisionManager.CollisionWithProjectiles(h1, c1);
-
-            //if (h1.inRangeCollide(p1))
-            //{
-            //    h1.pickup(p1);
-            //    System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
-            //}
-
-            // TODO: Add your update logic here
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //c1.update(elapsed);
-            h1.update(elapsed);
-            //p1.update(elapsed);
-            WorldManager.update(elapsed);
-
-            foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
-            {
-                if (h1.inRangeCollide(s))
+                foreach (StartElement element in main)
                 {
-                    WorldManager.setMap("map_Hallway");     //NOTE HARD CODED
-                    h1.setX(12 * 32);
-                    h1.setY(3 * 32);
+                    element.Update();
                 }
             }
 
-            //InGameMenu.update(elapsed);
-            double l_scaleFactor = 1.0;
-            Point camera_offset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
-            //InGameMenu.updateOffsets(camera_offset.X, camera_offset.Y);
+            else
+            {
 
-            base.Update(gameTime);
+                WorldManager.handleWarp(h1);
+
+                KeyboardManager.update();
+                KeyboardManager.handleCharacterMovement(h1);
+                KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
+                KeyboardManager.handleShooting(h1);
+                KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
+
+                /*
+                if (KeyboardManager.isKeyPressed(Keys.S))
+                {
+                    SaveGameData data = new SaveGameData();
+                    data.fileName = "savegame.sav";
+                    data.heroInventory = h1.getInventory().toIntArray();
+                    data.heroName = "JAY";
+                    data.heroX = h1.getX();
+                    data.heroY = h1.getY();
+                    data.heroDirection = h1.getDirection();
+                    data.inputKeys = KeyboardManager.getKeyControls();
+                    data.questTriggers = Quest.getTriggers();
+                    SaveManager.saveGame("savegame.sav", data);
+                }
+
+                if (KeyboardManager.isKeyPressed(Keys.D))
+                {
+                    SaveGameData data = SaveManager.loadGame("savegame.sav");
+                    h1.getInventory().loadIntArray(data.heroInventory);
+                    h1.setName(data.heroName);
+                    h1.setX(data.heroX);
+                    h1.setY(data.heroY);
+                    h1.setDirection(data.heroDirection);
+                    KeyboardManager.loadKeyControls(data.inputKeys);
+                    Quest.loadTriggers(data.questTriggers);
+                }
+
+                if (KeyboardManager.isKeyPressed(Keys.F))
+                {
+                    SaveManager.loadAllGames();
+                }
+                */
+
+                /*
+                if (KeyboardManager.isKeyPressed(Keys.Space))
+                {
+                    if (InGameMenu.isOpen())
+                        InGameMenu.close();
+                    else
+                        InGameMenu.open();
+                }
+                if (KeyboardManager.isKeyPressed(Keys.W))
+                    InGameMenu.moveCursor(Direction.North);
+                if (KeyboardManager.isKeyPressed(Keys.A))
+                    InGameMenu.moveCursor(Direction.West);
+                if (KeyboardManager.isKeyPressed(Keys.S))
+                    InGameMenu.moveCursor(Direction.South);
+                if (KeyboardManager.isKeyPressed(Keys.D))
+                    InGameMenu.moveCursor(Direction.East);
+                if (KeyboardManager.isKeyPressed(Keys.Z))
+                    InGameMenu.confirm();
+                if (KeyboardManager.isKeyPressed(Keys.X))
+                    InGameMenu.goBack();
+                 */
+
+                //CollisionManager.CollisionWithCharacter(h1, c1);
+                //CollisionManager.CollisionWithProjectiles(h1, c1);
+
+                //if (h1.inRangeCollide(p1))
+                //{
+                //    h1.pickup(p1);
+                //    System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
+                //}
+
+                // TODO: Add your update logic here
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //c1.update(elapsed);
+                h1.update(elapsed);
+                //p1.update(elapsed);
+                WorldManager.update(elapsed);
+
+                foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
+                {
+                    if (h1.inRangeCollide(s))
+                    {
+                        WorldManager.setMap("map_Hallway");     //NOTE HARD CODED
+                        h1.setX(12 * 32);
+                        h1.setY(3 * 32);
+                    }
+                }
+
+                //InGameMenu.update(elapsed);
+                double l_scaleFactor = 1.0;
+                Point camera_offset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
+                //InGameMenu.updateOffsets(camera_offset.X, camera_offset.Y);
+
+                base.Update(gameTime);
+
+            }
         }
 
         /// <summary>
@@ -216,18 +246,44 @@ namespace SunsetHigh
 
             spriteBatch.Begin(0, null, null, null, null, null, l_cameraMatrix);
 
-            Rectangle l_visibleArea = new Rectangle(l_cameraOffset.X, l_cameraOffset.Y, (int) (GraphicsDevice.Viewport.Width / l_scaleFactor),
-                (int) (GraphicsDevice.Viewport.Height / l_scaleFactor));
-            WorldManager.drawMap(spriteBatch, l_visibleArea);
+            if (gameState == GameState.startScreen)
+            {
+                foreach (StartElement element in main)
+                {
+                    element.Draw(this.spriteBatch);
+                }
+            }
 
-            //c1.draw(spriteBatch);
-            h1.draw(spriteBatch);
-            //p1.draw(spriteBatch);
+            else
+            {
+                Rectangle l_visibleArea = new Rectangle(l_cameraOffset.X, l_cameraOffset.Y, (int)(GraphicsDevice.Viewport.Width / l_scaleFactor),
+                    (int)(GraphicsDevice.Viewport.Height / l_scaleFactor));
+                WorldManager.drawMap(spriteBatch, l_visibleArea);
 
-            //InGameMenu.draw(spriteBatch);
+                //c1.draw(spriteBatch);
+                h1.draw(spriteBatch);
+                //p1.draw(spriteBatch);
+
+                //InGameMenu.draw(spriteBatch);
+
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// When the start button is clicked. Not sure if this is this best place to put...
+        /// </summary>
+        /// <param name="element"></param>
+        public void OnClick(string element)
+        {
+            if (element == "startButton")
+            {
+                //play game
+                gameState = GameState.inGame;
+            }
+
         }
     }
 }

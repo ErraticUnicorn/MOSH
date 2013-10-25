@@ -41,8 +41,6 @@
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Interaction.cs" />
     <Compile Include="Library.cs" />
-    <Compile Include="LightingArt.cs" />
-    <Compile Include="Line.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Inventory.cs" />
@@ -55,6 +53,7 @@
     <Compile Include="Room.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="StartElement.cs" />
     <Compile Include="WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +99,13 @@
     <Content Include="Content\Appliances.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Backgrounds Variety.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bg.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\burger.png">
@@ -178,13 +183,22 @@
     <Content Include="Content\ScreenshotSchool.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\sprite_boxChildAll.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\sprite_brace_face_temp.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\sprite_enforcer.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\sprite_enforcer_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\sprite_ffwriter.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\sprite_ffwriter_back.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\sprite_herbert.png">
@@ -220,6 +234,9 @@
     <Content Include="Content\Stairs chalkboard etc.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\startButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Stickerbrush_Symphony.m4a">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -246,6 +263,9 @@
     <None Include="bin\WindowsGL\Debug\SunsetHigh.vshost.exe.manifest" />
     <None Include="ConceptArt\instructions.md" />
     <None Include="Content\Appliances.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Arial.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Content\Cafeteria.tmx">
