@@ -38,7 +38,9 @@ public static class WorldManager {
         Rectangle l_heroBounds = new Rectangle(p_hero.getX(), p_hero.getY(), p_hero.getWidth(), p_hero.getHeight());
         MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
 
-        if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
+        // Disabled this part of the conditional because of a weird case where the hero's x seems to go negative for no reason, making
+        // warps not work. Need to investigate. 
+        if (l_collidedObject != null /*&& l_collidedObject.Bounds.Contains(l_heroBounds)*/) {
             setMap((string) l_collidedObject.Properties["warpMap"]);
             p_hero.setX(m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"]);
             p_hero.setY(m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"]);

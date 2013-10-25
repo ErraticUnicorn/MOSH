@@ -51,6 +51,7 @@ namespace SunsetHigh
             setMale(true);
             setMoving(false);
             setDirection(Direction.South);
+            script = null;
         }
 
         /// <summary>

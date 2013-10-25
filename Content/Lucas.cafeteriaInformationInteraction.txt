@@ -1,11 +1,6 @@
-"Are you Lucas? Phil sent me to find you."
-
+"Hello" -> ["Are you Lucas? Phil sent me to find you." -> 2]
 "Yes, thank you. Thank you very much! What brings you out to this quadrant?" -> ["I'm looking for information." -> 3, "I was hungry." -> 4]
-
 "What do you want to know?" -> ["Do you know anything about her disappearance?" -> 5, "What's for lunch today?" -> 6]
-
-"OK, then.  Thanks again and may the Force be with you!" -> [End]
-
-"I don't know much, but I can tell you that one of the lieutenants might have seen something important on that night. That's all I know." -> [End]
-
-"Pizza, I think. I've got Calculus soon, so bye!" -> [End]
+"OK, then.  Thanks again and may the Force be with you!" -> [Quest %1]
+"I don't know much, but I can tell you that one of the lieutenants might have seen something important on that night. That's all I know." -> [Quest %1]
+"Pizza, I think. I've got Calculus soon, so bye!" -> [Quest %1]

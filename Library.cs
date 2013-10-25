@@ -21,6 +21,8 @@ namespace SunsetHigh
             npc2.getInventory().addItem(Item.PokeBall, 5);
             npc3.getInventory().addItem(Item.PokeBall, 5);
             npc4.getInventory().addItem(Item.PokeBall, 5);
+            npc1.setScript(@"Content\Phil.libraryQuestInteraction.txt");
+            npc1.setDirection(Direction.West);
             CharList.Add(npc1);
             CharList.Add(npc2);
             CharList.Add(npc3);

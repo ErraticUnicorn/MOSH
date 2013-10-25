@@ -24,6 +24,7 @@ namespace SunsetHigh
         private float FC4timer;
         private float FC2counter;
         private float FC4counter;
+        private float FC3Counter;
 
         public Cafeteria() : base()
         {
@@ -34,9 +35,11 @@ namespace SunsetHigh
             FC4timer = 0;
             FC2counter = 0;
             FC4counter = 0;
+            FC3Counter = 0;
             foodType = 0;
             npcHiding = new Character(23 * 32, 7 * 32);
             npcHiding.getInventory().addItem(Item.PokeBall, 5);
+            npcHiding.setScript(@"Content\Lucas.cafeteriaInformationInteraction.txt");
             CharList.Add(npcHiding);
         }
 
@@ -65,6 +68,7 @@ namespace SunsetHigh
 
         public override void update(float elapsed)
         {
+            updateState();
             base.update(elapsed);
             if (isFoodFight)
             {
@@ -72,13 +76,13 @@ namespace SunsetHigh
                 FC2timer += elapsed;
                 FC3timer += elapsed;
                 FC4timer += elapsed;
-                
+
                 if (FC1timer > 1)
                 {
                     foodType++;
                     FC1timer = 0;
                     Projectile food = new Projectile(5 * 32, 21 * 32, 5, Direction.North);
-                    
+
                     if (foodType % 3 == 0)
                     {
                         food.setImage(hamburger);
@@ -113,24 +117,28 @@ namespace SunsetHigh
                     }
                 }
 
-                
 
-                if (FC3timer > .75)
+
+                if (FC3timer > .35)
                 {
                     FC3timer = 0;
-                    Projectile food = new Projectile(15 * 32, 21 * 32, 10, Direction.North);
-                    if (foodType % 3 == 0)
+                    if (FC3Counter <= 14 && FC3Counter >= 0)
                     {
-                        food.setImage(hamburger);
+                        ++FC3Counter;
+                        Projectile food = new Projectile(15 * 32, 21 * 32, 4, Direction.North);
+                        if (foodType % 3 == 0)
+                        {
+                            food.setImage(hamburger);
+                        }
+                        if (foodType % 3 != 0)
+                        {
+                            food.setImage(apple);
+                        }
+                        Interactables.Add(food);
                     }
-                    if (foodType % 3 != 0)
-                    {
-                        food.setImage(apple);
-                    }
-                    Interactables.Add(food);
 
                 }
-                if (FC4timer > .25)
+                if (FC4timer > .65)
                 {
                     FC4counter++;
                     FC4timer = 0;
@@ -140,7 +148,7 @@ namespace SunsetHigh
                         if (FC4counter == 13)
                         {
                             food.setImage(cow);
-                            food.setXCenter(20*32);
+                            food.setXCenter(20 * 32);
                         }
                         else if (foodType % 3 == 0)
                         {
@@ -157,6 +165,10 @@ namespace SunsetHigh
                         FC4counter = 0;
                     }
                 }
+            }
+            else
+            {
+                Interactables.Clear();
             }
         }
 

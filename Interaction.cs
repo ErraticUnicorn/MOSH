@@ -57,7 +57,7 @@ namespace SunsetHigh
     /// </summary>
     public class Interaction
     {
-        private const string matcherString = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight)(, )*)*(?<end>End)??,??(?<quest>Quest #\d+)??,??(?<fight>Fight)??\]";
+        private const string matcherString = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight)(, )*)*(?<end>End)??,??(?<quest>Quest (#|%)\d+)??,??(?<fight>Fight)??\]";
         private static Regex lineMatcher = new Regex(matcherString, RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.Singleline);
         public List<InteractionTreeNode> dialogue;   
         public Interaction(string interactionFile)
@@ -78,7 +78,22 @@ namespace SunsetHigh
                 {
                     temp.eventType = Events.Quest;
                     var questLine = groups["quest"].Value;
-                    temp.responses.Add(new Tuple<string, Events, int>("quest", Events.Quest, int.Parse(questLine.Substring(questLine.IndexOf('#')+1))));
+                    int questNum = 1;
+                    int numIndex = 0;
+                    string questSay = string.Empty;
+                    // Kids, this is terrible, terrible practice. *Never* do it. I'm disappointed that C# lets you. I'm fixing it after Friday.
+                    if((numIndex = questLine.IndexOf('#')+1) == 0) 
+                    {
+                        questNum = int.Parse(questLine.Substring(questLine.IndexOf('%') + 1));
+                        questSay = "End quest";
+                    }
+                    else 
+                    {
+                        questNum = int.Parse(questLine.Substring(numIndex));
+                        questSay = "Begin quest";
+                    }
+
+                    temp.responses.Add(new Tuple<string, Events, int>(questSay, Events.Quest, questNum));
                 }
                 else if (groups["fight"].Success)
                     temp.eventType = Events.Fight;

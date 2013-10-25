@@ -44,14 +44,14 @@ namespace SunsetHigh
             // TODO: Add your initialization logic here
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
             h1 = new Hero(32 * 2, 32 * 6, 32, 32);
-            c1 = new Character(300, 200, 32, 32, "Content\\Phil.libraryQuestInteraction.txt");
-            c1.getInventory().addItem(Item.LunchMoney, 100);
-            npcs = new List<Character>();
+            //c1 = new Character(300, 200, 32, 32, "Content\\Phil.libraryQuestInteraction.txt");
+            //c1.getInventory().addItem(Item.LunchMoney, 100);
+            //npcs = new List<Character>();
             //npcs.Add(c1);
             //p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
 
             //InGameMenu.init();
-            Quest.setTrigger(QuestID.FoodFight1);
+            //Quest.setTrigger(QuestID.FoodFight1);
 
 
             base.Initialize();
@@ -81,7 +81,7 @@ namespace SunsetHigh
 
             //InGameMenu.loadContent(Content);
 
-            BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
+           // BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace SunsetHigh
 
             KeyboardManager.update();
             KeyboardManager.handleCharacterMovement(h1);
-            KeyboardManager.handlePickpocketing(h1, npcs);
+            KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
             KeyboardManager.handleShooting(h1);
-            KeyboardManager.handleTalking(h1, npcs);
+            KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
 
             /*
             if (KeyboardManager.isKeyPressed(Keys.S))

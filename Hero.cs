@@ -21,7 +21,6 @@ namespace SunsetHigh
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
         private SoundEffect gotItemSound;
-        private SpriteFont font;
         private List<Projectile> projectiles; //List of all projectiles
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
@@ -73,16 +72,26 @@ namespace SunsetHigh
         {
             talking = true;
             dialogue.loadInteraction(c);
+            dialogue.end = false;
             System.Diagnostics.Debug.WriteLine("Spoke!");
         }
-        
+
+        public bool isTalking()
+        {
+            return talking;
+        }
+
+        public void stopTalking()
+        {
+            talking = false;
+        }
         public override void loadContent(ContentManager content)
         {
             base.loadContent(content);
             ppSystem.loadContent(content);
+            dialogue.loadContent(content);
             this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
             Sprite.loadCommonImage(content, PROJECTILE_IMAGE_NAME);
-            font = content.Load<SpriteFont>("Arial");
         }
 
         public override void draw(SpriteBatch sb)
@@ -92,9 +101,10 @@ namespace SunsetHigh
             {
                 ppSystem.draw(sb);
             }
+
             if (talking)
             {
-                dialogue.draw(sb, font);
+                dialogue.draw(sb);
             }
 
             foreach(Projectile p in projectiles)
@@ -114,7 +124,10 @@ namespace SunsetHigh
             shootTimer += elapsed;
             if (shootTimer >= RECHARGE_TIME)
                 canShoot = true;
-
+            if (talking)
+            {
+               dialogue.update();
+            }
             foreach (Projectile p in projectiles)
             {
                 p.update(elapsed);  //TODO: remove if off the screen
@@ -203,24 +216,122 @@ namespace SunsetHigh
             }
         }
       
-
+        /// <summary>
+        /// Class to handle the dialogue box/moving through the line tree, etc. Godawful and ugly, but works for right now.
+        /// </summary>
         private class Dialogue
         {
             private Interaction current;
             private int index = 0;
+            private SpriteFont font;
+            private Sprite bg;
+            private string say = "...";
+            public bool end = false;
             public Dialogue()
             {
+                bg = new Sprite(0, 0, 0, 0);
             }
 
-            public void draw(SpriteBatch sb, SpriteFont font)
+            public string buildString()
             {
-                int width = sb.GraphicsDevice.Viewport.Width;
-                int height = sb.GraphicsDevice.Viewport.Height;
-                sb.Draw(new Texture2D(sb.GraphicsDevice, width, height), new Rectangle(width / 3, height - 60, 200, 50), Color.GhostWhite);
-                sb.DrawString(font, current.dialogue[index].line, new Vector2(width / 3, height - 55), Color.Black);
+                var text = current.dialogue[index].line;
+                string[] words = text.Split(' ');
+                StringBuilder wrappedText = new StringBuilder();
+                wrappedText.Append(buildString(words));
+                foreach (var resp in current.dialogue[index].responses)
+                {
+                    wrappedText.Append("\n");
+                    wrappedText.Append("> "+buildString(resp.Item1.Split(' ')));
+                }
+
+                return wrappedText.ToString();
+            }
+            private string buildString(string[] words)
+            {
+                StringBuilder wrappedText = new StringBuilder();
+                float linewidth = 0f;
+                float spaceWidth = font.MeasureString(" ").X;
+                for (int i = 0; i < words.Length; ++i)
+                {
+                    Vector2 size = font.MeasureString(words[i]);
+                    if (linewidth + size.X < 400)
+                    {
+                        linewidth += size.X + spaceWidth;
+                    }
+                    else
+                    {
+                        wrappedText.Append("\n");
+                        linewidth = size.X + spaceWidth;
+                    }
+                    wrappedText.Append(words[i]);
+                    wrappedText.Append(" ");
+                }
+
+                return wrappedText.ToString();
+            }
+            public void loadContent(ContentManager content)
+            {
+                font = content.Load<SpriteFont>("Arial");
+                bg.loadImage(content, "bg");
+            }
+            public void draw(SpriteBatch sb)
+            {
+                if (current != null)
+                {
+                    int width = sb.GraphicsDevice.Viewport.Width;
+                    int height = sb.GraphicsDevice.Viewport.Height;
+                    bg.setX(width / 3);
+                    bg.setY(height - 90);
+                    bg.draw(sb);
+                    say = end ? "(end)" : buildString();
+                    sb.DrawString(font, say, new Vector2(width / 3, height - 90), Color.Black, 0f, new Vector2(), 0.80f, SpriteEffects.None, 0f);
+                }
 
             }
+            public void update()
+            {
+                Tuple<string, Events, int> next = null;
+                // Only handling a binary choice for right now, to make this work for Friday
+                if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Z))
+                {
+                    if(current.dialogue[index].eventType != Events.End)
+                        next = current.dialogue[index].responses[0];
+                    else 
+                    {
+                        end = true;
+                        return;
+                    }
+                    
+                }
+                else if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.X))
+                {
+                    if(current.dialogue[index].eventType != Events.End)
+                        next = current.dialogue[index].responses[1];
+                    else 
+                    {
+                        end = true;
+                        return;
+                    }
+                }
 
+                if (next != null)
+                {
+                    switch (next.Item2)
+                    {
+                        case Events.Quest:
+                            Quest.toggleTrigger((QuestID)next.Item3);
+                            end = true;
+                            break;
+                        case Events.End:
+                            end = true;
+                            break;
+                        default:
+                            index = next.Item3-1;
+                            say = current.dialogue[index].line;
+                            break;
+                    }
+                }
+            }
             public void loadInteraction(Character c)
             {
                 current = c.script;

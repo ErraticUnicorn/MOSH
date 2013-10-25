@@ -141,7 +141,7 @@ namespace SunsetHigh
         }
 
         /// <summary>
-        /// Handles Character movement in 8 directions; call this method in the Game's update
+        /// Ts Character movement in 8 directions; call this method in the Game's update
         /// cycle (AFTER calling KeyboardManager.update())
         /// </summary>
         /// <param name="character">The character to control (presumably main character)</param>
@@ -239,8 +239,15 @@ namespace SunsetHigh
         public static void handleTalking(Hero hero, List<Character> targets)
         {
             nullCheck();
+
             if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk]))
             {
+                if (hero.isTalking())
+                {
+                    hero.stopTalking();
+                }
+                else
+                {
                     for (int i = 0; i < targets.Count; i++)
                     {
                         if (hero.inRangeAction(targets[i]))
@@ -249,6 +256,7 @@ namespace SunsetHigh
                             break;
                         }
                     }
+                }
             }
         }
 
