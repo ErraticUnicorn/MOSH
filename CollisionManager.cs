@@ -25,7 +25,7 @@ public static class CollisionManager {
 
         if (h.inRange(c, 0))
         {
-            h.move(h.getDirection(), -5);
+            h.move(h.getDirection(), -4);
         }
     }
     
