@@ -145,7 +145,8 @@ namespace SunsetHigh
         /// cycle (AFTER calling KeyboardManager.update())
         /// </summary>
         /// <param name="character">The character to control (presumably main character)</param>
-        public static void handleCharacterMovement(Character character)
+        /// <param name="elapsed">The time that elapsed since the last update</param>
+        public static void handleCharacterMovement(Character character, float elapsed)
         {
             nullCheck();
             int dirFlags = 0;
@@ -171,18 +172,24 @@ namespace SunsetHigh
             }
             if (!xaxis.Equals(Direction.Undefined) && !yaxis.Equals(Direction.Undefined))
             {
-                character.move2D(xaxis, yaxis, 4, 4);
-                //character.move2D(xaxis, yaxis, 3, 4);
+                if (yaxis.Equals(Direction.North))
+                    if (xaxis.Equals(Direction.East))
+                        character.move(Direction.NorthEast, elapsed);
+                    else
+                        character.move(Direction.NorthWest, elapsed);
+                else
+                    if (xaxis.Equals(Direction.East))
+                        character.move(Direction.SouthEast, elapsed);
+                    else
+                        character.move(Direction.SouthWest, elapsed);
             }
             else if (!xaxis.Equals(Direction.Undefined))
             {
-                character.move(xaxis, 4);
-                //character.move(xaxis, 5);
+                character.move(xaxis, elapsed);
             }
             else if (!yaxis.Equals(Direction.Undefined))
             {
-                character.move(yaxis, 4);
-                //character.move(yaxis, 5);
+                character.move(yaxis, elapsed);
             }
             else
             {

@@ -29,17 +29,17 @@ public static class WorldManager {
         m_currentRoom = m_rooms["map_Library"];
     }
 
-    public static void setMap(String p_mapName) {
-        m_currentRoom = m_rooms[p_mapName];
+    public static void setRoom(String p_roomName) {
+        m_currentRoom = m_rooms[p_roomName];
         m_currentRoom.updateState();
     }
 
     public static void handleWarp(Hero p_hero) {
-        Rectangle l_heroBounds = new Rectangle(p_hero.getX(), p_hero.getY(), p_hero.getWidth(), p_hero.getHeight());
+        Rectangle l_heroBounds = new Rectangle(p_hero.getX(), p_hero.getY(), p_hero.getWidth() - 4, p_hero.getHeight() - 4); //NOTE!! warp collision boxes must be bigger
         MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
 
         if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
-            setMap((string) l_collidedObject.Properties["warpMap"]);
+            setRoom((string) l_collidedObject.Properties["warpMap"]);
             p_hero.setX(m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"]);
             p_hero.setY(m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"]);
         }

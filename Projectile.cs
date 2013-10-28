@@ -5,16 +5,13 @@ using System.Text;
 
 namespace SunsetHigh
 {
-    public class Projectile : Sprite
+    public class Projectile : FreeMovingSprite
     {
-        private const int DEFAULT_SPEED = 0;
         private const float DEFAULT_ANGLE = 0.0f;
-
-        private int speed;
         private float angle;
 
         /// <summary>
-        /// Initializes a Projectile at the origin with zero speed and angle.
+        /// Initializes a Projectile at the origin with a default speed and heading east.
         /// </summary>
         public Projectile()
             : this(0, 0, DEFAULT_SPEED, DEFAULT_ANGLE) { }
@@ -22,17 +19,17 @@ namespace SunsetHigh
         /// <summary>
         /// Initializes a Projectile with the given speed and angle
         /// </summary>
-        /// <param name="speed">A positive speed (in pixels per frame update)</param>
+        /// <param name="speed">A positive speed (in pixels per second)</param>
         /// <param name="angle">An angle in radians (from 0 to 2 PI)</param>
-        public Projectile(int speed, float angle)
+        public Projectile(float speed, float angle)
             : this(0, 0, speed, angle) { }
 
         /// <summary>
         /// Initializes a Projectile with the given speed and direction
         /// </summary>
-        /// <param name="speed">A positive speed (in pixels per frame update)</param>
+        /// <param name="speed">A positive speed (in pixels per second)</param>
         /// <param name="dir">A direction in which it will move</param>
-        public Projectile(int speed, Direction dir)
+        public Projectile(float speed, Direction dir)
             : this(0, 0, speed, dir) { }
 
         /// <summary>
@@ -40,9 +37,9 @@ namespace SunsetHigh
         /// </summary>
         /// <param name="x">X coordinate of the top-left corner</param>
         /// <param name="y">Y coordinate of the top-left corner</param>
-        /// <param name="speed">A positive speed (in pixels per frame update)</param>
+        /// <param name="speed">A positive speed (in pixels per second)</param>
         /// <param name="angle">An angle in radians (from 0 to 2 PI)</param>
-        public Projectile(int x, int y, int speed, float angle)
+        public Projectile(int x, int y, float speed, float angle)
             : this(x, y, 0, 0, speed, angle) { }
 
         /// <summary>
@@ -50,13 +47,13 @@ namespace SunsetHigh
         /// </summary>
         /// <param name="x">X coordinate of the top-left corner</param>
         /// <param name="y">Y coordinate of the top-left corner</param>
-        /// <param name="speed">A positive speed (in pixels per frame update)</param>
+        /// <param name="speed">A positive speed (in pixels per second)</param>
         /// <param name="dir">A direction in which it will move</param>
-        public Projectile(int x, int y, int speed, Direction dir)
+        public Projectile(int x, int y, float speed, Direction dir)
             : this(x, y, 0, 0, speed, dir) { }
 
         /// <summary>
-        /// Initializes a Projectile with a given position and dimensions, and zero speed and angle
+        /// Initializes a Projectile with a given position and dimensions, a default speed heading east
         /// </summary>
         /// <param name="x">X coordinate of the top-left corner</param>
         /// <param name="y">Y coordinate of the top-left corner</param>
@@ -65,13 +62,6 @@ namespace SunsetHigh
         public Projectile(int x, int y, int width, int height)
             : this(x, y, width, height, DEFAULT_SPEED, DEFAULT_ANGLE) { }
 
-        public bool inRange(Sprite other, int offset)
-        {
-            return (((this.getX() <= other.getX() && this.getX() + this.getWidth() + offset >= other.getX() - offset) ||
-                    (this.getX() >= other.getX() && this.getX() - offset <= other.getX() + other.getWidth() + offset)) &&
-                   ((this.getY() <= other.getY() && this.getY() + this.getHeight() + offset >= other.getY() - offset) ||
-                    (this.getY() >= other.getY() && this.getY() - offset <= other.getY() + other.getHeight() + offset)));
-        }
         /// <summary>
         /// Initializes a Projectile with a given position, dimensions, speed, and angle
         /// </summary>
@@ -79,9 +69,9 @@ namespace SunsetHigh
         /// <param name="y">Y coordinate of the top-left corner</param>
         /// <param name="width">Width in pixels</param>
         /// <param name="height">Height in pixels</param>
-        /// <param name="speed">A positive speed (in pixels per frame update)</param>
+        /// <param name="speed">A positive speed (in pixels per second)</param>
         /// <param name="angle">An angle in radians (from 0 to 2 PI)</param>
-        public Projectile(int x, int y, int width, int height, int speed, float angle)
+        public Projectile(int x, int y, int width, int height, float speed, float angle)
             : base(x, y, width, height)
         {
             this.setSpeed(speed);
@@ -95,19 +85,15 @@ namespace SunsetHigh
         /// <param name="y">Y coordinate of the top-left corner</param>
         /// <param name="width">Width in pixels</param>
         /// <param name="height">Height in pixels</param>
-        /// <param name="speed">A positive speed (in pixels per frame update)</param>
+        /// <param name="speed">A positive speed (in pixels per second)</param>
         /// <param name="dir">A direction in which it will move</param>
-        public Projectile(int x, int y, int width, int height, int speed, Direction dir)
+        public Projectile(int x, int y, int width, int height, float speed, Direction dir)
             : base(x, y, width, height)
         {
             this.setSpeed(speed);
             this.setDirection(dir);
         }
 
-        public int getSpeed() 
-        { 
-            return this.speed; 
-        }
         public Direction getDirection() 
         { 
             return convertAngleToDirection(this.angle); 
@@ -117,12 +103,6 @@ namespace SunsetHigh
             return this.angle;
         }
 
-        public void setSpeed(int speed)
-        {
-            if (speed < 0)
-                speed = speed * -1;
-            this.speed = speed;
-        }
         public void setDirection(Direction dir)
         {
             this.angle = convertDirectionToAngle(dir);
@@ -139,20 +119,22 @@ namespace SunsetHigh
         public override void update(float elapsed)
         {
             base.update(elapsed);
-            this.setX(this.getX() + (int)Math.Round(this.speed * Math.Cos(this.angle)));
-            this.setY(this.getY() - (int)Math.Round(this.speed * Math.Sin(this.angle)));  // y-axis is reversed
+            this.move(this.getAngle(), elapsed, false);
         }
 
         private float convertDirectionToAngle(Direction dir)
         {
-            if (dir.Equals(Direction.North))
-                return (float)Math.PI / 2;
-            if (dir.Equals(Direction.East))
-                return 0.0f;
-            if (dir.Equals(Direction.South))
-                return (float)Math.PI * 3 / 2;
-            if (dir.Equals(Direction.West))
-                return (float)Math.PI;
+            switch (dir)
+            {
+                case Direction.North: return (float)Math.PI / 2;
+                case Direction.NorthEast: return (float)Math.PI / 4;
+                case Direction.East: return 0.0f;
+                case Direction.SouthEast: return (float)Math.PI * 7 / 4;
+                case Direction.South: return (float)Math.PI * 3 / 2;
+                case Direction.SouthWest: return (float)Math.PI * 5 / 4;
+                case Direction.West: return (float)Math.PI;
+                case Direction.NorthWest: return (float)Math.PI * 3 / 4;
+            }
             return 0.0f;
         }
 

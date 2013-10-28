@@ -9,26 +9,15 @@ using Microsoft.Xna.Framework.Content;
 namespace SunsetHigh
 {
     /// <summary>
-    /// Specifies which direction a Character is facing
-    /// </summary>
-    public enum Direction                       
-    {
-        Undefined = -1,
-        North = 0,
-        East,
-        South,
-        West
-    };
-    
-    /// <summary>
-    /// Character extends from Sprite, adding behavior for movement and inventory.
+    /// Character extends from FreeMovingSprite, adding behavior for movement and inventory.
     /// Each character also has an Inventory (all his/her items).
     /// </summary>
-    public class Character : Sprite
+    public class Character : FreeMovingSprite
     {
         private const int ACTION_OFFSET = 3;        //pixels offset between sprite and action boxes
                                                     //the "action box" being area where character can interact with environment
         private const int COLLISION_OFFSET = 0;     //pixels offset between sprite and other sprites for collisions
+        //private const float RAD2_OVER_2 = (float)Math.Sqrt(2.0) / 2.0f;
 
         //mechanics
         private Direction direction;                //which direction the character is facing
@@ -38,21 +27,13 @@ namespace SunsetHigh
         private string name;                        //character's name
         public Interaction script;                  //script given to NPCs
         private Inventory inventory;                //all the items this character has
-        
+
         /// <summary>
         /// Initializes a default Character at the origin which matches the dimensions
         /// of its sprite (when loaded)
         /// </summary>
         public Character()
-            : base()
-        {
-            this.inventory = new Inventory();
-            setName("NAMELESS");
-            setMale(true);
-            setMoving(false);
-            setDirection(Direction.South);
-            script = null;
-        }
+            : this(0, 0, 0, 0, "") { }
 
         /// <summary>
         /// Initializes a Character at the given position which matches the dimensions
@@ -61,14 +42,7 @@ namespace SunsetHigh
         /// <param name="x">X coordinate of the top-left corner</param>
         /// <param name="y">Y coordinate of the top-left corner</param>
         public Character(int x, int y)
-            : base(x, y)
-        {
-            this.inventory = new Inventory();
-            setName("NAMELESS");
-            setMale(true);
-            setMoving(false);
-            setDirection(Direction.South);
-        }
+            : this(x, y, 0, 0, "") { }
 
         /// <summary>
         /// Initializes a Character at the given position with the given dimensions
@@ -115,63 +89,27 @@ namespace SunsetHigh
             //i.e. each row is a direction
             if (this.getImageRows() >= 4)
             {
-                if (this.getDirection().Equals(Direction.North))
-                    this.setFrameRow(3);
-                if (this.getDirection().Equals(Direction.East))
-                    this.setFrameRow(2);
-                if (this.getDirection().Equals(Direction.South))
-                    this.setFrameRow(0);
-                if (this.getDirection().Equals(Direction.West))
-                    this.setFrameRow(1);
-            }
-        }
-
-        /// <summary>
-        /// Moves this Character a given distance in pixels; also sets Character's direction
-        /// </summary>
-        /// <param name="dir">Direction to move the Character</param>
-        /// <param name="dist">Distance to move in pixels</param>
-        public void move(Direction dir, int dist) {
-            this.setDirection(dir);
-
-            Point l_offset = new Point(0, 0);
-
-            switch (dir) {
-                case Direction.North: l_offset.Y = -dist; break;
-                case Direction.South: l_offset.Y =  dist; break;
-                case Direction.East:  l_offset.X =  dist; break;
-                case Direction.West:  l_offset.X = -dist; break;
-                default: break;
-            }
-
-            if ((l_offset.X != 0 || l_offset.Y != 0) && !CollisionManager.collisionWithSolidAtRelative(this, l_offset) &&
-                    CollisionManager.collisionWithCharacterAtRelative(this, l_offset, this) == null) {
-                this.setMoving(true);
-
-                switch (dir) {
-                    case Direction.North: this.setY(this.getY() - dist); break;
-                    case Direction.South: this.setY(this.getY() + dist); break;
-                    case Direction.East:  this.setX(this.getX() + dist); break;
-                    case Direction.West:  this.setX(this.getX() - dist); break;
+                switch (dir)
+                {
+                    case Direction.NorthEast:
+                    case Direction.NorthWest:
+                    case Direction.North: this.setFrameRow(3); break;
+                    case Direction.SouthEast:
+                    case Direction.SouthWest:
+                    case Direction.South: this.setFrameRow(0); break;
+                    case Direction.East: this.setFrameRow(2); break;
+                    case Direction.West: this.setFrameRow(1); break;
                     default: break;
                 }
             }
         }
-        
-        /// <summary>
-        /// Moves the Character in two directions (for diagonal movement)
-        /// </summary>
-        /// <param name="dir1">First direction to move</param>
-        /// <param name="dir2">Second direction to move</param>
-        /// <param name="dist1">Distance to move in first direction</param>
-        /// <param name="dist2">Distance to move in second direction</param>
-        public void move2D(Direction dir1, Direction dir2, int dist1, int dist2)
+
+        public override bool move(Direction dir, float elapsed, bool collide = true)
         {
-            this.setMoving(true);
-            this.move(dir1, dist1);
-            this.move(dir2, dist2);
-            if (dist1 > dist2) this.setDirection(dir1);
-            else this.setDirection(dir2);
+            this.setDirection(dir);
+            bool retVal = base.move(dir, elapsed, collide);
+            this.setMoving(retVal);
+            return retVal;
         }
 
         /// <summary>
@@ -189,6 +127,7 @@ namespace SunsetHigh
                    ((this.getY() <= other.getY() && this.getY() + this.getHeight() + offset >= other.getY() - offset) ||
                     (this.getY() >= other.getY() && this.getY() - offset <= other.getY() + other.getHeight() + offset)));
         }
+
         /// <summary>
         /// Checks if this Character is in a given range to perform an action such as talking or pickpocketing
         /// </summary>
@@ -238,11 +177,18 @@ namespace SunsetHigh
         /// <returns>The opposite direction</returns>
         public Direction getOppositeDirection()
         {
-            Direction mDir = this.getDirection();
-            if (mDir == Direction.Undefined)
-                return Direction.Undefined;
-
-            return (Direction)(((int)mDir + 2) % 4);
+            switch (this.getDirection())
+            {
+                case Direction.North: return Direction.South;
+                case Direction.South: return Direction.North;
+                case Direction.East: return Direction.West;
+                case Direction.West: return Direction.East;
+                case Direction.NorthWest: return Direction.SouthEast;
+                case Direction.NorthEast: return Direction.SouthWest;
+                case Direction.SouthWest: return Direction.NorthEast;
+                case Direction.SouthEast: return Direction.NorthWest;
+            }
+            return Direction.Undefined;
         }
 
         /// <summary>

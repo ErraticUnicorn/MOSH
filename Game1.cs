@@ -132,11 +132,12 @@ namespace SunsetHigh
 
             else
             {
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 WorldManager.handleWarp(h1);
 
                 KeyboardManager.update();
-                KeyboardManager.handleCharacterMovement(h1);
+                KeyboardManager.handleCharacterMovement(h1, elapsed);
                 KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
                 KeyboardManager.handleShooting(h1);
                 KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
@@ -206,7 +207,6 @@ namespace SunsetHigh
                 //}
 
                 // TODO: Add your update logic here
-                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 //c1.update(elapsed);
                 h1.update(elapsed);
                 //p1.update(elapsed);
@@ -216,7 +216,7 @@ namespace SunsetHigh
                 {
                     if (h1.inRangeCollide(s))
                     {
-                        WorldManager.setMap("map_Hallway");     //NOTE HARD CODED
+                        WorldManager.setRoom("map_Hallway");     //NOTE HARD CODED
                         h1.setX(12 * 32);
                         h1.setY(3 * 32);
                     }

@@ -20,7 +20,7 @@ namespace SunsetHigh
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
-        private SoundEffect gotItemSound;
+
         private List<Projectile> projectiles; //List of all projectiles
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
@@ -90,7 +90,7 @@ namespace SunsetHigh
             base.loadContent(content);
             ppSystem.loadContent(content);
             dialogue.loadContent(content);
-            this.gotItemSound = content.Load<SoundEffect>("LTTP_Rupee1");
+            SoundFX.loadSound(content, "LTTP_Rupee1");
             Sprite.loadCommonImage(content, PROJECTILE_IMAGE_NAME);
         }
 
@@ -171,7 +171,7 @@ namespace SunsetHigh
                     {
                         //Got item!
                         this.getInventory().addItem(i, 1);
-                        this.gotItemSound.Play();
+                        SoundFX.playSound("LTTP_Rupee1");
                         return i;
                     }
                     else
@@ -207,7 +207,7 @@ namespace SunsetHigh
                 if (this.getDirection().Equals(Direction.West))
                     x = -this.getWidth() / 2;
 
-                Projectile bullet = new Projectile(this.getX() + x, this.getY() + y, 10, this.getDirection());
+                Projectile bullet = new Projectile(this.getX() + x, this.getY() + y, 300.0f, this.getDirection());
                 bullet.setImage(Sprite.getCommonImage(PROJECTILE_IMAGE_NAME));
                 projectiles.Add(bullet);
                 

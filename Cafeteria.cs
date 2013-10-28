@@ -81,7 +81,7 @@ namespace SunsetHigh
                 {
                     foodType++;
                     FC1timer = 0;
-                    Projectile food = new Projectile(5 * 32, 21 * 32, 5, Direction.North);
+                    Projectile food = new Projectile(5 * 32, 21 * 32, 150f, Direction.North);
 
                     if (foodType % 3 == 0)
                     {
@@ -100,7 +100,7 @@ namespace SunsetHigh
                     FC2timer = 0;
                     if (FC2counter >= 0 && FC2counter <= 5)
                     {
-                        Projectile food = new Projectile(10 * 32, 0, 3, Direction.South);
+                        Projectile food = new Projectile(10 * 32, 0, 90f, Direction.South);
                         if (foodType % 3 == 0)
                         {
                             food.setImage(hamburger);
@@ -125,7 +125,7 @@ namespace SunsetHigh
                     if (FC3Counter <= 14 && FC3Counter >= 0)
                     {
                         ++FC3Counter;
-                        Projectile food = new Projectile(15 * 32, 21 * 32, 4, Direction.North);
+                        Projectile food = new Projectile(15 * 32, 21 * 32, 120f, Direction.North);
                         if (foodType % 3 == 0)
                         {
                             food.setImage(hamburger);
@@ -144,7 +144,7 @@ namespace SunsetHigh
                     FC4timer = 0;
                     if (FC4counter >= 0 && FC4counter <= 15)
                     {
-                        Projectile food = new Projectile(20 * 32, 0, 4, Direction.South);
+                        Projectile food = new Projectile(20 * 32, 0, 120f, Direction.South);
                         if (FC4counter == 13)
                         {
                             food.setImage(cow);
