@@ -12,6 +12,7 @@ namespace SunsetHigh
     {
         FoodFight1 = 1,
         FoodFight2,
+        TeacherChase = 1,
         //and so on...
     }
 

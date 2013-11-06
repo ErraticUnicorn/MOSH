@@ -38,7 +38,11 @@
     <Compile Include="BGMusic.cs" />
     <Compile Include="Cafeteria.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="Hallway.cs" />
     <Compile Include="CollisionManager.cs" />
+    <Compile Include="FreeMovingSprite.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Interaction.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="Game1.cs" />
@@ -52,6 +56,7 @@
     <Compile Include="Quest.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="SaveManager.cs" />
+    <Compile Include="SoundFX.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="StartElement.cs" />
     <Compile Include="WorldManager.cs" />
@@ -259,7 +264,6 @@
     <Folder Include="obj\x86\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
     <None Include="bin\WindowsGL\Debug\SunsetHigh.vshost.exe.manifest" />
     <None Include="ConceptArt\instructions.md" />
     <None Include="Content\Appliances.xnb">
