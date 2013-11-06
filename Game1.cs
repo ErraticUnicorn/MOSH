@@ -49,8 +49,10 @@ namespace SunsetHigh
 
             StartScreen.init();
 
-            
-            h1 = new Hero(32 * 2, 32 * 6);
+            h1 = Hero.instance;
+            h1.setX(32 * 2);
+            h1.setY(32 * 6);
+
             /*
             h1.getInventory().addItem(Item.PokeBall, 3);
             h1.getInventory().addItem(Item.LunchMoney, 1);

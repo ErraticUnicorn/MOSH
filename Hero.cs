@@ -28,16 +28,30 @@ namespace SunsetHigh
         private bool talking;
         private Dialogue dialogue;
 
+        private static volatile Hero inst;
+        private static object syncRoot = new Object();
+        public static Hero instance
+        {
+            get
+            {
+                if (inst == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (inst == null)
+                            inst = new Hero();
+                    }
+                }
+                return inst;
+            }
+        }
+
         /// <summary>
         /// Initializes a Hero at the origin which will match the dimensions
         /// of its texture (when loaded)
         /// </summary>
         /// 
-        public List<Projectile> getProjectiles()
-        {
-            return this.projectiles;
-        }
-        public Hero()
+        private Hero()
             : this(0, 0, 0, 0) { }
 
         /// <summary>
@@ -46,7 +60,7 @@ namespace SunsetHigh
         /// </summary>
         /// <param name="x">X coordinate of the top-left corner</param>
         /// <param name="y">Y coordinate of the top-left corner</param>
-        public Hero(int x, int y)
+        private Hero(int x, int y)
             : this(x, y, 0, 0) { }
 
         /// <summary>
@@ -56,7 +70,7 @@ namespace SunsetHigh
         /// <param name="y">Y coordinate of the top-left corner</param>
         /// <param name="w">Width in pixels</param>
         /// <param name="h">Height in pixels</param>
-        public Hero(int x, int y, int w, int h)
+        private Hero(int x, int y, int w, int h)
             : base(x, y, w, h, string.Empty)
         {
             ppSystem = new PickpocketSystem();

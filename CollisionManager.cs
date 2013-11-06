@@ -22,9 +22,8 @@ namespace SunsetHigh {
     
         public static void CollisionWithProjectiles(Hero h, Character c)
         {
-
+            /*
             List<Projectile> shots = h.getProjectiles();
-
             for (int i = 0; i < shots.Count; i++)
             {
                 if (c.inRange(shots[i], 0))
@@ -33,6 +32,7 @@ namespace SunsetHigh {
                 }
 
             }
+             */
         }
 
 
