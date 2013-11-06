@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SunsetHigh
 {
-    class StartElement
+    public class StartElement
     {
         private Texture2D StartTexture;
         private Rectangle StartRect;
@@ -64,6 +64,5 @@ namespace SunsetHigh
         {
             StartRect = new Rectangle(StartRect.X += x, StartRect.Y += y, StartRect.Width, StartRect.Height);
         }
-
     }
 }

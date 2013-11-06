@@ -13,25 +13,22 @@ using TiledLib;
 
 namespace SunsetHigh
 {
+    public enum GameState
+    {
+        StartScreen, 
+        InGame
+    }
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class Game1 : Game
     {
-
         Hero h1;
-        List<Character> npcs;
-        Character c1;
-        Pickup p1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //Stuff for start screen
-        //Don't know the best way to put the start screen stuff so they will be in here for now
-        enum GameState { startScreen, inGame }
         GameState gameState;
-        List<StartElement> main = new List<StartElement>();
-
         public Game1()
             : base()
         {
@@ -48,19 +45,32 @@ namespace SunsetHigh
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            TargetElapsedTime = TimeSpan.FromSeconds(1 / 30.0);
-            h1 = new Hero(32 * 2, 32 * 6, 32, 32);
-            //c1 = new Character(300, 200, 32, 32, "Content\\Phil.libraryQuestInteraction.txt");
-            //c1.getInventory().addItem(Item.LunchMoney, 100);
-            //npcs = new List<Character>();
-            //npcs.Add(c1);
-            //p1 = new Pickup(500, 100, 24, 24, Item.PokeBall);
+            TargetElapsedTime = TimeSpan.FromSeconds(1 / 45.0);
 
-            //InGameMenu.init();
+            StartScreen.init();
+
+            
+            h1 = new Hero(32 * 2, 32 * 6);
+            /*
+            h1.getInventory().addItem(Item.PokeBall, 3);
+            h1.getInventory().addItem(Item.LunchMoney, 1);
+            h1.getInventory().addItem(Item.filler1);
+            h1.getInventory().addItem(Item.filler2);
+            h1.getInventory().addItem(Item.filler3);
+            h1.getInventory().addItem(Item.Hat);
+            h1.getInventory().addItem(Item.filler4);
+            h1.getInventory().addItem(Item.filler5);
+            h1.getInventory().addItem(Item.filler6);
+            h1.getInventory().addItem(Item.filler7);
+            h1.getInventory().addItem(Item.filler8);
+            h1.getInventory().addItem(Item.filler9);
+            h1.getInventory().addItem(Item.Shoes);
+            h1.getInventory().addItem(Item.Socks);
+
+            InGameMenu.init();
+            InGameMenu.loadInventoryPanel(h1.getInventory());
+             */
             //Quest.setTrigger(QuestID.FoodFight1);
-
-            main.Add(new StartElement("background"));
-            main.Add(new StartElement("startButton"));
 
             base.Initialize();
         }
@@ -82,23 +92,11 @@ namespace SunsetHigh
             //content to load (i.e. both images and sound)
             h1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
             h1.loadContent(this.Content);
-            //c1.loadImage(this.Content, "red_spritesheet", 4, 3, 0.25f);
-            //c1.loadContent(this.Content);
-            //p1.loadImage(this.Content, "Poke_Ball", 1, 1, 100.0f); //doesn't animate
-            //p1.loadContent(this.Content);
 
+            StartScreen.loadContent(Content);
             //InGameMenu.loadContent(Content);
 
-            //loading each element
-            foreach (StartElement element in main)
-            {
-                element.LoadContent(this.Content);
-                element.CenterElement(600, 800);
-                element.clickEvent += OnClick;
-            }
-
-
-           BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
+           //BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
 
         /// <summary>
@@ -119,29 +117,37 @@ namespace SunsetHigh
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //    Exit();
 
-            if (gameState == GameState.startScreen)
+            if (gameState == GameState.StartScreen)
             {
-                foreach (StartElement element in main)
-                {
-                    element.Update();
-                }
+                KeyboardManager.update();
+                if (KeyboardManager.isNewKeyPressed())
+                    gameState = GameState.InGame;   //annoying to click
             }
 
             else
             {
                 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                double l_scaleFactor = 1.0;
+                Point l_cameraOffset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
 
                 WorldManager.handleWarp(h1);
 
                 KeyboardManager.update();
-                KeyboardManager.handleCharacterMovement(h1, elapsed);
-                KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
-                KeyboardManager.handleShooting(h1);
-                KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
-
+                
+                //KeyboardManager.handleInGameMenu(l_cameraOffset.X, l_cameraOffset.Y);
+                //if (InGameMenu.isExiting())
+                //    InGameMenu.updateMovingOffsets(l_cameraOffset.X, l_cameraOffset.Y);
+                //if (!InGameMenu.isOpen())
+                //{
+                    KeyboardManager.handleCharacterMovement(h1, elapsed);
+                    KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
+                    KeyboardManager.handleShooting(h1);
+                    KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
+                //}
+                
                 /*
                 if (KeyboardManager.isKeyPressed(Keys.S))
                 {
@@ -175,28 +181,6 @@ namespace SunsetHigh
                 }
                 */
 
-                /*
-                if (KeyboardManager.isKeyPressed(Keys.Space))
-                {
-                    if (InGameMenu.isOpen())
-                        InGameMenu.close();
-                    else
-                        InGameMenu.open();
-                }
-                if (KeyboardManager.isKeyPressed(Keys.W))
-                    InGameMenu.moveCursor(Direction.North);
-                if (KeyboardManager.isKeyPressed(Keys.A))
-                    InGameMenu.moveCursor(Direction.West);
-                if (KeyboardManager.isKeyPressed(Keys.S))
-                    InGameMenu.moveCursor(Direction.South);
-                if (KeyboardManager.isKeyPressed(Keys.D))
-                    InGameMenu.moveCursor(Direction.East);
-                if (KeyboardManager.isKeyPressed(Keys.Z))
-                    InGameMenu.confirm();
-                if (KeyboardManager.isKeyPressed(Keys.X))
-                    InGameMenu.goBack();
-                 */
-
                 //CollisionManager.CollisionWithCharacter(h1, c1);
                 //CollisionManager.CollisionWithProjectiles(h1, c1);
 
@@ -207,11 +191,13 @@ namespace SunsetHigh
                 //}
 
                 // TODO: Add your update logic here
-                //c1.update(elapsed);
-                h1.update(elapsed);
-                //p1.update(elapsed);
-                WorldManager.update(elapsed);
 
+                //InGameMenu.update(elapsed);
+                //if (!InGameMenu.isOpen())
+                //{
+                    h1.update(elapsed);
+                    WorldManager.update(elapsed);
+                //}
                 foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
                 {
                     if (h1.inRangeCollide(s))
@@ -221,11 +207,6 @@ namespace SunsetHigh
                         h1.setY(3 * 32);
                     }
                 }
-
-                //InGameMenu.update(elapsed);
-                double l_scaleFactor = 1.0;
-                Point camera_offset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
-                //InGameMenu.updateOffsets(camera_offset.X, camera_offset.Y);
 
                 base.Update(gameTime);
 
@@ -246,12 +227,10 @@ namespace SunsetHigh
 
             spriteBatch.Begin(0, null, null, null, null, null, l_cameraMatrix);
 
-            if (gameState == GameState.startScreen)
+            if (gameState == GameState.StartScreen)
             {
-                foreach (StartElement element in main)
-                {
-                    element.Draw(this.spriteBatch);
-                }
+                StartScreen.draw(spriteBatch);
+
             }
 
             else
@@ -260,9 +239,7 @@ namespace SunsetHigh
                     (int)(GraphicsDevice.Viewport.Height / l_scaleFactor));
                 WorldManager.drawMap(spriteBatch, l_visibleArea);
 
-                //c1.draw(spriteBatch);
                 h1.draw(spriteBatch);
-                //p1.draw(spriteBatch);
 
                 //InGameMenu.draw(spriteBatch);
 
@@ -270,20 +247,6 @@ namespace SunsetHigh
 
             spriteBatch.End();
             base.Draw(gameTime);
-        }
-
-        /// <summary>
-        /// When the start button is clicked. Not sure if this is this best place to put...
-        /// </summary>
-        /// <param name="element"></param>
-        public void OnClick(string element)
-        {
-            if (element == "startButton")
-            {
-                //play game
-                gameState = GameState.inGame;
-            }
-
         }
     }
 }
