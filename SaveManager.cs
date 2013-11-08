@@ -14,7 +14,7 @@ namespace SunsetHigh
     /// </summary>
     public class SaveGameData
     {
-        public string fileName;             //The file name of this save game data
+        //public string fileName;             //The file name of this save game data
         public int[] heroInventory;         //Inventory of hero (all his items)
         public string heroName;             //Hero's name (if it is user-entered)
         public int heroX;

@@ -17,7 +17,11 @@ namespace SunsetHigh
         MoveWest,
         Pickpocket,
         Shoot,
-        Talk
+        Talk,
+        Action,
+        Cancel,
+        MenuToggle,
+        UseWeapon,
         //others
     }
 
@@ -77,6 +81,38 @@ namespace SunsetHigh
                 return false;
             return currentState.IsKeyDown(key) && !priorState.IsKeyDown(key);
         }
+        
+        /// <summary>
+        /// Checks if any new key has just been pressed (and was not down previously)
+        /// </summary>
+        /// <returns>True if any key has just been pressed, false if not</returns>
+        public static bool isNewKeyPressed()
+        {
+            if (currentState == null || priorState == null)
+                return false;
+            return currentState.GetPressedKeys().Length - 1 == priorState.GetPressedKeys().Length;
+        }
+
+        /// <summary>
+        /// Returns one key that has just been pressed (assuming it's the only key pressed)
+        /// </summary>
+        /// <returns>The only key that has just been pressed</returns>
+        public static Keys getNewKeyPressed()
+        {
+            if (isNewKeyPressed())
+            {
+                foreach (Keys key in currentState.GetPressedKeys())
+                {
+                    if (!priorState.GetPressedKeys().Contains(key))
+                    {
+                        return key;
+                    }
+                }
+            }
+            System.Diagnostics.Debug.WriteLine("Only call this method if isOneKeyPressed() is valid!");
+            return currentState.GetPressedKeys()[0];
+        }
+
         /// <summary>
         /// Checks if the given key has just been released (i.e. it is up now and was
         /// pressed in the previous update)
@@ -89,7 +125,17 @@ namespace SunsetHigh
                 return false;
             return currentState.IsKeyUp(key) && !priorState.IsKeyUp(key);
         }
-        
+
+        public static bool keyControlExists(Keys key, KeyInputType exclude)
+        {
+            for (int i = 0; i < keyTypes.Length; i++)
+            {
+                if ((int)exclude == i) continue;
+                if (keyTypes[i] == key) return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Change the key input needed to trigger a given game function; used for 
         /// customizing key controls
@@ -100,6 +146,15 @@ namespace SunsetHigh
         {
             nullCheck();
             keyTypes[(int)inputType] = key;
+        }
+
+        /// <summary>
+        /// Returns the current Key mapped to this KeyInputType
+        /// </summary>
+        public static Keys getKeyControl(KeyInputType inputType)
+        {
+            nullCheck();
+            return keyTypes[(int)inputType];
         }
 
         /// <summary>
@@ -128,6 +183,10 @@ namespace SunsetHigh
             keyTypes[(int)KeyInputType.Pickpocket] = Keys.P;
             keyTypes[(int)KeyInputType.Shoot] = Keys.O;
             keyTypes[(int)KeyInputType.Talk] = Keys.F;
+            keyTypes[(int)KeyInputType.Action] = Keys.Z;
+            keyTypes[(int)KeyInputType.Cancel] = Keys.X;
+            keyTypes[(int)KeyInputType.MenuToggle] = Keys.Space;
+            keyTypes[(int)KeyInputType.UseWeapon] = Keys.W;
         }
 
         /// <summary>
@@ -146,6 +205,7 @@ namespace SunsetHigh
         /// </summary>
         /// <param name="character">The character to control (presumably main character)</param>
         /// <param name="elapsed">The time that elapsed since the last update</param>
+
         public static void handleCharacterMovement(Character character, float elapsed)
         {
             nullCheck();
@@ -209,6 +269,14 @@ namespace SunsetHigh
                 hero.shoot();
             }
         }
+        public static void handleWeaponOut(Hero hero)
+        {
+            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.UseWeapon]))
+            {
+                hero.weaponUse();
+            }
+        }
+
 
         /// <summary>
         /// Handles the Hero's pickpocketing ability; call this method in the Game's update
@@ -262,6 +330,43 @@ namespace SunsetHigh
                             hero.converse(targets[i]);
                             break;
                         }
+                    }
+                }
+            }
+        }
+
+        public static void handleInGameMenu(int offset_x, int offset_y)
+        {
+            if (!InGameMenu.isOpen())
+            {
+                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MenuToggle]))
+                {
+                    InGameMenu.updateOffsets(offset_x, offset_y);
+                    InGameMenu.open();
+                }
+            }
+            else
+            {
+                bool blockKey = false;
+                if (KeyboardManager.isNewKeyPressed())
+                {
+                    blockKey = InGameMenu.sendOneKeyInput(KeyboardManager.getNewKeyPressed()); //for custom key controls..
+                    if (!blockKey)
+                    {
+                        if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MenuToggle]))
+                            InGameMenu.close();
+                        else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveNorth]))
+                            InGameMenu.moveCursor(Direction.North);
+                        else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveWest]))
+                            InGameMenu.moveCursor(Direction.West);
+                        else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveSouth]))
+                            InGameMenu.moveCursor(Direction.South);
+                        else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveEast]))
+                            InGameMenu.moveCursor(Direction.East);
+                        else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
+                            InGameMenu.confirm();
+                        else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Cancel]))
+                            InGameMenu.goBack();
                     }
                 }
             }
