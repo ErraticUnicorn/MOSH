@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using System.Text;
 
@@ -18,33 +17,27 @@ namespace SunsetHigh
         Socks,
         Hat,
         LunchMoney,
-        PokeBall,
+        PokeBall
     };
 
     /// <summary>
     /// Represents an assortment of items; each Character has an Inventory
     /// to hold his/her own collection
     /// </summary>
-    public class Inventory : IEnumerable
+    public class Inventory
     {
         private static int NUM_TYPE_ITEMS = Enum.GetValues(typeof(Item)).Length - 1;
                                              //number of values in Item enum excluding Nothing
                                              //don't change this variable please
         private int total;
-        private int numTypes;
         private int[] items;
-        private int[] order;
-
+        
         /// <summary>
         /// Default constructor
         /// </summary>
         public Inventory() 
         {
             items = new int[NUM_TYPE_ITEMS];
-            order = new int[NUM_TYPE_ITEMS];
-            for (int i = 0; i < order.Length; i++)
-                order[i] = -1;
-            numTypes = 0;
             total = 0; 
         }
 
@@ -99,8 +92,6 @@ namespace SunsetHigh
         {
             if (quantity < 0 || type.Equals(Item.Nothing))
                 return;     //bad arguments
-            if (this.items[(int)type] == 0)
-                this.order[numTypes++] = (int)type;
             this.items[(int)type] += quantity;
             total += quantity;
         }
@@ -123,15 +114,9 @@ namespace SunsetHigh
         {
             if (quantity < 0 || type.Equals(Item.Nothing))
                 return;     //bad arguments
-            if (this.items[(int)type] <= quantity)
-            {
-                int i = 0;
-                for (; order[i] != (int)type; i++) ;
-                Array.Copy(order, i + 1, order, i, numTypes - 1 - i);
-                order[numTypes - 1] = -1;
-                numTypes--;     // O(n) operation
-                quantity = this.items[(int)type]; //remove all items of this type
-            }
+            if (this.items[(int)type] < quantity)
+                quantity = this.items[(int)type]; //prevents negative quantities
+
             this.items[(int)type] -= quantity;
             this.total -= quantity;
         }
@@ -165,9 +150,9 @@ namespace SunsetHigh
             Random rand = new Random();
             int pick = rand.Next(possible.Count);
 
-            Item retVal = possible[pick];
-            removeItem(retVal);
-            return retVal;
+            this.items[(int)possible[pick]] -= 1;  //removes one of this type
+            this.total -= 1;
+            return possible[pick];
         }
 
         /// <summary>
@@ -178,10 +163,6 @@ namespace SunsetHigh
             for (int i = 0; i < this.items.Length; i++)
             {
                 this.items[i] = 0;
-            } 
-            for (int i = 0; i < this.order.Length; i++)
-            {
-                this.order[i] = -1;
             }
             this.total = 0;
         }
@@ -203,15 +184,6 @@ namespace SunsetHigh
         {
             if (loadableItems.Length <= this.items.Length)
                 loadableItems.CopyTo(this.items, 0);
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            for (int i = 0; i < numTypes; i++)
-            {
-                if (order[i] >= 0)
-                    yield return (Item)order[i];
-            }
         }
     }
 }

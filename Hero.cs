@@ -12,7 +12,7 @@ namespace SunsetHigh
     /// <summary>
     /// Hero extends from Character, and is used for the main character
     /// </summary>
-    public sealed class Hero : Character
+    public class Hero : Character
     {
         private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
         private const string PROJECTILE_IMAGE_NAME = "projectile";
@@ -27,13 +27,9 @@ namespace SunsetHigh
         private bool canShoot; //Boolean for tinkering with parameters of how often a player can shoot
         private bool talking;
         private Dialogue dialogue;
-        private bool weaponOut;
 
         private static volatile Hero inst;
         private static object syncRoot = new Object();
-        /// <summary>
-        /// Returns an instance of the Hero class (singleton)
-        /// </summary>
         public static Hero instance
         {
             get
@@ -81,7 +77,6 @@ namespace SunsetHigh
             ppActive = false;
             projectiles = new List<Projectile>();
             canShoot = true;
-            weaponOut = false;           
             shootTimer = 0.0f;
             talking = false;
             dialogue = new Dialogue();
@@ -141,11 +136,8 @@ namespace SunsetHigh
             }
 
             shootTimer += elapsed;
-            if (weaponOut)
-           {
-                if (shootTimer >= RECHARGE_TIME)
-                    canShoot = true;
-            }
+            if (shootTimer >= RECHARGE_TIME)
+                canShoot = true;
             if (talking)
             {
                dialogue.update();
@@ -237,12 +229,6 @@ namespace SunsetHigh
                 shootTimer = 0.0f;
             }
         }
-
-        public void weaponUse()
-        {
-            this.weaponOut = !weaponOut;
-        }
-
       
         /// <summary>
         /// Class to handle the dialogue box/moving through the line tree, etc. Godawful and ugly, but works for right now.
@@ -484,8 +470,6 @@ namespace SunsetHigh
                 return arrow.getXCenter() > positiveBar.getX() && arrow.getXCenter() < positiveBar.getX() + positiveBar.getWidth();
             }
         }
-
-       
     }
 }
     

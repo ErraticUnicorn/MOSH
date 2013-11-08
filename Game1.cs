@@ -53,17 +53,25 @@ namespace SunsetHigh
             h1.setX(32 * 2);
             h1.setY(32 * 6);
 
-            
+            /*
             h1.getInventory().addItem(Item.PokeBall, 3);
             h1.getInventory().addItem(Item.LunchMoney, 1);
+            h1.getInventory().addItem(Item.filler1);
+            h1.getInventory().addItem(Item.filler2);
+            h1.getInventory().addItem(Item.filler3);
             h1.getInventory().addItem(Item.Hat);
+            h1.getInventory().addItem(Item.filler4);
+            h1.getInventory().addItem(Item.filler5);
+            h1.getInventory().addItem(Item.filler6);
+            h1.getInventory().addItem(Item.filler7);
+            h1.getInventory().addItem(Item.filler8);
+            h1.getInventory().addItem(Item.filler9);
             h1.getInventory().addItem(Item.Shoes);
             h1.getInventory().addItem(Item.Socks);
-            h1.getInventory().removeItem(Item.Hat);
 
             InGameMenu.init();
             InGameMenu.loadInventoryPanel(h1.getInventory());
-            
+             */
             //Quest.setTrigger(QuestID.FoodFight1);
 
             base.Initialize();
@@ -88,7 +96,7 @@ namespace SunsetHigh
             h1.loadContent(this.Content);
 
             StartScreen.loadContent(Content);
-            InGameMenu.loadContent(Content);
+            //InGameMenu.loadContent(Content);
 
            //BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
@@ -131,16 +139,16 @@ namespace SunsetHigh
 
                 KeyboardManager.update();
                 
-                KeyboardManager.handleInGameMenu(l_cameraOffset.X, l_cameraOffset.Y);
-                if (InGameMenu.isExiting())
-                    InGameMenu.updateMovingOffsets(l_cameraOffset.X, l_cameraOffset.Y);
-                if (!InGameMenu.isOpen())
-                {
+                //KeyboardManager.handleInGameMenu(l_cameraOffset.X, l_cameraOffset.Y);
+                //if (InGameMenu.isExiting())
+                //    InGameMenu.updateMovingOffsets(l_cameraOffset.X, l_cameraOffset.Y);
+                //if (!InGameMenu.isOpen())
+                //{
                     KeyboardManager.handleCharacterMovement(h1, elapsed);
                     KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
                     KeyboardManager.handleShooting(h1);
                     KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
-                }
+                //}
                 
                 /*
                 if (KeyboardManager.isKeyPressed(Keys.S))
@@ -186,12 +194,12 @@ namespace SunsetHigh
 
                 // TODO: Add your update logic here
 
-                InGameMenu.update(elapsed);
-                if (!InGameMenu.isOpen())
-                {
+                //InGameMenu.update(elapsed);
+                //if (!InGameMenu.isOpen())
+                //{
                     h1.update(elapsed);
                     WorldManager.update(elapsed);
-                }
+                //}
                 foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
                 {
                     if (h1.inRangeCollide(s))
@@ -235,7 +243,7 @@ namespace SunsetHigh
 
                 h1.draw(spriteBatch);
 
-                InGameMenu.draw(spriteBatch);
+                //InGameMenu.draw(spriteBatch);
 
             }
 

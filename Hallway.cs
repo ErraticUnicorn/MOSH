@@ -31,13 +31,11 @@ namespace SunsetHigh
             base.loadContent(content, filename);
         }
 
-        /*
         public override void loadContent(ContentManager content, string filename, string filename2)
         {
             base.loadContent(content, filename);
             base.loadContent(content, filename2);
         }
-         */
 
         public override void updateState()
         {
