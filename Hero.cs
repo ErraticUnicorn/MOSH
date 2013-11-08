@@ -12,7 +12,7 @@ namespace SunsetHigh
     /// <summary>
     /// Hero extends from Character, and is used for the main character
     /// </summary>
-    public class Hero : Character
+    public sealed class Hero : Character
     {
         private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
         private const string PROJECTILE_IMAGE_NAME = "projectile";
@@ -30,6 +30,9 @@ namespace SunsetHigh
 
         private static volatile Hero inst;
         private static object syncRoot = new Object();
+        /// <summary>
+        /// Returns an instance of the Hero class (singleton)
+        /// </summary>
         public static Hero instance
         {
             get
