@@ -102,6 +102,7 @@ namespace SunsetHigh
             // inventory screen
             inventoryScreen = new InventoryPanel(200, -330, 440, 330);
             inventoryScreen.setMessagePanel(inventoryInfoScreen);
+            inventoryScreen.setScrolling(5, 2);
             inventoryScreen.setPopLocations(200, -330, 200, 0);
             components.Add(inventoryScreen);
 
@@ -144,9 +145,8 @@ namespace SunsetHigh
 
             // save file data screen
             SaveDataPanel saveScreen = new SaveDataPanel(200, 480, 440, 380);
-            saveScreen.loadEntries(new SaveDataEntry(saveScreen), new SaveDataEntry(saveScreen), new SaveDataEntry(saveScreen),
-                new SaveDataEntry(saveScreen), new SaveDataEntry(saveScreen), new SaveDataEntry(saveScreen));
-            saveScreen.refreshSaveData();
+            saveScreen.setScrolling(5, 1);
+            saveScreen.loadSaveData();
             saveScreen.setPopLocations(200, 480, 200, 100);
             components.Add(saveScreen);
 
@@ -217,6 +217,32 @@ namespace SunsetHigh
             PanelGroupSorter.addPanelGroups(pg0, pg1, pg1a, pg1b, pg1c, pg1d, 
                 pg2, pg3, pg4, pg5, pg5a, pg6, pg7);
         }
+
+        public static void reset()
+        {
+            foreach (Sprite sprite in components)
+            {
+                sprite.setVisible(false);
+                if (sprite is PopInOutSprite)
+                {
+                    PopInOutSprite pSprite = (PopInOutSprite)sprite;
+                    pSprite.setX(pSprite.getHideX());
+                    pSprite.setY(pSprite.getHideY());
+                }
+                if (sprite is Panel)
+                {
+                    Panel panel = (Panel)sprite;
+                    panel.reset();
+                }
+            }            
+            while (panelStack.Count > 0 && menuOpen)
+            {
+                goBack();
+            }
+            menuArrow.setX(-175);
+            menuArrow.setY(67);
+        }
+
         public static void loadInventoryPanel(Inventory hInventory)
         {
             nullCheck();

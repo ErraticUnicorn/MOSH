@@ -101,6 +101,11 @@ namespace SunsetHigh
         protected void setFrameRow(int row) { this.frameRow = row; }
         protected void setFrameColumn(int col) { this.frameColumn = col; }
         protected void setAnimationTime(float time) { this.animationTime = time; }
+        protected void resetAnimation()
+        {
+            this.frameColumn = 0;
+            this.frameElapsed = 0;
+        }
         protected void matchToTextureDimensions() 
         { 
             this.useTextureDimensions = true;

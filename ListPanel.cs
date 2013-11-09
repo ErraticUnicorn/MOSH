@@ -95,7 +95,6 @@ namespace SunsetHigh
             else this.rowFirst = true;
             this.scrollTopRow = 0;
             this.scrollOffsetBetweenEntries = (this.getHeight() - this.getYMargin() * 2) / this.scrollRowsOnPanel;
-            //int xoffset = (this.getWidth() - this.getXMargin() * 2) / this.cols;
         }
         public bool isScrolling() { return this.scrolling; }
 
@@ -136,7 +135,7 @@ namespace SunsetHigh
             if (this.getHeight() == 0 || this.getWidth() == 0 || this.font == null)
             {
                 this.tempWillAlign = true;
-                return;             // if content has not been loaded yet, we can't align yet
+                return;             // if content has not been loaded yet, we will align later
             }
             if (this.entries.Count > rows * cols || rows == 0 || cols == 0)
                 return; // bad arguments/uninitialized
@@ -150,17 +149,20 @@ namespace SunsetHigh
                 middleOffsetX = offsetX / 2 - ((int)font.MeasureString(entries[0].getName()).X / 2);
             middleOffsetY = offsetY / 2 - ((int)font.MeasureString(entries[0].getName()).Y / 2);
 
+            int rowOffset;
+            if (this.isScrolling()) rowOffset = this.scrollTopRow;
+            else rowOffset = 0;
             for (int i = 0; i < this.entries.Count; i++)
             {
                 if (rowFirst)
                 {
                     this.entries[i].setX(startX + offsetX * (i % cols) + middleOffsetX);
-                    this.entries[i].setY(startY + offsetY * (i / cols) + middleOffsetY);
+                    this.entries[i].setY(startY + offsetY * (i / cols - rowOffset) + middleOffsetY);
                 }
                 else
                 {
                     this.entries[i].setX(startX + offsetX * (i / rows) + middleOffsetX);
-                    this.entries[i].setY(startY + offsetY * (i % rows) + middleOffsetY);
+                    this.entries[i].setY(startY + offsetY * (i % rows - rowOffset) + middleOffsetY);
                 }
             }
         }
@@ -301,6 +303,12 @@ namespace SunsetHigh
             if (this.entries.Count == 0)
                 return;
             this.entries[this.cursor].onPress();
+        }
+
+        public override void reset()
+        {
+            base.reset();
+            this.cursor = 0;
         }
 
         public override void loadContent(ContentManager content)

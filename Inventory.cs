@@ -21,6 +21,14 @@ namespace SunsetHigh
         PokeBall,
     };
 
+    public struct InventorySave
+    {
+        public int[] items;
+        public int[] order;
+        public int total;
+        public int numTypes;
+    }
+
     /// <summary>
     /// Represents an assortment of items; each Character has an Inventory
     /// to hold his/her own collection
@@ -189,20 +197,29 @@ namespace SunsetHigh
         /// <summary>
         /// Used for saving purposes only
         /// </summary>
-        /// <returns>An int[] representation of the inventory</returns>
-        public int[] toIntArray()
+        /// <returns>An struct containing primitives representing the inventory</returns>
+        public InventorySave getSaveStructure()
         {
-            return this.items;
+            InventorySave saveStruct;
+            saveStruct.items = this.items;
+            saveStruct.order = this.order;
+            saveStruct.numTypes = this.numTypes;
+            saveStruct.total = this.total;
+            return saveStruct;
         }
 
         /// <summary>
         /// Used for loading in the hero's inventory when restoring a saved game 
         /// </summary>
-        /// <param name="loadableItems">An int[] representation of inventory to load</param>
-        public void loadIntArray(int[] loadableItems)
+        /// <param name="saveStruct">An int[] representation of inventory to load</param>
+        public void loadSaveStructure(InventorySave saveStruct)
         {
-            if (loadableItems.Length <= this.items.Length)
-                loadableItems.CopyTo(this.items, 0);
+            if (saveStruct.items.Length <= this.items.Length)
+                saveStruct.items.CopyTo(this.items, 0);
+            if (saveStruct.order.Length <= this.order.Length)
+                saveStruct.order.CopyTo(this.order, 0);
+            this.numTypes = saveStruct.numTypes;
+            this.total = saveStruct.total;
         }
 
         public IEnumerator GetEnumerator()

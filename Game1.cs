@@ -130,7 +130,7 @@ namespace SunsetHigh
                 WorldManager.handleWarp(h1);
 
                 KeyboardManager.update();
-                
+
                 KeyboardManager.handleInGameMenu(l_cameraOffset.X, l_cameraOffset.Y);
                 if (InGameMenu.isExiting())
                     InGameMenu.updateMovingOffsets(l_cameraOffset.X, l_cameraOffset.Y);
@@ -140,40 +140,7 @@ namespace SunsetHigh
                     KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
                     KeyboardManager.handleShooting(h1);
                     KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
-                }
-                
-                /*
-                if (KeyboardManager.isKeyPressed(Keys.S))
-                {
-                    SaveGameData data = new SaveGameData();
-                    data.fileName = "savegame.sav";
-                    data.heroInventory = h1.getInventory().toIntArray();
-                    data.heroName = "JAY";
-                    data.heroX = h1.getX();
-                    data.heroY = h1.getY();
-                    data.heroDirection = h1.getDirection();
-                    data.inputKeys = KeyboardManager.getKeyControls();
-                    data.questTriggers = Quest.getTriggers();
-                    SaveManager.saveGame("savegame.sav", data);
-                }
-
-                if (KeyboardManager.isKeyPressed(Keys.D))
-                {
-                    SaveGameData data = SaveManager.loadGame("savegame.sav");
-                    h1.getInventory().loadIntArray(data.heroInventory);
-                    h1.setName(data.heroName);
-                    h1.setX(data.heroX);
-                    h1.setY(data.heroY);
-                    h1.setDirection(data.heroDirection);
-                    KeyboardManager.loadKeyControls(data.inputKeys);
-                    Quest.loadTriggers(data.questTriggers);
-                }
-
-                if (KeyboardManager.isKeyPressed(Keys.F))
-                {
-                    SaveManager.loadAllGames();
-                }
-                */
+                }                
 
                 //CollisionManager.CollisionWithCharacter(h1, c1);
                 //CollisionManager.CollisionWithProjectiles(h1, c1);

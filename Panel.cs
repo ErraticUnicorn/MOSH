@@ -106,6 +106,8 @@ namespace SunsetHigh
         /// </summary>
         public virtual void onExit() { this.setHighlighted(false);  }
 
+        public virtual void reset() { }
+
         public override void loadContent(ContentManager content)
         {
             base.loadContent(content);

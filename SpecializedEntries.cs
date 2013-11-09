@@ -23,7 +23,7 @@ namespace SunsetHigh
             // if this entry confirms exiting the game
             if (this.isExiting())
             {
-                // Cleanup and exit!
+                // Cleanup and return to title screen
             }
             // this entry cancels exiting
             else
@@ -43,10 +43,7 @@ namespace SunsetHigh
         private int mQuantity;
 
         public ItemEntry(InventoryPanel owner, Item type, int quantity)
-            : this(0, 0, owner, type, quantity) { }
-
-        public ItemEntry(int x, int y, InventoryPanel owner, Item type, int quantity)
-            : base("No text", x, y)
+            : base("Temp", 0, 0) 
         {
             this.owner = owner;
             this.mItem = type;
@@ -68,15 +65,10 @@ namespace SunsetHigh
         public void setItemType(Item itemType) { this.mItem = itemType; }
         public void setQuantity(int quantity) { this.mQuantity = quantity; }
 
-        public override void onPress() { }
+        public override void onPress() { }  // nothing happens
         public override void onHover()
         {
             this.owner.getMessagePanel().setMessage("Information about " + getItemNameString());
-        }
-
-        private void convertItemTypeToName()
-        {
-            this.setName(Enum.GetName(typeof(Item), mItem));
         }
 
         public override void draw(SpriteBatch sb, int x_offset, int y_offset, SpriteFont font, Color c)
@@ -84,6 +76,11 @@ namespace SunsetHigh
             base.draw(sb, x_offset, y_offset, font, c);
             sb.DrawString(font, this.getQuantityString(),
                 new Vector2(x_offset + this.getX() + NEXT_COLUMN_OFFSET, y_offset + this.getY()), c);
+        }
+
+        private void convertItemTypeToName()
+        {
+            this.setName(Enum.GetName(typeof(Item), mItem));
         }
     }
 
@@ -95,9 +92,9 @@ namespace SunsetHigh
         private KeyInputType inputType;
 
         public KeyModifierEntry(string name, KeyConfigPanel owner, KeyInputType inputType)
+            : base(name, 0, 0)
         {
             this.owner = owner;
-            this.setName(name);
             this.inputType = inputType;
         }
 
@@ -127,6 +124,7 @@ namespace SunsetHigh
         public override void draw(SpriteBatch sb, int x_offset, int y_offset, SpriteFont font, Color c)
         {
             base.draw(sb, x_offset, y_offset, font, c);
+            //Draw the key associated with this input type
             sb.DrawString(font, this.getKeyString(),
                 new Vector2(x_offset + NEXT_COLUMN_OFFSET + this.getX(), y_offset + this.getY()), c);
         }
@@ -141,35 +139,39 @@ namespace SunsetHigh
         private SaveGameData saveData;
 
         public SaveDataEntry(SaveDataPanel owner)
-            : this(owner, null, 0, 0) { }
+            : this(owner, null) { }
         public SaveDataEntry(SaveDataPanel owner, SaveGameData data)
-            : this(owner, data, 0, 0) { }
-        public SaveDataEntry(SaveDataPanel owner, SaveGameData data, int x, int y)
-            : base("Temp", x, y)
+            : base("Temp", 0, 0)
         {
             this.owner = owner;
             this.setSaveData(data);
         }
 
-        public void setSaveData(SaveGameData data)
-        {
-            this.saveData = data;
-            this.setNameFromData();
-        }
-        public SaveGameData getSaveData()
-        {
-            return this.saveData;
-        }
+        public void setSaveData(SaveGameData data) { this.saveData = data; }
+        public SaveGameData getSaveData() { return this.saveData; }
 
         public override void onPress()
         {
             //if save type if true, we will save our current save data
             if (owner.isSaving())
             {
-                //SaveManager.saveGame(saveData.fileName, saveData);
+                SaveGameData newData = SaveManager.packData();
+                if (this.saveData == null)
+                { 
+                    newData.fileName = SaveManager.generateNewFileName();
+                    this.owner.loadEntries(new SaveDataEntry(this.owner, null));    //add a new blank entry
+                    this.setName(newData.heroData.name);
+                }
+                else
+                {
+                    //newData.playTime = this.saveData.playTime + newData.playTime;
+                    newData.fileName = this.saveData.fileName;
+                }
+                SaveManager.saveGame(newData.fileName, newData, false);
+                this.saveData = newData;
                 this.owner.getPreviousPanel().setMessage("Game saved!");
             }
-            //if save type if false, we wil load our current save data
+            //if save type if false, we will load our current save data
             else
             {
                 if (this.saveData == null)
@@ -178,8 +180,9 @@ namespace SunsetHigh
                 }
                 else
                 {
-                    // load the game
                     this.owner.getPreviousPanel().setMessage("Game loaded!");
+                    InGameMenu.reset();
+                    SaveManager.unpackData(this.saveData);
                 }
             }
         }
@@ -187,22 +190,13 @@ namespace SunsetHigh
         public override void draw(SpriteBatch sb, int x_offset, int y_offset, SpriteFont font, Color c)
         {
             base.draw(sb, x_offset, y_offset, font, c);
-            // draw time string separate from name
-        }
-
-        private void setNameFromData()
-        {
-            string name;
+            string playTimeStr;
             if (this.saveData != null)
-            {
-                name = "";
-                name += saveData.heroName + "\n";
-            }
+                playTimeStr = GameClock.formatTimeSpan(this.saveData.playTime);
             else
-            {
-                name = "NO DATA SAVED          00:00:00\n---No Game---";
-            }
-            this.setName(name);
+                playTimeStr = GameClock.formatTimeSpan(TimeSpan.Zero);
+            sb.DrawString(font, playTimeStr,
+                new Vector2(x_offset + NEXT_COLUMN_OFFSET + this.getX(), y_offset + this.getY()), c);
         }
     }
 
@@ -215,9 +209,7 @@ namespace SunsetHigh
         private string newMessage;
 
         public SaveTypeSpecifierEntry(string name, IMessagePanel owner, SaveDataPanel next)
-            : this(name, 0, 0, owner, next) { }
-        public SaveTypeSpecifierEntry(string name, int x, int y, IMessagePanel owner, SaveDataPanel next)
-            : base(name, x, y, next)
+            : base(name, next) 
         {
             this.owner = owner;
         }
@@ -242,9 +234,7 @@ namespace SunsetHigh
         private string newMessage;
 
         public ScreenSpecifierEntry(string name, IMessagePanel owner, Panel next)
-            : this(name, 0, 0, owner, next) { }
-        public ScreenSpecifierEntry(string name, int x, int y, IMessagePanel owner, Panel next)
-            : base(name, x, y, next)
+            : base(name, next) 
         {
             this.owner = owner;
         }
@@ -277,13 +267,11 @@ namespace SunsetHigh
     {
         private Panel nextFocus;
         public SubMenuFocusEntry()
-            : this("No name", 0, 0, null) { }
+            : this("No name", null) { }
         public SubMenuFocusEntry(string name)
-            : this(name, 0, 0, null) { }
+            : this(name, null) { }
         public SubMenuFocusEntry(string name, Panel next)
-            : this(name, 0, 0, next) { }
-        public SubMenuFocusEntry(string name, int x, int y, Panel next)
-            : base(name, x, y)
+            : base(name, 0, 0) 
         {
             this.setNextPanel(next);
         }

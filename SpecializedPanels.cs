@@ -16,7 +16,6 @@ namespace SunsetHigh
         public InventoryPanel(int x, int y, int width, int height)
             : base(x, y, width, height)
         {
-            this.setScrolling(5, 2);
         }
 
         public void setMessagePanel(IMessagePanel panel) { this.messagePanel = panel; }
@@ -127,7 +126,6 @@ namespace SunsetHigh
             : base(x, y, width, height)
         {
             this.saving = true;
-            this.setScrolling(5, 1);
         }
 
         public void setSaveType(bool saving) { this.saving = saving; }
@@ -135,14 +133,19 @@ namespace SunsetHigh
         public void setPreviousPanel(IMessagePanel prevPanel) { this.prevPanel = prevPanel; }
         public IMessagePanel getPreviousPanel() { return this.prevPanel; }
 
-        public void refreshSaveData()
+        public void loadSaveData()
         {
-            List<SaveGameData> listSave = SaveManager.loadAllGames();
-            for (int i = 0; i < listSave.Count && i < 6; i++)
+            List<SaveGameData> listSave = SaveManager.loadAllGames(false);
+            List<MenuEntry> tempEntries = new List<MenuEntry>();
+            this.clearEntries();
+            for (int i = 0; i < listSave.Count; i++)
             {
-                if (this.getEntries().Count <= i || !(this.getEntries()[i] is SaveDataEntry)) continue;
-                ((SaveDataEntry)(this.getEntries()[i])).setSaveData(listSave[i]);
+                SaveDataEntry entry = new SaveDataEntry(this, listSave[i]);
+                entry.setName(listSave[i].heroData.name);
+                tempEntries.Add(entry);
             }
+            tempEntries.Add(new SaveDataEntry(this, null)); // the "blank file" for saving a new game
+            this.loadEntries(tempEntries.ToArray());
         }
     }
 }
