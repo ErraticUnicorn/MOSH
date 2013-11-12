@@ -382,7 +382,7 @@ namespace SunsetHigh
                     switch (next.Item2)
                     {
                         case Events.Quest:
-                            Quest.toggleTrigger((QuestID)next.Item3);
+                            Quest.setQuestAccepted((QuestID)next.Item3);
                             end = true;
                             break;
                         case Events.End:

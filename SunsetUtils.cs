@@ -37,5 +37,27 @@ namespace SunsetHigh
             }
             return returnString + line;
         }
+
+        /// <summary>
+        /// Util method for casting string to enum
+        /// </summary>
+        /// <typeparam name="T">The enum type/name</typeparam>
+        /// <param name="input">The string to cast</param>
+        /// <returns>The appropriate enum value</returns>
+        public static T parseEnum<T>(string input)
+        {
+            return (T)(Enum.Parse(typeof(T), input, true));
+        }
+
+        /// <summary>
+        /// Util method for casting enum to string
+        /// </summary>
+        /// <typeparam name="T">The enum type/name</typeparam>
+        /// <param name="input">The enum value to cast</param>
+        /// <returns>The appropriate string</returns>
+        public static string enumToString<T>(T input)
+        {
+            return Enum.GetName(typeof(T), input);
+        }
     }
 }

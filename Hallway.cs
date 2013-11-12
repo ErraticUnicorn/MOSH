@@ -17,7 +17,7 @@ namespace SunsetHigh
         public Hallway()
             : base()
         {
-            if(Quest.isTriggered(QuestID.TeacherChase)){
+            if(Quest.isQuestAccepted(QuestID.TeacherChase)){
                 isChasedQuest = true;
             }
 

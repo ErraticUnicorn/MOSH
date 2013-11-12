@@ -10,10 +10,33 @@ namespace SunsetHigh
     /// </summary>
     public enum QuestID
     {
-        FoodFight1 = 1,
-        FoodFight2,
-        TeacherChase = 1,
+        FoodFight = 1,
+        TeacherChase,
         //and so on...
+    }
+
+    /// <summary>
+    /// Specifies a state for a particular quest (i.e. if it is accepted, complete, etc.)
+    /// Different states can be combined with bitwise operations (for quests with multiple
+    /// parts, branching quests, etc.)
+    /// </summary>
+    [Flags]
+    public enum QuestState
+    {
+        Unavailable = 0x0,
+        Available = 0x1,
+        Accepted = 0x2,
+        Progress1 = 0x4,
+        Progress2 = 0x8,
+        Progress3 = 0x10,
+        Progress4 = 0x20,
+        Progress5 = 0x40,
+        Progress6 = 0x80,
+        Progress7 = 0x100,
+        Progress8 = 0x200,
+        Progress9 = 0x400,
+        Progress10 = 0x800,     // these "progress" values specify different points in the quest
+        Complete = 0x1000,
     }
 
     /// <summary>
@@ -22,43 +45,95 @@ namespace SunsetHigh
     public static class Quest
     {
         private static int NUM_QUEST_IDS = Enum.GetValues(typeof(QuestID)).Length;
-        private static bool[] triggers;
+        private static QuestState[] triggers;
 
-        /// <summary>
-        /// Sets a trigger with the given ID to be true
-        /// </summary>
-        /// <param name="id">The trigger name</param>
-        public static void setTrigger(QuestID id)
+        public static void setQuestAvailable(QuestID id)
         {
-            nullCheck();
-            triggers[(int)id] = true;
+            addQuestState(id, QuestState.Available);
         }
-        /// <summary>
-        /// Sets a trigger with the given ID to be false
-        /// </summary>
-        /// <param name="id">The trigger name</param>
-        public static void unsetTrigger(QuestID id)
+        public static void setQuestAccepted(QuestID id)
         {
-            nullCheck();
-            triggers[(int)id] = false;
+            addQuestState(id, QuestState.Accepted);
         }
-        /// <summary>
-        /// Sets or unsets a trigger depending on its state. I.e. if the trigger is inactive,
-        /// it will be set active (true), and vice-versa
-        /// </summary>
-        /// <param name="id">The trigger name</param>
-        public static void toggleTrigger(QuestID id)
+        public static void setQuestComplete(QuestID id)
         {
-            nullCheck();
-            triggers[(int)id] = !triggers[(int)id];
+            addQuestState(id, QuestState.Complete);
         }
 
         /// <summary>
-        /// Checks if a given trigger is active (i.e. true)
+        /// Adds the given state(s) to the quest with the given ID (keeping any old states)
         /// </summary>
-        /// <param name="id">The trigger name</param>
-        /// <returns>True if the given trigger is active, false if not</returns>
-        public static bool isTriggered(QuestID id)
+        /// <param name="id">The particular quest</param>
+        /// <param name="state">The state(s) to add</param>
+        public static void addQuestState(QuestID id, QuestState state)
+        {
+            nullCheck();
+            triggers[(int)id] |= state;
+        }
+        /// <summary>
+        /// Removes the given state(s) from the quest with the given ID (keeping other states)
+        /// </summary>
+        /// <param name="id">The particular quest</param>
+        /// <param name="state">The state(s) to remove</param>
+        public static void removeQuestState(QuestID id, QuestState state)
+        {
+            nullCheck();
+            triggers[(int)id] &= ~state;
+        }
+        /// <summary>
+        /// Sets the quest with the given ID to a given state (overwrites any old states!)
+        /// </summary>
+        /// <param name="id">The particular quest</param>
+        /// <param name="state">The new state(s) of the quest</param>
+        public static void overwriteQuestState(QuestID id, QuestState state)
+        {
+            nullCheck();
+            triggers[(int)id] = state;
+        }
+
+        public static bool isQuestAvailable(QuestID id)
+        {
+            return isQuestStateActive(id, QuestState.Available);
+        }
+        public static bool isQuestAccepted(QuestID id)
+        {
+            return isQuestStateActive(id, QuestState.Accepted);
+        }
+        public static bool isQuestComplete(QuestID id)
+        {
+            return isQuestStateActive(id, QuestState.Complete);
+        }
+
+        /// <summary>
+        /// Checks a given quest for the given quest state(s)
+        /// </summary>
+        /// <param name="id">The particular quest</param>
+        /// <param name="state">The quest state(s) to check</param>
+        /// <returns>True if the state(s) are active, false otherwise</returns>
+        public static bool isQuestStateActive(QuestID id, QuestState state)
+        {
+            nullCheck();
+            return (triggers[(int)id] & state) == state;
+        }
+
+        /// <summary>
+        /// Checks a given quest for whether the given state(s) is switched off
+        /// </summary>
+        /// <param name="id">The particular quest</param>
+        /// <param name="state">The quest state(s) to check</param>
+        /// <returns>True if the state(s) are inactive, false otherwise</returns>
+        public static bool isQuestStateInactive(QuestID id, QuestState state)
+        {
+            nullCheck();
+            return (~triggers[(int)id] & state) == state;
+        }
+        /// <summary>
+        /// Returns the state(s) of the given quests. Check what states are active
+        /// using bitwise operations (&).
+        /// </summary>
+        /// <param name="id">The particular quest</param>
+        /// <returns>The state(s), as a combination of flags (bits)</returns>
+        public static QuestState getQuestState(QuestID id)
         {
             nullCheck();
             return triggers[(int)id];
@@ -67,18 +142,18 @@ namespace SunsetHigh
         /// <summary>
         /// Used for saving purposes only
         /// </summary>
-        /// <returns>A bool[] representation of the game's triggers</returns>
-        public static bool[] getTriggers()
+        /// <returns>A QuestState[] representation of the game's triggers</returns>
+        public static QuestState[] getQuestStateSave()
         {
             nullCheck();
             return triggers;
         }
 
         /// <summary>
-        /// Used for loading in quest triggers when restoring a saved game
+        /// Used for loading in quest states when restoring a saved game
         /// </summary>
-        /// <param name="loadableTriggers">A bool[] representation of the triggers to load</param>
-        public static void loadTriggers(bool[] loadableTriggers)
+        /// <param name="loadableTriggers">A QuestState[] representation of the states to load</param>
+        public static void loadQuestStateSave(QuestState[] loadableTriggers)
         {
             nullCheck();
             if (loadableTriggers.Length <= triggers.Length)
@@ -90,7 +165,13 @@ namespace SunsetHigh
         private static void nullCheck()
         {
             if (triggers == null || triggers.Length == 0)
-                triggers = new bool[NUM_QUEST_IDS]; //initializes the array
+            {
+                triggers = new QuestState[NUM_QUEST_IDS];
+                for (int i = 0; i < triggers.Length; i++)
+                {
+                    triggers[i] = QuestState.Unavailable;
+                }
+            }
         }
     }
 }
