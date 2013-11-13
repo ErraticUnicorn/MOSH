@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="35" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="indoor_free_tileset__by_thegreatblaid-d5x95zt" tilewidth="32" tileheight="32" margin="19">
+  <image source="../../../TMXExample/assets/images/indoor_free_tileset__by_thegreatblaid-d5x95zt.png" width="624" height="304"/>
+ </tileset>
+ <tileset firstgid="145" name="locker" tilewidth="45" tileheight="78">
+  <image source="../images/locker.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="215" name="lockerbackwards" tilewidth="117" tileheight="32">
+  <image source="../images/lockerbackwards.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="263" name="sunsethighlogo" tilewidth="32" tileheight="32">
+  <image source="../images/sunsethighlogo.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="479" name="carpet" tilewidth="32" tileheight="32">
+  <image source="../images/carpet.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="695" name="door" tilewidth="32" tileheight="32">
+  <image source="../images/door.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="35" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4B4MJEINW5QTAwgRS05YDC5ZRQMfjAHDx5MYDC4C5vdA+2ewRxno2AUjIKBBQCflQ0e
+  </data>
+ </layer>
+ <layer name="objects" width="35" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzrZWBg6B3FQw67YcH0UGtCJH7LxMDwjon6asnB34BmfyfSfFLUjuJRPIpH8SgeODzQ9eUoHloYAKhq7po=
+  </data>
+ </layer>
+ <layer name="lockers" width="35" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztlcsKwjAQRdP8ga+Nr41av9fHv7i1a7v3CRZd6kd4pQSldjoz1KCLHDgktHeSgQ5qTEDLysozidXXSEmRX9t8rcJlEvuq+ca5Rc6RMVkky25sbp1zZ3AOF3DJnOEj63KBT7Sz45OUmOUGZqoJW7ANO8zsavJUluqli/c92IcDOGR60eSp7AXrtaRuhGdjOIExnDK9aPJU9ob1Lvzt8A31jX7BP/Xi2MIds5fW17nvyR4emP07xf8SKleW5e44whOzr0Ka4+4L0DwAfRFLcw==
+  </data>
+ </layer>
+ <layer name="Tile Layer 4" width="35" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIwUcZBpoF4yCUTAKRsEoGAWjYBTQHwAA6VQAxA==
+  </data>
+ </layer>
+</map>

@@ -24,9 +24,15 @@ namespace SunsetHigh {
             cafeteria.loadContent(p_content, "map_Cafeteria");
             Room hallway = new Room();
             hallway.loadContent(p_content, "map_Hallway");
+            //Room questHall = new Room();
+            //questHall.loadContent(p_content, "map_longhallwaymission");
+            //Room questHallEnd = new Room();
+            //questHallEnd.loadContent(p_content, "map_longhallwayend");
             m_rooms.Add("map_Library", library);
             m_rooms.Add("map_Cafeteria", cafeteria);
             m_rooms.Add("map_Hallway", hallway);
+            //m_rooms.Add("map_longhallwaymission", questHall);
+            //m_rooms.Add("map_longhallwayend", questHallEnd);
 
             m_currentRoom = m_rooms["map_Library"];
             m_currentRoomName = "map_Library";

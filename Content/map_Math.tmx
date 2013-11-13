@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="ScreenshotSchool" tilewidth="32" tileheight="32" margin="19">
+  <image source="../images/ScreenshotSchool.png" width="480" height="318"/>
+ </tileset>
+ <tileset firstgid="127" name="hall" tilewidth="32" tileheight="32" margin="19">
+  <image source="../images/indoor_free_tileset__by_thegreatblaid-d5x95zt.png" width="624" height="304"/>
+ </tileset>
+ <tileset firstgid="271" name="AlchemistPosesandLabTablescrTherapie_zps58ce40b0" tilewidth="32" tileheight="32" margin="19">
+  <image source="../images/AlchemistPosesandLabTablescrTherapie_zps58ce40b0.png" trans="ffffff" width="384" height="432"/>
+ </tileset>
+ <tileset firstgid="403" name="door" tilewidth="32" tileheight="32">
+  <image source="../images/door.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0T0OgkAQhuFR1IZCUHtvIBZKJRRi5Q8qlYqg9z+Fb7GUsGSzUQqTfZKZTPZLJuP2RFzLeNKHgwGGGBnUVd6Y2oOPCaaYGdRV3lzs+OeJ7HHAUfULBFjWzHV5N9zxUP0GEeKa+bf31e13wRVZyzzdfiVeeHfkviekOKt+hTVCw/vmeKJQ/RYJdj/at4t5TUz+2Mz7AHoPMHU=
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYKA9mMrIwDANiKcz4mbDwEwgexYQz2bEbR4pYBHQnMVAvATNvHVA/nog3kAle7YDzdkBxDupZN4oGAWjYGiAjcA8v4mK+X4X0KzdQ6QcAQBZZBAk
+  </data>
+ </layer>
+</map>
