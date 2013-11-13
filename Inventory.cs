@@ -19,6 +19,7 @@ namespace SunsetHigh
         Hat,
         LunchMoney,
         PokeBall,
+        Meds,
     };
 
     public struct InventorySave
