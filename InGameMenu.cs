@@ -88,8 +88,7 @@ namespace SunsetHigh
             components.Add(cluesInfoScreen);
 
             // clues list
-            TextPanel cluesScreen = new TextPanel(200, 480, 200, 480);
-            cluesScreen.setMessage("Not implemented yet.");
+            ListPanel cluesScreen = new CluePanel(200, 480, 200, 480, cluesInfoScreen);
             cluesScreen.setPopLocations(200, 480, 200, 0);
             components.Add(cluesScreen);
 
