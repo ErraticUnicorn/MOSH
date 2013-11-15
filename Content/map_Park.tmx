@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="grass-tiles-2-small" tilewidth="32" tileheight="32">
+  <image source="../images/tileset/grass-tiles-2-small.png" trans="ffffff" width="384" height="192"/>
+ </tileset>
+ <tileset firstgid="73" name="tree2-final" tilewidth="32" tileheight="32">
+  <image source="../images/tileset/tree2-final.png" trans="ffffff" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="137" name="qubodup-bush_berries_0" tilewidth="32" tileheight="32">
+  <image source="../images/tileset/qubodup-bush_berries_0.png" trans="ffffff" width="32" height="32"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzdlLsKgDAMRbtURx+bIjjpLji3//9XRqgQQm6s4lAcDi1NOKQlaXDOhUQUTETNmFleEPsozrX4nQ+tKFaCz4qVUN+ffB3RZLx9rk9z5vjQfHDnAtB8LbESPfBZyFlrgccT1QOfdcfTtRE7MSYGgFWbTzmb8rYI7rP6TfaH5rF81x1lHvrb7nyyNi3/jS+Hr33ccQB68Efc
+  </data>
+ </layer>
+ <layer name="foreground" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYCANdJKont5g1H2UAZj7qoG4BohrgbiOCuY2A3ELELcCcRuFZtEqDDtx0KMAO8AVXqSG32AN58HqLhgYDO4DAPvQDJU=
+  </data>
+ </layer>
+ <layer name="foreforeground" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzLduQlEAREF+DwMm52ywyTnTQIc/m6HHBVcW1Vtpmi1OLPba4nyQIEmKT9JkXmw9liVHngJFSpSpBPSq1KjToEmLNp2AXpcvevT55ocBw4DeiDETpsyYs2AZ0FuxZsOWHXsOHAN6J85P/gvXgN5fu/H7j71o0aK9f3dEDxUa
+  </data>
+ </layer>
+</map>

@@ -15,16 +15,11 @@ namespace SunsetHigh
     public class SaveGameData
     {
         public string fileName;             //The file name of this save game data
-        public int[] heroInventory;         //Inventory of hero (all his items)
-        public string heroName;             //Hero's name (if it is user-entered)
-        public int heroX;
-        public int heroY;                   //Hero position
-        public Direction heroDirection;     //Which way the hero is facing
-        //more positional data here (i.e. the room)
+        public ClockSave playTime;           //The play time logged in this file
+        public HeroSave heroData;           //Data about the Hero (Inventory, position, etc.)
+        public string roomName;             //The current room
         public Keys[] inputKeys;            //custom keys for input
-        public bool[] questTriggers;        //triggers for how far along in plot we are 
-        //playtime
-        //
+        public QuestState[] questTriggers;        //triggers for how far along in plot we are 
     }
 
     /// <summary>
@@ -78,6 +73,11 @@ namespace SunsetHigh
             return true;
         }
 
+        public static void saveGame(string fileName, bool encrypt = true)
+        {
+            saveGame(fileName, packData(), encrypt);
+        }
+
         /// <summary>
         /// Loads a game with a given file name in the "SaveData" folder.
         /// By default the method will attempt to decrypt the file.
@@ -85,35 +85,83 @@ namespace SunsetHigh
         /// <param name="fileName">Name of the file to load</param>
         /// <param name="encrypt">Optional, specifies whether to decrypt the file</param>
         /// <returns>The save game data to load, or null if there are errors in reading/decryption</returns>
-        public static SaveGameData loadGame(string fileName, bool encrypt=true)
+        public static SaveGameData getSaveData(string fileName, bool encrypt=true)
         {
             SaveGameData saveGame = null;
 
             if (fileName.StartsWith(SAVE_DIRECTORY))
                 fileName = fileName.Substring(SAVE_DIRECTORY.Length);
 
-            // unencrypted method (stable)
-            if (!encrypt)
+            try
             {
-                Stream fStream = new FileStream(SAVE_DIRECTORY + fileName, FileMode.Open);
-                XmlSerializer serializer = new XmlSerializer(typeof(SaveGameData));
-                saveGame = (SaveGameData)serializer.Deserialize(fStream);
-                fStream.Close();
-            }
-            // encrypted method
-            else
-            {
-                Stream memStream = decryptFile(SAVE_DIRECTORY + fileName, false);
-                if (memStream != null)
+                // unencrypted method (stable)
+                if (!encrypt)
                 {
+                    Stream fStream = new FileStream(SAVE_DIRECTORY + fileName, FileMode.Open);
                     XmlSerializer serializer = new XmlSerializer(typeof(SaveGameData));
-                    saveGame = (SaveGameData)serializer.Deserialize(memStream);
-                    memStream.Flush();
-                    memStream.Close();
+                    saveGame = (SaveGameData)serializer.Deserialize(fStream);
+                    fStream.Close();
                 }
+                // encrypted method
+                else
+                {
+                    Stream memStream = decryptFile(SAVE_DIRECTORY + fileName, false);
+                    if (memStream != null)
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(SaveGameData));
+                        saveGame = (SaveGameData)serializer.Deserialize(memStream);
+                        memStream.Flush();
+                        memStream.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
+                return null;
             }
 
             return saveGame;
+        }
+
+        public static void loadGame(string fileName, bool encrypt = true)
+        {
+            SaveGameData data = getSaveData(fileName, encrypt);
+            if (data != null)
+                unpackData(data);
+        }
+
+        public static SaveGameData packData()
+        {
+            SaveGameData data = new SaveGameData();
+            Hero h1 = Hero.instance;
+            data.heroData = h1.getSaveStructure();
+            data.inputKeys = KeyboardManager.getKeyControls();
+            data.questTriggers = Quest.getQuestStateSave();
+            data.roomName = WorldManager.m_currentRoomName;
+            data.playTime = GameClock.getSaveStructure();
+            return data;
+        }
+
+        public static void unpackData(SaveGameData data)
+        {
+            Hero h1 = Hero.instance;
+            h1.loadSaveStructure(data.heroData);
+            KeyboardManager.loadKeyControls(data.inputKeys);
+            Quest.loadQuestStateSave(data.questTriggers);
+            WorldManager.setRoom(data.roomName);
+            GameClock.loadSaveStructure(data.playTime);
+        }
+
+        public static string generateNewFileName()
+        {
+            if (!Directory.Exists(SAVE_DIRECTORY))
+                Directory.CreateDirectory(SAVE_DIRECTORY);
+            string prefix = "sunset";
+            string suffix = ".sav";
+            int num = 1;
+            for (; File.Exists(SAVE_DIRECTORY + prefix + num + suffix); num++) ;
+            return prefix + num + suffix;
         }
 
         /// <summary>
@@ -121,7 +169,7 @@ namespace SunsetHigh
         /// for previewing save files in the title screen
         /// </summary>
         /// <returns>A list of all save game data in the "SaveData" folder. Can be empty</returns>
-        public static List<SaveGameData> loadAllGames()
+        public static List<SaveGameData> loadAllGames(bool encrypt = true)
         {
             List<SaveGameData> list = new List<SaveGameData>();
             if (Directory.Exists(SAVE_DIRECTORY))
@@ -130,7 +178,7 @@ namespace SunsetHigh
                 for (int i = 0; i < files.Length; i++)
                 {
                     System.Diagnostics.Debug.WriteLine(files[i]);
-                    SaveGameData data = loadGame(files[i].Substring(SAVE_DIRECTORY.Length));
+                    SaveGameData data = getSaveData(files[i].Substring(SAVE_DIRECTORY.Length), encrypt);
                     if (data != null)
                     {
                         list.Add(data);

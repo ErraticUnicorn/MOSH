@@ -10,26 +10,46 @@ using Microsoft.Xna.Framework.Audio;
 namespace SunsetHigh
 {
     /// <summary>
+    /// Structure for saving data about a Hero.
+    /// </summary>
+    public struct HeroSave
+    {
+        public InventorySave inventorySave;
+        public int x;
+        public int y;
+        public Direction dir;
+        public string name;
+    }
+
+    /// <summary>
     /// Hero extends from Character, and is used for the main character
     /// </summary>
-    public class Hero : Character
+    public sealed class Hero : Character
     {
         private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
         private const string PROJECTILE_IMAGE_NAME = "projectile";
 
+        //pickpocket vars
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
 
+        //Shooting vars
         private List<Projectile> projectiles; //List of all projectiles
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
-        private bool canShoot; //Boolean for tinkering with parameters of how often a player can shoot
+        private bool canShoot;      // whether player can shoot a projectile
+        
+        //Speech vars
         private bool talking;
         private Dialogue dialogue;
 
+        //Static vars
         private static volatile Hero inst;
         private static object syncRoot = new Object();
+        /// <summary>
+        /// Returns an instance of the Hero class (singleton)
+        /// </summary>
         public static Hero instance
         {
             get
@@ -229,7 +249,36 @@ namespace SunsetHigh
                 shootTimer = 0.0f;
             }
         }
-      
+
+        /// <summary>
+        /// Used for loading purposes
+        /// </summary>
+        /// <param name="data">The save data for the Hero</param>
+        public void loadSaveStructure(HeroSave data)
+        {
+            this.setX(data.x);
+            this.setY(data.y);
+            this.setDirection(data.dir);
+            this.setName(data.name);
+            this.getInventory().loadSaveStructure(data.inventorySave);
+            this.resetAnimation();
+        }
+
+        /// <summary>
+        /// Used for saving purposes
+        /// </summary>
+        /// <returns>The save data for the Hero</returns>
+        public HeroSave getSaveStructure()
+        {
+            HeroSave data;
+            data.x = this.getX();
+            data.y = this.getY();
+            data.name = this.getName();
+            data.dir = this.getDirection();
+            data.inventorySave = this.getInventory().getSaveStructure();
+            return data;
+        }
+
         /// <summary>
         /// Class to handle the dialogue box/moving through the line tree, etc. Godawful and ugly, but works for right now.
         /// </summary>
@@ -333,7 +382,7 @@ namespace SunsetHigh
                     switch (next.Item2)
                     {
                         case Events.Quest:
-                            Quest.toggleTrigger((QuestID)next.Item3);
+                            Quest.setQuestAccepted((QuestID)next.Item3);
                             end = true;
                             break;
                         case Events.End:

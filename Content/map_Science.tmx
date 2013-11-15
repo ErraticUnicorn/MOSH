@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="pokemonlab" tilewidth="32" tileheight="32" margin="19">
+  <image source="../images/pokemonlab.png" trans="ffffff" width="641" height="482"/>
+ </tileset>
+ <tileset firstgid="267" name="Science" tilewidth="32" tileheight="32" margin="19">
+  <image source="../images/AlchemistPosesandLabTablescrTherapie_zps58ce40b0.png" trans="ffffff" width="384" height="432"/>
+ </tileset>
+ <tileset firstgid="399" name="door" tilewidth="32" tileheight="32">
+  <image source="../images/door.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJyt0zlLA0EYxvERDzDg1WiEBLwaj1ZtJLKp1MZmt/QLBK9v4PUZtPFo1SYmrdp4tMbG3qPR1rP2H5iFN28mkyAu/JhZZveZd3ZmjfnfqxktaEUb2pHwtAlx34FOdKEbPehFH5LoRwppT5sW9wMYxBCGMYJFZDBrZREpgeUaK5vEFKYxijGMY0K8J4UqU5vDPBYwY5/Xdch6QpEpa1zGClaxhnW7Xpmh+4GaT861gU1sYRs7jvpC0YaePF3/LvZsnp5XZsStHNdrj/tL2McBDnHkydPZWVNZX2Tz8jhDAUVHXqAyI5Epz1Nc3xWucYPbGnvg2hs9Vmu9ch9iP02Nca1XfjdJf0OXv6zXtfZjnODUVJ4/XVMjyu+d4wKXpvr/0K3m+o/uUMI9Hkz1WfPVG6n+I57wjBe84s1D15bDu/CBT3zh29S/dG25Os//AriKhLc=
+  </data>
+ </layer>
+ <layer name="chem" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAdOM3IwHCGEcGfCGRPAuLJSGJTgexpQDydEVM/OrgCVHOVgLp5QPn5QLyACPMGEixhhGBC4C0jfj6p5n1jxM8fCcAJ6GdnIHYBYlcgdmPELuZOZNj4AtX5AbE/EAcAcSAjdrGgAQprZL9h8ycl/sXmz4H27yigHwAA8kkb2w==
+  </data>
+ </layer>
+ <layer name="objects" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUUAK+MRKHR8EoGG4AACWWCac=
+  </data>
+ </layer>
+ <layer name="backob" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFgx28ZGRgeAXErxmpY94noDmfgfgLlcz7DTTnDxD/pZJ5o2AUjIKhAQCw+wiV
+  </data>
+ </layer>
+</map>

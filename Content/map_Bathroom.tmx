@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="bathtiles" tilewidth="32" tileheight="32">
+  <image source="../images/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
+ </tileset>
+ <tileset firstgid="136" name="celiannaschooltilesmode" tilewidth="32" tileheight="32">
+  <image source="../images/celiannaschooltilesmode.png" trans="ffffff" width="377" height="431"/>
+ </tileset>
+ <tileset firstgid="279" name="bathroom" tilewidth="48" tileheight="128">
+  <image source="../images/bathroom.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <tileset firstgid="315" name="door" tilewidth="32" tileheight="32">
+  <image source="../images/door.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2D4An0y8Kh5o+YNVvOIMZ8SQKp5AD2MF1I=
+  </data>
+ </layer>
+ <layer name="bathroom" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDCcgzkgaexSQBgqBYVdExfCrAppVPUTjAwCJegI9
+  </data>
+ </layer>
+</map>

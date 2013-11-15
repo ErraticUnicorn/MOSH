@@ -12,6 +12,7 @@ namespace SunsetHigh
     public class Cafeteria : Room
     {
         private Character npcHiding;
+        private Character npcDruggie;
         private Texture2D apple;
         private Texture2D cow;
         private Texture2D hamburger;
@@ -41,6 +42,12 @@ namespace SunsetHigh
             npcHiding.getInventory().addItem(Item.PokeBall, 5);
             npcHiding.setScript(@"Content\Lucas.cafeteriaInformationInteraction.txt");
             CharList.Add(npcHiding);
+
+            npcDruggie = new Character(25 * 32, 1 * 32);
+            npcDruggie.getInventory().addItem(Item.Meds, 1);
+            npcDruggie.setScript(@"Content\Chess.druggieInteraction.txt");
+            npcDruggie.setDirection(Direction.South);
+            CharList.Add(npcDruggie);
         }
 
         public override void loadContent(ContentManager content, string filename)
@@ -51,12 +58,13 @@ namespace SunsetHigh
             hamburger = content.Load<Texture2D>("burger");
             cheese = content.Load<Texture2D>("cheese");
             npcHiding.loadImage(content, "sprite_sheet_herbert", 4, 3, 0.25f);
+            npcDruggie.loadImage(content, "sprite_ffwriter");
 
         }
         public override void updateState()
         {
             base.updateState();
-            if (Quest.isTriggered(QuestID.FoodFight1))
+            if (Quest.isQuestAccepted(QuestID.FoodFight))
             {
                 isFoodFight = true;
             }

@@ -84,7 +84,6 @@ namespace SunsetHigh
         {
             if (dir.Equals(Direction.Undefined)) return;
 
-            this.direction = dir;
             //we should have a standard convention for spritesheets
             //i.e. each row is a direction
             if (this.getImageRows() >= 4)
@@ -93,12 +92,16 @@ namespace SunsetHigh
                 {
                     case Direction.NorthEast:
                     case Direction.NorthWest:
-                    case Direction.North: this.setFrameRow(3); break;
+                    case Direction.North: this.setFrameRow(3); 
+                        this.direction = Direction.North; break;
                     case Direction.SouthEast:
                     case Direction.SouthWest:
-                    case Direction.South: this.setFrameRow(0); break;
-                    case Direction.East: this.setFrameRow(2); break;
-                    case Direction.West: this.setFrameRow(1); break;
+                    case Direction.South: this.setFrameRow(0);
+                        this.direction = Direction.South; break;
+                    case Direction.East: this.setFrameRow(2);
+                        this.direction = Direction.East; break;
+                    case Direction.West: this.setFrameRow(1);
+                        this.direction = Direction.West; break;
                     default: break;
                 }
             }
