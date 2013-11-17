@@ -19,22 +19,6 @@ namespace SunsetHigh {
         public static bool collisionWithSolidAtRelative(Sprite p_sprite, Point p_offset) {
             return collisionWithObjectAtRelative(p_sprite, p_offset, "Solid") != null;
         }
-    
-        public static void CollisionWithProjectiles(Hero h, Character c)
-        {
-            /*
-            List<Projectile> shots = h.getProjectiles();
-            for (int i = 0; i < shots.Count; i++)
-            {
-                if (c.inRange(shots[i], 0))
-                {
-                    shots.Remove(shots[i]);
-                }
-
-            }
-             */
-        }
-
 
         // returns an object in the specified Tiled map object layer that the given sprite collides with
         // throws exception if the specified layer does not exist!
@@ -113,7 +97,39 @@ namespace SunsetHigh {
             return l_collidedObject;
         }
 
-        //rudimentary 1-d collision
+        // clone of Character collision method with Interactable
+        public static IInteractable collisionWithInteractableAtRelative(IInteractable p_interactable, Point p_offset, IInteractable p_exclude)
+        {
+            IInteractable l_collidedObject = null;
+            foreach (IInteractable i in WorldManager.m_currentRoom.Interactables)
+            {
+                if (i == p_exclude)
+                {
+                    continue;
+                }
+                Rectangle l_copy = p_interactable.getBoundingRect();    //preserve this just in case
+                Rectangle l_spriteBounds;
+                l_spriteBounds.X = l_copy.X + p_offset.X;
+                l_spriteBounds.Y = l_copy.Y + p_offset.Y;
+                l_spriteBounds.Width = l_copy.Width;
+                l_spriteBounds.Height = l_copy.Height;
+
+                Rectangle l_charBounds = i.getBoundingRect();
+                if (l_spriteBounds.Intersects(l_charBounds))
+                {
+                    l_collidedObject = i;
+                    break;
+                }
+            }
+            return l_collidedObject;
+        }
+
+        /// <summary>
+        /// Sets the given Sprite one pixel off the closest side of the given Rectangle
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <param name="rect"></param>
+        /// <returns>True if the sprite's position changed, false otherwise</returns>
         public static bool setSpriteOutsideRectangle(Sprite sprite, Rectangle rect)
         {
             if (sprite.getY() + sprite.getHeight() < rect.Y && sprite.getY() != rect.Y - sprite.getHeight())

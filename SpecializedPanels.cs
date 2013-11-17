@@ -114,6 +114,22 @@ namespace SunsetHigh
         }
     }
 
+    public class QuestPanel : ListPanel
+    {
+        private const string FILE_DIRECTORY = @"Content\";
+
+        public QuestPanel()
+            : this(0, 0, 0, 0) { }
+        public QuestPanel(int x, int y, int width, int height)
+            : base(x, y, width, height)
+        {
+        }
+
+        public void loadEntriesFromFile(string fileName)
+        {
+
+        }
+    }
 
     public class SaveDataPanel : ListPanel
     {

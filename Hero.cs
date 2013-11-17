@@ -401,6 +401,7 @@ namespace SunsetHigh
                 index = 0;
             }
         }
+        
         private class PickpocketSystem  //A container for three sprites
         {
             private const int NEGATIVE_WIDTH = 100;

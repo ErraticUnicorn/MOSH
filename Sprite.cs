@@ -15,7 +15,7 @@ namespace SunsetHigh
     /// to the sprite. Alternative, just use this class for 
     /// simple or static drawings.
     /// </summary>
-    public class Sprite
+    public class Sprite : IInteractable
     {
         //class objects
         private static Dictionary<string, Texture2D> textureFinder;
@@ -228,6 +228,18 @@ namespace SunsetHigh
         public void loadImage(ContentManager content, string fileName)
         {
             this.loadImage(content, fileName, 1, 1, 100.0f);
+        }
+
+        // empty definitions to override later
+        public virtual void onInteract()
+        {
+        }
+        public virtual void onCollide()
+        {
+        }
+        public virtual Rectangle getBoundingRect()
+        {
+            return new Rectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         }
 
         /// <summary>

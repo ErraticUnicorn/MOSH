@@ -121,15 +121,10 @@ namespace SunsetHigh
 
         public void smoothMoveCameraAdjust(int delta_x, int delta_y)
         {
-            //if ((cameraOffset.X == delta_x && cameraOffset.Y == delta_y) || !this.isSmoothMoving())
-            //    return;
-            //int delta_x = (int)(delta_x - cameraOffset.X);
-            //int delta_y = (int)(delta_y - cameraOffset.Y);
+            this.smoothStart.X += delta_x;
+            this.smoothStart.Y += delta_y;
             this.smoothEnd.X += delta_x;
             this.smoothEnd.Y += delta_y;
-            //System.Diagnostics.Debug.WriteLine(delta_x + " " + delta_y);
-            //cameraOffset.X = delta_x;
-            //cameraOffset.Y = delta_y;
         }
 
         //public void setSmoothMoveDuration(float time) {

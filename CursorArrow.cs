@@ -24,6 +24,8 @@ namespace SunsetHigh
             this.panel = panel;
             this.setSmoothMoveType(SmoothMoveType.Sqrt);
             this.setPopDuration(POP_TIME);
+
+            WorldManager.OffsetChanged += updateOffsets;
         }
         public CursorArrow(int x, int y, int width, int height)
             : this(x, y, width, height, null) { }

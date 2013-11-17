@@ -24,6 +24,8 @@ namespace SunsetHigh
     /// </summary>
     public class Game1 : Game
     {
+        private const float SCALE_FACTOR = 1.0f;    //other factors break the panels
+
         Hero h1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -63,7 +65,7 @@ namespace SunsetHigh
 
             InGameMenu.init();
             InGameMenu.loadInventoryPanel(h1.getInventory());
-            
+
             //Quest.setTrigger(QuestID.FoodFight1);
 
             base.Initialize();
@@ -89,6 +91,7 @@ namespace SunsetHigh
 
             StartScreen.loadContent(Content);
             InGameMenu.loadContent(Content);
+            LocationNamePanel.instance.loadContent(Content);
 
            //BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
@@ -123,50 +126,32 @@ namespace SunsetHigh
 
             else
             {
-                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                double l_scaleFactor = 1.0;
-                Point l_cameraOffset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;   //time elapsed since last update
+                KeyboardManager.update();                                       //updates current and previous frames of key input
 
+                // Teleport character to new room
                 WorldManager.handleWarp(h1);
-
-                KeyboardManager.update();
-
-                KeyboardManager.handleInGameMenu(l_cameraOffset.X, l_cameraOffset.Y);
-                if (InGameMenu.isExiting())
-                    InGameMenu.updateMovingOffsets(l_cameraOffset.X, l_cameraOffset.Y);
+                // Update the offset based on new room / character position
+                WorldManager.updateCameraOffset(h1, GraphicsDevice, SCALE_FACTOR);
+               
+                // Keyboard listening
+                KeyboardManager.handleInGameMenu();
                 if (!InGameMenu.isOpen())
                 {
                     KeyboardManager.handleCharacterMovement(h1, elapsed);
                     KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
                     KeyboardManager.handleShooting(h1);
-                    KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
-                }                
+                    //KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
+                    KeyboardManager.handleInteractions(h1, WorldManager.m_currentRoom.Interactables);
+                } 
 
-                //CollisionManager.CollisionWithCharacter(h1, c1);
-                //CollisionManager.CollisionWithProjectiles(h1, c1);
-
-                //if (h1.inRangeCollide(p1))
-                //{
-                //    h1.pickup(p1);
-                //    System.Diagnostics.Debug.WriteLine("Picked up "+Enum.GetName(typeof(Item), p1.getItemType()));
-                //}
-
-                // TODO: Add your update logic here
-
+                // Updates based on time
                 InGameMenu.update(elapsed);
                 if (!InGameMenu.isOpen())
                 {
+                    LocationNamePanel.instance.update(elapsed);
                     h1.update(elapsed);
                     WorldManager.update(elapsed);
-                }
-                foreach (Sprite s in WorldManager.m_currentRoom.Interactables)
-                {
-                    if (h1.inRangeCollide(s))
-                    {
-                        WorldManager.setRoom("map_Hallway");     //NOTE HARD CODED
-                        h1.setX(12 * 32);
-                        h1.setY(3 * 32);
-                    }
                 }
 
                 base.Update(gameTime);
@@ -182,9 +167,8 @@ namespace SunsetHigh
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            double l_scaleFactor = 1.0;
-            Point l_cameraOffset = WorldManager.getCameraOffset(h1, GraphicsDevice, l_scaleFactor);
-            Matrix l_cameraMatrix = Matrix.CreateTranslation(-l_cameraOffset.X, -l_cameraOffset.Y, 0) * Matrix.CreateScale((float) l_scaleFactor);
+            Point l_cameraOffset = WorldManager.m_currentCameraOffset;
+            Matrix l_cameraMatrix = Matrix.CreateTranslation(-l_cameraOffset.X, -l_cameraOffset.Y, 0) * Matrix.CreateScale(SCALE_FACTOR);
 
             spriteBatch.Begin(0, null, null, null, null, null, l_cameraMatrix);
 
@@ -196,12 +180,13 @@ namespace SunsetHigh
 
             else
             {
-                Rectangle l_visibleArea = new Rectangle(l_cameraOffset.X, l_cameraOffset.Y, (int)(GraphicsDevice.Viewport.Width / l_scaleFactor),
-                    (int)(GraphicsDevice.Viewport.Height / l_scaleFactor));
+                Rectangle l_visibleArea = new Rectangle(l_cameraOffset.X, l_cameraOffset.Y, (int)(GraphicsDevice.Viewport.Width / SCALE_FACTOR),
+                    (int)(GraphicsDevice.Viewport.Height / SCALE_FACTOR));
                 WorldManager.drawMap(spriteBatch, l_visibleArea);
 
                 h1.draw(spriteBatch);
 
+                LocationNamePanel.instance.draw(spriteBatch);
                 InGameMenu.draw(spriteBatch);
 
             }

@@ -14,8 +14,6 @@ namespace SunsetHigh
     /// </summary>
     public static class InGameMenu
     {
-        private static Point lastSpawnOffset;
-        private static Point lastSmoothMoveOffset;
         private static bool initialized = false;
         private static bool menuOpen;
 
@@ -37,8 +35,6 @@ namespace SunsetHigh
                 return;
             
             //initialize static variables
-            lastSpawnOffset = new Point();
-            lastSmoothMoveOffset = new Point();
             components = new List<Sprite>();
             panelStack = new Stack<Panel>();
             activePanel = menuBody;
@@ -264,50 +260,7 @@ namespace SunsetHigh
                 sprite.update(elapsed);
             }
         }
-        public static void updateOffsets(int x, int y)
-        {
-            if (lastSpawnOffset.Equals(new Point(x, y)))
-                return;
-            //System.Diagnostics.Debug.WriteLine(x + " " + y);
-            int delta_x = x - lastSpawnOffset.X;
-            int delta_y = y - lastSpawnOffset.Y;
-            foreach (Sprite sprite in components)
-            {
-                sprite.setX(sprite.getX() + delta_x);
-                sprite.setY(sprite.getY() + delta_y);
-                if (sprite is PopInOutSprite)
-                {
-                    PopInOutSprite pSprite = (PopInOutSprite)sprite;
-                    pSprite.setPopLocations(pSprite.getHideX() + delta_x, pSprite.getHideY() + delta_y,
-                        pSprite.getAppearX() + delta_x, pSprite.getAppearY() + delta_y);
-                    pSprite.setX(pSprite.getHideX());
-                    pSprite.setY(pSprite.getHideY());
-                }
-            }
-            lastSpawnOffset.X = x;
-            lastSpawnOffset.Y = y;
-            lastSmoothMoveOffset.X = x;
-            lastSmoothMoveOffset.Y = y;
-        }
-        public static void updateMovingOffsets(int x, int y)
-        {
-            if (lastSmoothMoveOffset.Equals(new Point(x, y)))
-                return;
-            int delta_x = x - lastSmoothMoveOffset.X;
-            int delta_y = y - lastSmoothMoveOffset.Y;
-            foreach (Sprite sprite in components)
-            {
-                if (sprite is PopInOutSprite)
-                {
-                    PopInOutSprite pSprite = (PopInOutSprite)sprite;
-                    pSprite.smoothMoveCameraAdjust(delta_x, delta_y); 
-                    //pSprite.setPopLocations(pSprite.getHideX() + delta_x, pSprite.getHideY() + delta_y,
-                    //    pSprite.getAppearX() + delta_x, pSprite.getAppearY() + delta_y);
-                }
-            }
-            lastSmoothMoveOffset.X = x;
-            lastSmoothMoveOffset.Y = y;
-        }
+
         public static void draw(SpriteBatch sb)
         {
             nullCheck();

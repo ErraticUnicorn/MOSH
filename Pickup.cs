@@ -87,5 +87,14 @@ namespace SunsetHigh
             this.setVisible(false);
             this.setPosition(-INF, -INF);   //inelegant, but it should work
         }
+
+        /// <summary>
+        /// We assume whenever the Hero collides with a pickup he picks it up.
+        /// </summary>
+        public override void onCollide()
+        {
+            base.onCollide();
+            Hero.instance.pickup(this);     //roundabout.. change later
+        }
     }
 }

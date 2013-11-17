@@ -11,8 +11,8 @@ namespace SunsetHigh
     public class TextPanel : Panel, IMessagePanel
     {
         private string message;
-        private SpriteFont font;
         private Color messageColor;
+        protected SpriteFont font;
 
         public TextPanel()
             : this(0, 0, 0, 0, "No message") { }
@@ -27,11 +27,11 @@ namespace SunsetHigh
             this.setMessageColor(Color.Black);
         }
 
-        public void setMessage(string message) { this.message = message; }
-        public void setMessageColor(Color color) { this.messageColor = color; }
+        public virtual void setMessage(string message) { this.message = message; }
+        public virtual void setMessageColor(Color color) { this.messageColor = color; }
 
-        public string getMessage() { return this.message; }
-        public Color getMessageColor() { return this.messageColor; }
+        public virtual string getMessage() { return this.message; }
+        public virtual Color getMessageColor() { return this.messageColor; }
 
         public override void onConfirm() { }
 

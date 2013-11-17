@@ -62,7 +62,7 @@ namespace SunsetHigh
         public List<InteractionTreeNode> dialogue;   
         public Interaction(string interactionFile)
         {
-            string[] lines = System.IO.File.ReadAllLines(interactionFile);
+             string[] lines = System.IO.File.ReadAllLines(interactionFile);
             this.dialogue = new List<InteractionTreeNode>();
             foreach (var line in lines)
             {

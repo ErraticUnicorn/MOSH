@@ -19,7 +19,7 @@ namespace SunsetHigh
         public HeroSave heroData;           //Data about the Hero (Inventory, position, etc.)
         public string roomName;             //The current room
         public Keys[] inputKeys;            //custom keys for input
-        public QuestState[] questTriggers;        //triggers for how far along in plot we are 
+        public QuestState[] questStates;        //triggers for how far along in quests we are
     }
 
     /// <summary>
@@ -137,7 +137,7 @@ namespace SunsetHigh
             Hero h1 = Hero.instance;
             data.heroData = h1.getSaveStructure();
             data.inputKeys = KeyboardManager.getKeyControls();
-            data.questTriggers = Quest.getQuestStateSave();
+            data.questStates = Quest.getQuestStateSave();
             data.roomName = WorldManager.m_currentRoomName;
             data.playTime = GameClock.getSaveStructure();
             return data;
@@ -148,7 +148,7 @@ namespace SunsetHigh
             Hero h1 = Hero.instance;
             h1.loadSaveStructure(data.heroData);
             KeyboardManager.loadKeyControls(data.inputKeys);
-            Quest.loadQuestStateSave(data.questTriggers);
+            Quest.loadQuestStateSave(data.questStates);
             WorldManager.setRoom(data.roomName);
             GameClock.loadSaveStructure(data.playTime);
         }

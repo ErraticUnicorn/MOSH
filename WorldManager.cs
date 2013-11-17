@@ -9,10 +9,20 @@ using TiledLib;
 
 namespace SunsetHigh {
 
+    public class CameraOffsetEventArgs : EventArgs
+    {
+        public int dx_offset { get; set; }
+        public int dy_offset { get; set; }
+    }
+
     public static class WorldManager {
         private static Dictionary<String, Room> m_rooms;
+
         public static Room m_currentRoom { get; private set; }
         public static string m_currentRoomName { get; private set; }
+        public static Point m_currentCameraOffset { get; private set; }
+
+        public static event EventHandler<CameraOffsetEventArgs> OffsetChanged;
 
         public static void loadMaps(ContentManager p_content) {
             m_rooms = new Dictionary<String, Room>();
@@ -55,10 +65,11 @@ namespace SunsetHigh {
                 setRoom((string) l_collidedObject.Properties["warpMap"]);
                 p_hero.setX(m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"]);
                 p_hero.setY(m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"]);
+                LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
             }
         }
 
-        public static Point getCameraOffset(Hero p_hero, GraphicsDevice p_gd, double l_scaleFactor) {
+        public static void updateCameraOffset(Hero p_hero, GraphicsDevice p_gd, double l_scaleFactor) {
             Point l_cameraOffset = new Point();
             l_cameraOffset.X = (int) (p_hero.getXCenter() - p_gd.Viewport.Width / l_scaleFactor / 2);
             l_cameraOffset.Y = (int) (p_hero.getYCenter() - p_gd.Viewport.Height / l_scaleFactor / 2);
@@ -71,7 +82,25 @@ namespace SunsetHigh {
             if (l_cameraOffset.X > l_maxCameraX) { l_cameraOffset.X = l_maxCameraX; }
             if (l_cameraOffset.Y > l_maxCameraY) { l_cameraOffset.Y = l_maxCameraY; }
 
-            return l_cameraOffset;
+            Point l_previousCameraOffset;
+            l_previousCameraOffset.X = m_currentCameraOffset.X;
+            l_previousCameraOffset.Y = m_currentCameraOffset.Y;
+
+            int l_dx_offset = l_cameraOffset.X - l_previousCameraOffset.X;
+            int l_dy_offset = l_cameraOffset.Y - l_previousCameraOffset.Y;
+
+            //update
+            m_currentCameraOffset = l_cameraOffset;
+            if (!(l_dx_offset == 0 && l_dy_offset == 0))
+            {
+                CameraOffsetEventArgs args = new CameraOffsetEventArgs();
+                args.dx_offset = l_dx_offset;
+                args.dy_offset = l_dy_offset;
+                if (OffsetChanged != null)
+                {
+                    OffsetChanged(null, args);  //call all registered listeners
+                }
+            }
         }
 
         public static void drawMap(SpriteBatch p_spriteBatch, Rectangle p_worldArea) {
@@ -84,5 +113,4 @@ namespace SunsetHigh {
             m_currentRoom.update(elapsed);
         }
     }
-
 }

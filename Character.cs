@@ -131,12 +131,23 @@ namespace SunsetHigh
                     (this.getY() >= other.getY() && this.getY() - offset <= other.getY() + other.getHeight() + offset)));
         }
 
+        public bool inRange(IInteractable other, int offset)
+        {
+            Rectangle copy = other.getBoundingRect();   // not sure if it returns the reference
+            Rectangle inflatedRect;
+            inflatedRect.X = copy.X - offset;
+            inflatedRect.Y = copy.Y - offset;
+            inflatedRect.Width = copy.Width + offset * 2;
+            inflatedRect.Height = copy.Height + offset * 2;
+            return this.getBoundingRect().Intersects(inflatedRect);
+        }
+
         /// <summary>
         /// Checks if this Character is in a given range to perform an action such as talking or pickpocketing
         /// </summary>
         /// <param name="other">The other Sprite to range check against</param>
         /// <returns>True if the Character is in range, false if not</returns>
-        public bool inRangeAction(Sprite other)
+        public bool inRangeAction(IInteractable other)
         {
             return inRange(other, ACTION_OFFSET);
         }
@@ -145,7 +156,7 @@ namespace SunsetHigh
         /// </summary>
         /// <param name="other">The other Sprite to range check against</param>
         /// <returns>True if the Character is in range, false if not</returns>
-        public bool inRangeCollide(Sprite other)
+        public bool inRangeCollide(IInteractable other)
         {
             return inRange(other, COLLISION_OFFSET);
         }
@@ -161,6 +172,15 @@ namespace SunsetHigh
                    (this.getDirection().Equals(Direction.South) && this.getY() < other.getY()) ||
                    (this.getDirection().Equals(Direction.East) && this.getX() < other.getX()) ||
                    (this.getDirection().Equals(Direction.West) && this.getX() > other.getX()));
+        }
+
+        public bool facing(IInteractable other)
+        {
+            Rectangle rect = other.getBoundingRect();
+            return ((this.getDirection().Equals(Direction.North) && this.getY() > rect.Y) ||
+                   (this.getDirection().Equals(Direction.South) && this.getY() < rect.Y) ||
+                   (this.getDirection().Equals(Direction.East) && this.getX() < rect.X) ||
+                   (this.getDirection().Equals(Direction.West) && this.getX() > rect.X));
         }
 
         /// <summary>
@@ -202,6 +222,12 @@ namespace SunsetHigh
         {
             this.getInventory().addItem(p.getItemType());
             p.banish();
+        }
+
+        public override void onInteract()
+        {
+            base.onInteract();
+            Hero.instance.converse(this);
         }
 
         /// <summary>

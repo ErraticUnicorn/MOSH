@@ -41,13 +41,13 @@ namespace SunsetHigh
             npcHiding = new Character(23 * 32, 7 * 32);
             npcHiding.getInventory().addItem(Item.PokeBall, 5);
             npcHiding.setScript(@"Content\Lucas.cafeteriaInformationInteraction.txt");
-            CharList.Add(npcHiding);
+            this.addObject(npcHiding);
 
             npcDruggie = new Character(25 * 32, 1 * 32);
             npcDruggie.getInventory().addItem(Item.Meds, 1);
             npcDruggie.setScript(@"Content\Chess.druggieInteraction.txt");
             npcDruggie.setDirection(Direction.South);
-            CharList.Add(npcDruggie);
+            this.addObject(npcDruggie);
         }
 
         public override void loadContent(ContentManager content, string filename)
@@ -99,7 +99,7 @@ namespace SunsetHigh
                     {
                         food.setImage(apple);
                     }
-                    Interactables.Add(food);
+                    this.addObject(food);
 
                 }
                 if (FC2timer > .5)
@@ -117,7 +117,7 @@ namespace SunsetHigh
                         {
                             food.setImage(apple);
                         }
-                        Interactables.Add(food);
+                        this.addObject(food);
                     }
                     if (FC2counter > 7)
                     {
@@ -142,7 +142,7 @@ namespace SunsetHigh
                         {
                             food.setImage(apple);
                         }
-                        Interactables.Add(food);
+                        this.addObject(food);
                     }
 
                 }
@@ -166,7 +166,7 @@ namespace SunsetHigh
                         {
                             food.setImage(apple);
                         }
-                        Interactables.Add(food);
+                        this.addObject(food);
                     }
                     if (FC4counter >= 17)
                     {
@@ -176,7 +176,10 @@ namespace SunsetHigh
             }
             else
             {
-                Interactables.Clear();
+                //Interactables.Clear();
+
+                // too lazy to clean up projectiles..
+                // it can be done easily though
             }
         }
 

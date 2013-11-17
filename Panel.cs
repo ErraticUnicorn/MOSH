@@ -56,7 +56,9 @@ namespace SunsetHigh
             this.setYMargin(DEFAULT_Y_MARGIN);
             this.setHighlighted(false);
             this.borders = new BorderSystem(this.getWidth(), this.getHeight());
-            this.setColor(Color.DarkGoldenrod);
+            this.setColor(Color.DarkCyan);
+
+            WorldManager.OffsetChanged += updateOffsets;
         }
 
         public void setPanelBackgroundVisible(bool visible) { this.backgroundVisible = visible; }
@@ -105,7 +107,9 @@ namespace SunsetHigh
         /// Invoked when this panel is exiting the user's view
         /// </summary>
         public virtual void onExit() { this.setHighlighted(false);  }
-
+        /// <summary>
+        /// Invoked when game resets
+        /// </summary>
         public virtual void reset() { }
 
         public override void loadContent(ContentManager content)

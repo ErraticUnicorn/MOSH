@@ -115,6 +115,25 @@ namespace SunsetHigh
             this.movingIn = false;
         }
 
+        /// <summary>
+        /// Used for listening to camera offset update events, so the sprite
+        /// stays in a constant position on screen whenever the character moves
+        /// (giving the appearance of a HUD)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void updateOffsets(object sender, CameraOffsetEventArgs e)
+        {
+            if (this.isSmoothMoving())
+            {
+                this.smoothMoveCameraAdjust(e.dx_offset, e.dy_offset);
+            }
+            this.setX(this.getX() + e.dx_offset);
+            this.setY(this.getY() + e.dy_offset);
+            this.setPopLocations(this.getHideX() + e.dx_offset, this.getHideY() + e.dy_offset,
+                this.getAppearX() + e.dx_offset, this.getAppearY() + e.dy_offset);
+        }
+
         public override void update(float elapsed)
         {
             base.update(elapsed);

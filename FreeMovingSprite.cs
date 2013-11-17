@@ -170,8 +170,7 @@ namespace SunsetHigh
             {
                 if ((l_offset.X == 0) != (l_offset.Y == 0))     //only one offset is zero (multiple cannot be handled yet)
                 {
-                    return CollisionManager.setSpriteOutsideRectangle(this,
-                        new Rectangle(other.getX(), other.getY(), other.getWidth(), other.getHeight()));
+                    return CollisionManager.setSpriteOutsideRectangle(this, other.getBoundingRect());
                 }
             }
 

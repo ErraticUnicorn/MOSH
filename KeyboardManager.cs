@@ -300,37 +300,60 @@ namespace SunsetHigh
             }
         }
 
-        public static void handleTalking(Hero hero, List<Character> targets)
+        //public static void handleTalking(Hero hero, List<Character> targets)
+        //{
+        //    nullCheck();
+
+        //    if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk]))
+        //    {
+        //        if (hero.isTalking())
+        //        {
+        //            hero.stopTalking();
+        //        }
+        //        else
+        //        {
+        //            for (int i = 0; i < targets.Count; i++)
+        //            {
+        //                if (hero.inRangeAction(targets[i]))
+        //                {
+        //                    hero.converse(targets[i]);
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+        public static void handleInteractions(Hero hero, List<IInteractable> targets)
         {
             nullCheck();
 
-            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk]))
+            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk])) //we will replace this with "action" key later
             {
+                // NOTE: Get rid of this once we clean up dialog
                 if (hero.isTalking())
                 {
                     hero.stopTalking();
                 }
-                else
+                // End NOTE
+                for (int i = 0; i < targets.Count; i++)
                 {
-                    for (int i = 0; i < targets.Count; i++)
+                    //System.Diagnostics.Debug.WriteLine(targets[i].getBoundingRect().X + " " + targets[i].getBoundingRect().Y);
+                    if (hero.inRangeAction(targets[i]) && hero.facing(targets[i]))
                     {
-                        if (hero.inRangeAction(targets[i]))
-                        {
-                            hero.converse(targets[i]);
-                            break;
-                        }
+                        targets[i].onInteract();
+                        break;
                     }
                 }
             }
         }
 
-        public static void handleInGameMenu(int offset_x, int offset_y)
+        public static void handleInGameMenu()
         {
             if (!InGameMenu.isOpen())
             {
                 if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MenuToggle]))
                 {
-                    InGameMenu.updateOffsets(offset_x, offset_y);
                     InGameMenu.open();
                 }
             }

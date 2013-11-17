@@ -23,10 +23,10 @@ namespace SunsetHigh
             npc4.getInventory().addItem(Item.PokeBall, 5);
             npc1.setScript(@"Content\Phil.libraryQuestInteraction.txt");
             npc1.setDirection(Direction.West);
-            CharList.Add(npc1);
-            CharList.Add(npc2);
-            CharList.Add(npc3);
-            CharList.Add(npc4);
+            this.addObject(npc1);
+            this.addObject(npc2);
+            this.addObject(npc3);
+            this.addObject(npc4);
         }
 
         public override void loadContent(Microsoft.Xna.Framework.Content.ContentManager content, string filename)
