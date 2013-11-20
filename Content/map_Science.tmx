@@ -1,32 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="pokemonlab" tilewidth="32" tileheight="32" margin="19">
-  <image source="../images/pokemonlab.png" trans="ffffff" width="641" height="482"/>
- </tileset>
- <tileset firstgid="267" name="Science" tilewidth="32" tileheight="32" margin="19">
-  <image source="../images/AlchemistPosesandLabTablescrTherapie_zps58ce40b0.png" trans="ffffff" width="384" height="432"/>
- </tileset>
- <tileset firstgid="399" name="door" tilewidth="32" tileheight="32">
-  <image source="../images/door.png" trans="ffffff" width="318" height="798"/>
+ <tileset firstgid="1" name="science" tilewidth="32" tileheight="32">
+  <image source="tileset/science.png" trans="ffffff" width="640" height="640"/>
  </tileset>
  <layer name="Tile Layer 1" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJyt0zlLA0EYxvERDzDg1WiEBLwaj1ZtJLKp1MZmt/QLBK9v4PUZtPFo1SYmrdp4tMbG3qPR1rP2H5iFN28mkyAu/JhZZveZd3ZmjfnfqxktaEUb2pHwtAlx34FOdKEbPehFH5LoRwppT5sW9wMYxBCGMYJFZDBrZREpgeUaK5vEFKYxijGMY0K8J4UqU5vDPBYwY5/Xdch6QpEpa1zGClaxhnW7Xpmh+4GaT861gU1sYRs7jvpC0YaePF3/LvZsnp5XZsStHNdrj/tL2McBDnHkydPZWVNZX2Tz8jhDAUVHXqAyI5Epz1Nc3xWucYPbGnvg2hs9Vmu9ch9iP02Nca1XfjdJf0OXv6zXtfZjnODUVJ4/XVMjyu+d4wKXpvr/0K3m+o/uUMI9Hkz1WfPVG6n+I57wjBe84s1D15bDu/CBT3zh29S/dG25Os//AriKhLc=
+   eJyt0WVwF2QABvD/RAQVBMSN7txg9KjR3TmcLBgdwkBAGZ1KGzRYNEpJSHcpoQgGEgYhZdAooaC/3fGB4yPne+/v3rvn7nm+vMGBQCCETGQmC1nJRnZykJNc5CYPeclHfgpQkEIUJpQwilCUcIpRnBKUpBSlKUMEZSlHeSpQkUgqUZkqVKUa1alBTWpRmzrUpR71aUBDGtGYJjSlGc1pQUuiaMWLRPMSrYkhljjiaUMCbWlHezrQkU50pgtd6cbLdKcHifSkF6/Qmz705VVeox9J9GcAAxnEYIYwlGEMZwQjGcXrvMFoxjCWcYxnAhN5k7d4m3eYxGSmMJVpTGcGM5nFu7zH+3zAh8xmDnOZx3wWsJBFfMTHLGYJS1nGcj5hBStZxWo+ZQ1rWcd6NrCRTWxmC1vZxnZ2sJNd7GYPn/E5e9nHfg7wBV9ykK84xGG+5hu+5TuO8D1HOcZxTvADP/ITP3OSU5zmDL9wlnOc5wIX+ZXf+J0/uMRlrnCVa1znBjf5k7+4xW3ucJe/+Yd73OdfAkEuT5CCJ0nJU6QiNU/zDM+ShrQ8RzrSk4HnycgLBBNCJjKThaxkIzs5yEkucpOHvOQjPwUoSCEKE0rFB5L/N9xbjOKUoCSlKE0ZIihLOcpT4UE3kkpUfmgvWXVqUJNa1KYOdalHfRrQkEY0pglNaUbzR/YGBgXmdKYFVQgjRh5LHPG0IYG2tKM9Hej4yFayQfpdaElVihAtf1yD9bsSRTWKkiR/HIlBgf/9/AeViKzA
   </data>
  </layer>
- <layer name="chem" width="20" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYKAdOM3IwHCGEcGfCGRPAuLJSGJTgexpQDydEVM/OrgCVHOVgLp5QPn5QLyACPMGEixhhGBC4C0jfj6p5n1jxM8fCcAJ6GdnIHYBYlcgdmPELuZOZNj4AtX5AbE/EAcAcSAjdrGgAQprZL9h8ycl/sXmz4H27yigHwAA8kkb2w==
-  </data>
- </layer>
- <layer name="objects" width="20" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUUAK+MRKHR8EoGG4AACWWCac=
-  </data>
- </layer>
- <layer name="backob" width="20" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFgx28ZGRgeAXErxmpY94noDmfgfgLlcz7DTTnDxD/pZJ5o2AUjIKhAQCw+wiV
-  </data>
- </layer>
+ <objectgroup name="Solid" width="20" height="20">
+  <object x="170" y="135" width="62" height="61"/>
+  <object x="1" y="-2" width="636" height="41"/>
+  <object x="2" y="35" width="13" height="572"/>
+  <object x="15" y="590" width="626" height="17"/>
+  <object x="621" y="30" width="19" height="416"/>
+  <object x="498" y="136" width="123" height="38"/>
+  <object x="556" y="32" width="67" height="56"/>
+  <object x="51" y="274" width="56" height="56"/>
+  <object x="49" y="370" width="57" height="50"/>
+  <object x="22" y="557" width="121" height="32"/>
+ </objectgroup>
 </map>

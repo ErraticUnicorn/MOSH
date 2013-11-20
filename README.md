@@ -34,3 +34,11 @@ Importing NAudio (for background music)
 In Visual Studio, go to Project->Add reference and find "naudio.dll" (which is in this repo under "Resources"). NOTE: Do NOT get the NAudio release DLL from online, as that is an earlier version. Either try the one in this repo or build it from the source code. Email me if there are questions.
 
 BGMusic.cs should compile with the NAudio reference. Use its static methods to manipulate background music. When passing in a filename as a string, do include the file extension.
+
+Adding Warp to a .tmx File
+---
+In the Tiled map, you need to add an object layer called "Teleport". In this layer, you put in all the collision boxes for the warp spots. Each collision box currently has three attributes (which can be set in the Object Properties dialogue box): warpMap, warpX, and warpY.
+1) warpMap is a string which represents the name of the map that the player should warp to
+2) warpX is an integer which represents the x coordinate that the player should warp to (measured in tiles, not pixels)
+3) warpY is the same thing as warpX except it represents the y coordinate
+4) I plan on adding another attribute for the direction that the player should be facing after teleporting (probably called warpDirection)

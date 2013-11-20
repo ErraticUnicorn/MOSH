@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="ScreenshotSchool" tilewidth="32" tileheight="32" margin="19">
-  <image source="../images/ScreenshotSchool.png" width="480" height="318"/>
- </tileset>
- <tileset firstgid="127" name="hall" tilewidth="32" tileheight="32" margin="19">
-  <image source="../images/indoor_free_tileset__by_thegreatblaid-d5x95zt.png" width="624" height="304"/>
- </tileset>
- <tileset firstgid="271" name="AlchemistPosesandLabTablescrTherapie_zps58ce40b0" tilewidth="32" tileheight="32" margin="19">
-  <image source="../images/AlchemistPosesandLabTablescrTherapie_zps58ce40b0.png" trans="ffffff" width="384" height="432"/>
- </tileset>
- <tileset firstgid="403" name="door" tilewidth="32" tileheight="32">
-  <image source="../images/door.png" trans="ffffff" width="318" height="798"/>
+ <tileset firstgid="1" name="math" tilewidth="32" tileheight="32">
+  <image source="tileset/math.png" trans="ffffff" width="640" height="640"/>
  </tileset>
  <layer name="Tile Layer 1" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0T0OgkAQhuFR1IZCUHtvIBZKJRRi5Q8qlYqg9z+Fb7GUsGSzUQqTfZKZTPZLJuP2RFzLeNKHgwGGGBnUVd6Y2oOPCaaYGdRV3lzs+OeJ7HHAUfULBFjWzHV5N9zxUP0GEeKa+bf31e13wRVZyzzdfiVeeHfkviekOKt+hTVCw/vmeKJQ/RYJdj/at4t5TUz+2Mz7AHoPMHU=
+   eJyt1FWzFlQUBuDvo+vQId3d3XHo7u4+dEmDhICC0qmE0t0NCijdkkqHoggoHRbxMJwLfoB71jPvzL54Z1+s2cFAIBCBiEQiMlGISjSiE4OYxCKE2MQhLvGITwISkojEJOEDkpKM5KQgJalITRrSko70ZCAjmchMFrKSjezkICe5yE0e8pKP/BSgIIUoTBGKUozilKAkpShNGUIpSznKU4GKVKIyVahKNapTg5rUojZ1qEs96tOAhjSiMU1oSjOa04KWtKI1bWhLO9rTgY6E0YnOdKEr3ehOD3rSi9704UP60o/+DGAggxjMEIbyEcMYzghG8jGjGM0YPuFTxjKOz/ic8UxgIpOYzBSmMo3pzGAms/iCL5nNHOYyj6/4mvksYCGLWMwSlrKM5axgJatYzRrWso71bGAjm9jMFrayje3sYCff8C272M0evuN79rKP/RzgIIc4zBGOcozjnOAkP3CK05zhLOc4z4/8xAUuconLXOEq17jODW7yM79wi1/5jdv8zh3uco8/+JP7POAhj3jME57yjOe84C/+5h/+5T9e8orXBIKGCEQMvtu7yDIKUYlGdGIQk1iEEJs4xCUe8UlAQhKRmCThfUllMpKTgpSkIjVpSEs60pOBjGQiM1nISjayh/fllLnITR7yko/8FKAghShMEYpSjOKUoCSlKB3eFyrLUo7yVKAilahMFapSjerUoCa1qE0d6lKP+jSgIY1oTBOa0ozmtKAlrWhNG9rSjvZ0ePsuwuhEZ7rQlW50pwc96RV895+9r5+7/gxgIIMYzBCGBgP/+3kDKLyedg==
   </data>
  </layer>
- <layer name="Tile Layer 2" width="20" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYKA9mMrIwDANiKcz4mbDwEwgexYQz2bEbR4pYBHQnMVAvATNvHVA/nog3kAle7YDzdkBxDupZN4oGAWjYGiAjcA8v4mK+X4X0KzdQ6QcAQBZZBAk
-  </data>
- </layer>
+ <objectgroup name="Solid" width="20" height="20">
+  <object x="0" y="2" width="29" height="602"/>
+  <object x="31" y="577" width="606" height="30"/>
+  <object x="610" y="513" width="30" height="58"/>
+  <object x="607" y="-4" width="31" height="384"/>
+  <object x="1" y="0" width="634" height="46"/>
+  <object x="515" y="32" width="59" height="41"/>
+  <object x="270" y="332" width="54" height="25"/>
+  <object x="394" y="333" width="56" height="22"/>
+  <object x="395" y="235" width="57" height="24"/>
+  <object x="266" y="236" width="60" height="25"/>
+  <object x="141" y="235" width="60" height="26"/>
+  <object x="140" y="331" width="59" height="23"/>
+  <object x="140" y="427" width="58" height="26"/>
+  <object x="268" y="427" width="59" height="28"/>
+  <object x="392" y="427" width="65" height="29"/>
+  <object x="566" y="526" width="38" height="40"/>
+  <object x="68" y="104" width="57" height="41"/>
+ </objectgroup>
 </map>

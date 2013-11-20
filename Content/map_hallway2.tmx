@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hall" tilewidth="32" tileheight="32">
+  <image source="tileset/hall.png" trans="ffffff" width="1120" height="640"/>
+ </tileset>
+ <tileset firstgid="701" name="locker" tilewidth="32" tileheight="32">
+  <image source="locker.png" trans="ffffff" width="318" height="798"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxTZ2BgUKcCvkEkpoZdA20vsXZS2+5RewdfHA90eiY1jCjFo/aO2jtq76i95No70jAAh6JZ6A==
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztklkOwiAYhH96SNebuEXv4YLLNWp40kc9hefwM/WhIdBAKYkaJ5kMbQbmH4LIH9+CpRJZqe58oThy1ingvFDfL6IsRM5FuobgVoi+wLJSucJUDcGdPLyaOTUzvL4lVWP7hu3oBvW+9f+PzG/c17enqmwXY9DHP4BDOILj935XX19em+wJ3imcwTlcqOa+a0/eIbLvBv8W7qCG+4a+PrS9axc+4T2zNsxhcqs9A/mG7ia32rl0Nty3ya127hM83e9M
+  </data>
+ </layer>
+ <objectgroup name="Solid" width="30" height="20">
+  <object x="-1" y="-1" width="543" height="275"/>
+  <object x="542" y="-1" width="32" height="62"/>
+  <object x="544" y="193" width="30" height="83"/>
+  <object x="897" y="0" width="64" height="62"/>
+  <object x="931" y="63" width="31" height="158"/>
+  <object x="897" y="193" width="63" height="445"/>
+  <object x="1" y="579" width="957" height="60"/>
+ </objectgroup>
+</map>
