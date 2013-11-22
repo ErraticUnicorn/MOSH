@@ -17,10 +17,10 @@ namespace SunsetHigh
             npc2 = new Character(1 * 32, 11 * 32);
             npc3 = new Character(20 * 32, 12 * 32);
             npc4 = new Character(24 * 32, 14 * 32);
-            npc1.getInventory().addItem(Item.PokeBall, 5);
-            npc2.getInventory().addItem(Item.PokeBall, 5);
-            npc3.getInventory().addItem(Item.PokeBall, 5);
-            npc4.getInventory().addItem(Item.PokeBall, 5);
+            npc1.inventory.addItem(Item.PokeBall, 5);
+            npc2.inventory.addItem(Item.PokeBall, 5);
+            npc3.inventory.addItem(Item.PokeBall, 5);
+            npc4.inventory.addItem(Item.PokeBall, 5);
             npc1.setScript(@"Content\Phil.libraryQuestInteraction.txt");
             npc1.setDirection(Direction.West);
             this.addObject(npc1);

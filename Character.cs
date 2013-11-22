@@ -9,6 +9,19 @@ using Microsoft.Xna.Framework.Content;
 namespace SunsetHigh
 {
     /// <summary>
+    /// Specifies a type of clique for certain characters to belong to.
+    /// </summary>
+    public enum Clique
+    {
+        None = -1,
+        Nerd = 0,
+        Jock,
+        Prep,
+        Bully,
+        Slacker
+    }
+
+    /// <summary>
     /// Character extends from FreeMovingSprite, adding behavior for movement and inventory.
     /// Each character also has an Inventory (all his/her items).
     /// </summary>
@@ -17,16 +30,18 @@ namespace SunsetHigh
         private const int ACTION_OFFSET = 3;        //pixels offset between sprite and action boxes
                                                     //the "action box" being area where character can interact with environment
         private const int COLLISION_OFFSET = 0;     //pixels offset between sprite and other sprites for collisions
-        //private const float RAD2_OVER_2 = (float)Math.Sqrt(2.0) / 2.0f;
 
         //mechanics
         private Direction direction;                //which direction the character is facing
         private bool moving;                        //whether character is currently in motion
+
         //personal data
-        private bool male;                          //male or female
-        private string name;                        //character's name
+        private bool male;                          //male or female (male by default)
+        private string name;                        //character's name ("NAMELESS" by default)
+        private Clique clique;                      //clique type of this character (None by default)
+        
         public Interaction script;                  //script given to NPCs
-        private Inventory inventory;                //all the items this character has
+        public Inventory inventory { get; set; }    //all the items this character has
 
         /// <summary>
         /// Initializes a default Character at the origin which matches the dimensions
@@ -57,6 +72,7 @@ namespace SunsetHigh
             this.inventory = new Inventory();
             setName("NAMELESS");
             setMale(true);
+            setClique(Clique.None);
             setMoving(false);
             setDirection(Direction.South);
             if(file != string.Empty)
@@ -64,8 +80,8 @@ namespace SunsetHigh
         }
 
         public Direction getDirection() { return this.direction; }
-        public Inventory getInventory() { return this.inventory; }
         public string getName() { return this.name; }
+        public Clique getClique() { return this.clique; }
         public bool isMoving() { return this.moving; }
         public bool isMale() { return this.male; }
         public bool isFemale() { return !this.male; }
@@ -73,6 +89,7 @@ namespace SunsetHigh
         public void setMoving(bool moving) { this.moving = moving; }
         public void setMale(bool male) { this.male = male; }
         public void setName(string name) { this.name = name; }
+        public void setClique(Clique clique) { this.clique = clique; }
         public void setScript(string file) { this.script = new Interaction(file); }
 
         /// <summary>
@@ -220,7 +237,7 @@ namespace SunsetHigh
         /// <param name="p">The Pickup to add</param>
         public void pickup(Pickup p)
         {
-            this.getInventory().addItem(p.getItemType());
+            this.inventory.addItem(p.getItemType());
             p.banish();
         }
 

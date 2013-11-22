@@ -44,6 +44,13 @@ namespace SunsetHigh
         private bool talking;
         private Dialogue dialogue;
 
+        //Reputation vars
+        private int nerdRep;
+        private int jockRep;
+        private int prepRep;
+        private int bullyRep;
+        private int slackerRep;
+
         //Static vars
         private static volatile Hero inst;
         private static object syncRoot = new Object();
@@ -100,6 +107,42 @@ namespace SunsetHigh
             shootTimer = 0.0f;
             talking = false;
             dialogue = new Dialogue();
+            nerdRep = 0;
+            jockRep = 0;
+            prepRep = 0;
+            bullyRep = 0;
+            slackerRep = 0;
+        }
+
+        public void setReputation(Clique clique, int repPoints)
+        {
+            switch (clique)
+            {
+                case Clique.Nerd: nerdRep += repPoints; break;
+                case Clique.Jock: jockRep += repPoints; break;
+                case Clique.Prep: prepRep += repPoints; break;
+                case Clique.Bully: bullyRep += repPoints; break;
+                case Clique.Slacker: slackerRep += repPoints; break;
+            }
+        }
+
+        // input positive points to increase reputation, negative to decrease
+        public void shiftReputation(Clique clique, int repPoints)
+        {
+            this.setReputation(clique, this.getReputation(clique) + repPoints);
+        }
+
+        public int getReputation(Clique clique)
+        {
+            switch (clique)
+            {
+                case Clique.Nerd: return nerdRep;
+                case Clique.Jock: return jockRep;
+                case Clique.Prep: return prepRep;
+                case Clique.Bully: return bullyRep;
+                case Clique.Slacker: return slackerRep;
+            }
+            return 0;
         }
 
         public void converse(Character c)
@@ -200,11 +243,11 @@ namespace SunsetHigh
 
                 if (ppSystem.success())
                 {
-                    Item i = ppTarget.getInventory().removeRandomItem();
+                    Item i = ppTarget.inventory.removeRandomItem();
                     if (!i.Equals(Item.Nothing))
                     {
                         //Got item!
-                        this.getInventory().addItem(i, 1);
+                        this.inventory.addItem(i, 1);
                         SoundFX.playSound("LTTP_Rupee1");
                         return i;
                     }
@@ -260,7 +303,7 @@ namespace SunsetHigh
             this.setY(data.y);
             this.setDirection(data.dir);
             this.setName(data.name);
-            this.getInventory().loadSaveStructure(data.inventorySave);
+            this.inventory.loadSaveStructure(data.inventorySave);
             this.resetAnimation();
         }
 
@@ -275,7 +318,7 @@ namespace SunsetHigh
             data.y = this.getY();
             data.name = this.getName();
             data.dir = this.getDirection();
-            data.inventorySave = this.getInventory().getSaveStructure();
+            data.inventorySave = this.inventory.getSaveStructure();
             return data;
         }
 

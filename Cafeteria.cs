@@ -39,12 +39,12 @@ namespace SunsetHigh
             FC3Counter = 0;
             foodType = 0;
             npcHiding = new Character(23 * 32, 7 * 32);
-            npcHiding.getInventory().addItem(Item.PokeBall, 5);
+            npcHiding.inventory.addItem(Item.PokeBall, 5);
             npcHiding.setScript(@"Content\Lucas.cafeteriaInformationInteraction.txt");
             this.addObject(npcHiding);
 
             npcDruggie = new Character(25 * 32, 1 * 32);
-            npcDruggie.getInventory().addItem(Item.Meds, 1);
+            npcDruggie.inventory.addItem(Item.Meds, 1);
             npcDruggie.setScript(@"Content\Chess.druggieInteraction.txt");
             npcDruggie.setDirection(Direction.South);
             this.addObject(npcDruggie);

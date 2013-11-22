@@ -30,6 +30,13 @@ namespace SunsetHigh
         public int numTypes;
     }
 
+    public class InventoryEventArgs : EventArgs
+    {
+        public Item type;
+        public int quantity;
+        //int position; // ?
+    }
+
     /// <summary>
     /// Represents an assortment of items; each Character has an Inventory
     /// to hold his/her own collection
@@ -43,6 +50,8 @@ namespace SunsetHigh
         private int numTypes;
         private int[] items;
         private int[] order;
+
+        public event EventHandler<InventoryEventArgs> InventoryChanged;
 
         /// <summary>
         /// Default constructor
@@ -108,10 +117,19 @@ namespace SunsetHigh
         {
             if (quantity < 0 || type.Equals(Item.Nothing))
                 return;     //bad arguments
+            
             if (this.items[(int)type] == 0)
+            {
                 this.order[numTypes++] = (int)type;
+            }
             this.items[(int)type] += quantity;
             total += quantity;
+
+            // push event
+            InventoryEventArgs args = new InventoryEventArgs();
+            args.type = type;
+            args.quantity = quantity;
+            pushEvent(args);
         }
 
         /// <summary>
@@ -143,6 +161,12 @@ namespace SunsetHigh
             }
             this.items[(int)type] -= quantity;
             this.total -= quantity;
+
+            // push event
+            InventoryEventArgs args = new InventoryEventArgs();
+            args.type = type;
+            args.quantity = -quantity;
+            pushEvent(args);
         }
 
         /// <summary>
@@ -186,7 +210,10 @@ namespace SunsetHigh
         {
             for (int i = 0; i < this.items.Length; i++)
             {
-                this.items[i] = 0;
+                if (this.items[i] > 0)
+                {
+                    this.removeItem((Item)i, items[i]); //removes all and pushes the event
+                }
             } 
             for (int i = 0; i < this.order.Length; i++)
             {
@@ -229,6 +256,14 @@ namespace SunsetHigh
             {
                 if (order[i] >= 0)
                     yield return (Item)order[i];
+            }
+        }
+
+        private void pushEvent(InventoryEventArgs e)
+        {
+            if (InventoryChanged != null)
+            {
+                InventoryChanged(this, e);
             }
         }
     }

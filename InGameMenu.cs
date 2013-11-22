@@ -102,8 +102,7 @@ namespace SunsetHigh
             components.Add(inventoryScreen);
 
             // reputation screen
-            TextPanel reputationScreen = new TextPanel(200, 480, 440, 480);
-            reputationScreen.setMessage("Not implemented yet.");
+            ReputationPanel reputationScreen = new ReputationPanel(200, 480, 440, 480);
             reputationScreen.setPopLocations(200, 480, 200, 0);
             components.Add(reputationScreen);
             

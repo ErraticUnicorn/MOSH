@@ -55,16 +55,16 @@ namespace SunsetHigh
             h1.setX(32 * 2);
             h1.setY(32 * 6);
 
-            
-            h1.getInventory().addItem(Item.PokeBall, 3);
-            h1.getInventory().addItem(Item.LunchMoney, 1);
-            h1.getInventory().addItem(Item.Hat);
-            h1.getInventory().addItem(Item.Shoes);
-            h1.getInventory().addItem(Item.Socks);
-            h1.getInventory().removeItem(Item.Hat);
+
+            h1.inventory.addItem(Item.PokeBall, 3);
+            h1.inventory.addItem(Item.LunchMoney, 1);
+            h1.inventory.addItem(Item.Hat);
+            h1.inventory.addItem(Item.Shoes);
+            h1.inventory.addItem(Item.Socks);
+            h1.inventory.removeItem(Item.Hat);
 
             InGameMenu.init();
-            InGameMenu.loadInventoryPanel(h1.getInventory());
+            InGameMenu.loadInventoryPanel(h1.inventory);
 
             //Quest.setTrigger(QuestID.FoodFight1);
 
@@ -144,7 +144,7 @@ namespace SunsetHigh
                     //KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
                     KeyboardManager.handleInteractions(h1, WorldManager.m_currentRoom.Interactables);
                 } 
-
+                
                 // Updates based on time
                 InGameMenu.update(elapsed);
                 if (!InGameMenu.isOpen())
