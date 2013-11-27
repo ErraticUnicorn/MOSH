@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hall" tilewidth="32" tileheight="32">
+  <image source="Tilesets/hall.png" trans="ffffff" width="1120" height="640"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzzZGBg8CQB/8aBSTEDhm/QEd8kwg/Uxtjs/YMkTmsa3V5a04PBvzA2vfwLsw8mRi//oosNd//C7Btp6XnUv8PHvzcZ8Pv3JhGYmHoOHaObjV4P/iECE6rrcOlB5pPaNiBU9pHT5iCmfYMrzSCXQcRiAP3b6TE=
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzMcNgEAMRFFvIaROSJ2QOiFVza/A1kpcEPOldxvbTKl/VCSzEhVqNOmdbVTLbYceA0bnV842auJ2xoIVm/MrZxu1c3vgxIXb+ZWzVUqpL/UANrkNNQ==
+  </data>
+ </layer>
+ <objectgroup name="Solid" width="30" height="20">
+  <object x="-2" y="-2" width="33" height="191"/>
+  <object x="8" y="-7" width="373" height="40"/>
+  <object x="578" y="1" width="379" height="32"/>
+  <object x="929" y="34" width="30" height="157"/>
+  <object x="928" y="319" width="31" height="318"/>
+  <object x="607" y="576" width="325" height="60"/>
+  <object x="0" y="323" width="32" height="316"/>
+  <object x="25" y="578" width="294" height="60"/>
+ </objectgroup>
+</map>

@@ -7,13 +7,13 @@ Organization
 ---
 Some pointers on file organization in this repo:
 
-1) Source files go in the top directory.
+1) Source files go in the src directory, in the appropriate subfolder. Make sure the namespace for these files is always "SunsetHigh"! When adding source with VS in these folders, additional names may be appended to the namespace.
 
-2) All content (.png, .wav), compressed audio files (.mp3, .wma, .m4a) and game data files (.xml, .tmx) go into the "Content" folder.
+2) All content (music, art, text, maps) go into the "Content" folder, in the appropriate subfolder. Note that tile sheets go into Content/Maps/Tilesets/, while Content/Maps/ is for Tiled maps.
 
 4) All outside libraries and utilities (e.g. NAudio.dll) go into the "Resources" folder.
 
-5) All save game states (coming soon!) go into "SaveData" folder.
+5) All save game states go into "SaveData" folder.
 
 Running and Debugging Instructions
 ---

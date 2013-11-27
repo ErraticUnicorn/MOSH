@@ -1,0 +1,1 @@
+﻿I plan to store the text dump for quest descriptions, item info, etc. here
