@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="computerlab" tilewidth="32" tileheight="32">
+  <image source="Maps/Tilesets/computerlab.png" trans="ffffff" width="960" height="640"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzF01W3kEUAhlHOoVPpVDrPoTuUTqUbpVPpRulUulE6lW6UTqUbpVPpRul2e8X3D5g1e633ZtZzNREivL+TmjSkJR3pyUBGMpGZLIQRTlaykZ0c5CQXuclDXvKRnwIUpBCFKRLoFqUYxSlBSUpRmjKUpRzlqcBnfE5FKlGZKlSlGtWpQU1qUZs61KVeoFufBjSkEY1pQlOa0ZwWtKQVX/E1rWlDW9rRng50pBOd6UJXutGdHoFuT3rRmz70pR/9GcBABjGYIXzH9wxlGMMZwUhGMZoxjGUc45nARCYFupOZwlSmMZ0ZzGQWs5nDXObxEz8znwUsZBGLWcJSlrGcFaxkFatZE+iuZR3r2cBGNrGZLWxlG9vZwW/8zk52sZs97GUf+znAQQ5xmCMc5Vige5wTnOQUpznDWc5xngtc5BJ/8TeXucJVrnGdG9zkFre5w13ucZ8Hge5DHvGYJzzlGc95wUte8Zo3vP3/UYhLKBGJRGSiEJVoRCcGMYlFbOKEvOvGteMRnwQkJBGJSUJSkpGcFHzEx6QkFalJQ1rSkZ4MZCQTmclCGOGBbnY7BznJRW7ykJd85KcABSlEYYrwCZ9SlGIUpwQlKUVpylCWcpSnQqBb0a5EZapQlWpUpwY1qUVt6lCXenzBl9SnAQ1pRGOa0JRmNKcFLWkV6La229CWdrSnAx3pRGe60JVudKcH3/AtPelFb/rQl370ZwADGcRghgS6Q+1hDGcEIxnFaMYwlnGMZwITmcQP/MhkpjCVaUxnBjOZxWzmMJd5ge58ewELWcRilrCUZSxnBStZxWrW8Au/spZ1rGcDG9nEZrawlW1sZ0egu9PexW72sJd97OcABznEYY5wlGP8wZ8c5wQnOcVpznCWc5znAhe5FOhetq9wlWtc5wY3ucVt7nCXe9znAf/wLw95xGOe8JRnPOcFL3nFa94EuiGh/j8RiURkohCVaEQnBjGJRWzi8AEfEpd4xCcBCUlEYpKQlGQkJ0Xou25KOxWpSUNa0pGeDGQkE5nJQhjhZCUb2clBTnKRmzzkJR/5KUBBCgW67+P8B6L08/Q=
+  </data>
+ </layer>
+</map>
