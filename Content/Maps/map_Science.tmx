@@ -8,7 +8,7 @@
    eJyt0WVwF2QABvD/RAQVBMSN7txg9KjR3TmcLBgdwkBAGZ1KGzRYNEpJSHcpoQgGEgYhZdAooaC/3fGB4yPne+/v3rvn7nm+vMGBQCCETGQmC1nJRnZykJNc5CYPeclHfgpQkEIUJpQwilCUcIpRnBKUpBSlKUMEZSlHeSpQkUgqUZkqVKUa1alBTWpRmzrUpR71aUBDGtGYJjSlGc1pQUuiaMWLRPMSrYkhljjiaUMCbWlHezrQkU50pgtd6cbLdKcHifSkF6/Qmz705VVeox9J9GcAAxnEYIYwlGEMZwQjGcXrvMFoxjCWcYxnAhN5k7d4m3eYxGSmMJVpTGcGM5nFu7zH+3zAh8xmDnOZx3wWsJBFfMTHLGYJS1nGcj5hBStZxWo+ZQ1rWcd6NrCRTWxmC1vZxnZ2sJNd7GYPn/E5e9nHfg7wBV9ykK84xGG+5hu+5TuO8D1HOcZxTvADP/ITP3OSU5zmDL9wlnOc5wIX+ZXf+J0/uMRlrnCVa1znBjf5k7+4xW3ucJe/+Yd73OdfAkEuT5CCJ0nJU6QiNU/zDM+ShrQ8RzrSk4HnycgLBBNCJjKThaxkIzs5yEkucpOHvOQjPwUoSCEKE0rFB5L/N9xbjOKUoCSlKE0ZIihLOcpT4UE3kkpUfmgvWXVqUJNa1KYOdalHfRrQkEY0pglNaUbzR/YGBgXmdKYFVQgjRh5LHPG0IYG2tKM9Hej4yFayQfpdaElVihAtf1yD9bsSRTWKkiR/HIlBgf/9/AeViKzA
   </data>
  </layer>
- <objectgroup name="Solid" width="20" height="20">
+ <objectgroup color="#ff00ff" name="Solid" width="20" height="20">
   <object x="170" y="135" width="62" height="61"/>
   <object x="1" y="-2" width="636" height="41"/>
   <object x="2" y="35" width="13" height="572"/>
@@ -19,5 +19,8 @@
   <object x="51" y="274" width="56" height="56"/>
   <object x="49" y="370" width="57" height="50"/>
   <object x="22" y="557" width="121" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="20" height="20">
+  <object x="640" y="416" width="32" height="192"/>
  </objectgroup>
 </map>

@@ -34,37 +34,8 @@
    eJztWEtOwzAQnSZpF9yAAwE7tvwEnAAQW36iC+AEIECiBYFEKWeAJb8NLIHT8CxSYUW1M3YmDmrzpKdp6s/Lk+uxO0R/eImJXjW+gQ8R0WMkH3V8QudL4zf4hD7PkXzMwzv6fETyUWGCoV8G9htE7UZ43Wto3gjpzmGeeXABXASXAvnZgs42uAPugnuBdC+g0wG74CV4ZdBdaxKtgxvNMO81wAH0DsGjwLoSfo8TopPE3paNPn7Vfu8j3qfPHczTText2Sjh9xbz9Ax+B23ZWNX6umCqRTQNzrRk5uPm52XorYCrQrrc/Cztl5ufpf1yIe2XC0m/LvtX0q/L/q39+mPc/FYJl/uz5F2bm5+l79nc/Cx5z64K47aPar9m1H79Ufs1Y1TOwUmHs82lbx7qc7B8lFXPmc1p9/m/b6vtqt+d4qb2edgYH7+c2q5eWxk2xsevrbbLHVMlJHOBCyTzgUsdWDIf/Pc6sMIorK8LbOtrquMWjTpOY6KzlOfx73emOm7RqKMHrbuU/VTXVMctGn8AqMH2AA==
   </data>
  </layer>
- <objectgroup name="Solid" width="30" height="60">
-  <object x="385" y="383" width="572" height="482"/>
-  <object x="417" y="865" width="542" height="423"/>
-  <object x="416" y="1288" width="543" height="214"/>
+ <objectgroup color="#000000" name="Solid" width="30" height="60">
   <object x="384" y="1439" width="34" height="95"/>
-  <object x="612" y="1505" width="26" height="31"/>
-  <object x="800" y="1503" width="31" height="31"/>
-  <object x="385" y="960" width="30" height="31"/>
-  <object x="383" y="1310" width="34" height="33"/>
-  <object x="384" y="351" width="33" height="95"/>
-  <object x="512" y="350" width="37" height="71"/>
-  <object x="609" y="352" width="30" height="64"/>
-  <object x="736" y="353" width="30" height="61"/>
-  <object x="0" y="0" width="94" height="32"/>
-  <object x="-4" y="35" width="67" height="60"/>
-  <object x="3" y="99" width="29" height="117"/>
-  <object x="0" y="192" width="62" height="64"/>
-  <object x="1" y="447" width="61" height="32"/>
-  <object x="2" y="477" width="28" height="119"/>
-  <object x="3" y="577" width="61" height="63"/>
-  <object x="0" y="832" width="62" height="33"/>
-  <object x="0" y="866" width="34" height="124"/>
-  <object x="6" y="963" width="55" height="26"/>
-  <object x="1" y="1315" width="61" height="27"/>
-  <object x="0" y="1343" width="31" height="130"/>
-  <object x="31" y="1443" width="30" height="27"/>
-  <object x="1" y="1602" width="32" height="333"/>
-  <object x="35" y="1601" width="28" height="30"/>
-  <object x="36" y="1729" width="27" height="30"/>
-  <object x="34" y="1855" width="62" height="103"/>
-  <object x="225" y="1859" width="735" height="125"/>
   <object x="420" y="1502" width="185" height="51"/>
   <object x="832" y="1500" width="123" height="55"/>
   <object x="1" y="1475" width="49" height="125"/>
@@ -74,7 +45,49 @@
   <object x="376" y="449" width="51" height="377"/>
   <object x="1" y="255" width="51" height="193"/>
   <object x="257" y="1" width="703" height="52"/>
-  <object x="774" y="350" width="183" height="48"/>
-  <object x="546" y="350" width="64" height="48"/>
+  <object x="0" y="0" width="96" height="32"/>
+  <object x="0" y="32" width="64" height="64"/>
+  <object x="0" y="96" width="32" height="96"/>
+  <object x="0" y="192" width="64" height="64"/>
+  <object x="0" y="448" width="64" height="32"/>
+  <object x="0" y="480" width="32" height="96"/>
+  <object x="0" y="576" width="64" height="64"/>
+  <object x="0" y="832" width="64" height="32"/>
+  <object x="0" y="864" width="32" height="96"/>
+  <object x="0" y="960" width="64" height="32"/>
+  <object x="0" y="1312" width="64" height="32"/>
+  <object x="0" y="1344" width="32" height="96"/>
+  <object x="0" y="1440" width="64" height="32"/>
+  <object x="0" y="1600" width="32" height="320"/>
+  <object x="32" y="1600" width="32" height="32"/>
+  <object x="32" y="1728" width="32" height="32"/>
+  <object x="224" y="1856" width="736" height="64"/>
+  <object x="608" y="1504" width="32" height="32"/>
+  <object x="800" y="1504" width="32" height="32"/>
+  <object x="384" y="352" width="32" height="32"/>
+  <object x="512" y="352" width="128" height="32"/>
+  <object x="736" y="352" width="224" height="32"/>
+  <object x="384" y="384" width="576" height="480"/>
+  <object x="416" y="864" width="544" height="416"/>
+  <object x="416" y="1280" width="544" height="224"/>
+  <object x="384" y="960" width="32" height="384"/>
+  <object x="960" y="32" width="32" height="352"/>
+  <object x="32" y="1856" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="30" height="60">
+  <object x="416" y="352" width="96" height="32"/>
+  <object x="640" y="352" width="96" height="32"/>
+  <object x="96" y="0" width="160" height="32"/>
+  <object x="32" y="96" width="32" height="96"/>
+  <object x="32" y="480" width="32" height="96"/>
+  <object x="32" y="864" width="32" height="96"/>
+  <object x="384" y="864" width="32" height="96"/>
+  <object x="32" y="1344" width="32" height="96"/>
+  <object x="384" y="1344" width="32" height="96"/>
+  <object x="640" y="1504" width="160" height="32"/>
+  <object x="32" y="1632" width="32" height="96"/>
+  <object x="32" y="1760" width="32" height="96"/>
+  <object x="96" y="1888" width="128" height="32"/>
+  <object x="928" y="1536" width="32" height="320"/>
  </objectgroup>
 </map>

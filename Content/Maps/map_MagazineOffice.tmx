@@ -25,17 +25,21 @@
    eJyNz0cOwjAQheEMHYQod8iNKHvKnrKnXJUg0Xvv8CMcCRxIePInSx6/xRiGMx1Y6H6Z/UoPfQwwxAhjTP7oTjHDHAssscJazTPIIoe81t1gix32OOCIk5oXUEQJZa17xgVX3HB/PgpHXvMKqqihrnV9/PEjgCBCCCOiug000UJb60b5E0MKcXUnkBTvfe2k5fO247avV9z2fY8pzjd93wf0kylR
   </data>
  </layer>
- <objectgroup name="Solid" width="15" height="10">
-  <object x="0" y="-2" width="475" height="37"/>
-  <object x="-39" y="-4" width="38" height="326"/>
-  <object x="2" y="321" width="481" height="40"/>
-  <object x="476" y="-1" width="55" height="360"/>
+ <objectgroup color="#000000" name="Solid" width="15" height="10">
   <object x="378" y="82" width="94" height="61"/>
   <object x="378" y="212" width="98" height="60"/>
-  <object x="127" y="65" width="167" height="154"/>
-  <object x="97" y="192" width="31" height="29"/>
-  <object x="292" y="196" width="25" height="26"/>
   <object x="160" y="209" width="28" height="26"/>
   <object x="227" y="212" width="27" height="29"/>
+  <object x="-32" y="0" width="32" height="320"/>
+  <object x="480" y="0" width="32" height="320"/>
+  <object x="0" y="0" width="480" height="32"/>
+  <object x="128" y="64" width="160" height="160"/>
+  <object x="96" y="192" width="32" height="32"/>
+  <object x="288" y="192" width="32" height="32"/>
+  <object x="0" y="320" width="192" height="32"/>
+  <object x="224" y="320" width="256" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="15" height="10">
+  <object x="192" y="320" width="32" height="32"/>
  </objectgroup>
 </map>

@@ -16,17 +16,20 @@
    eJxjYGBg6ADiThJoZDARiCeRQCODWUA8mwQaGSwG4iUk0KOAvgAAsyQcIQ==
   </data>
  </layer>
- <objectgroup name="Solid" width="15" height="10">
+ <objectgroup color="#000000" name="Solid" width="15" height="10">
   <object x="33" y="0" width="43" height="105"/>
   <object x="161" y="2" width="43" height="105"/>
   <object x="98" y="0" width="43" height="105"/>
   <object x="227" y="2" width="43" height="105"/>
   <object x="354" y="2" width="43" height="105"/>
   <object x="291" y="0" width="43" height="105"/>
-  <object x="1" y="1" width="34" height="316"/>
   <object x="34" y="307" width="418" height="7"/>
-  <object x="449" y="290" width="33" height="29"/>
-  <object x="450" y="1" width="26" height="189"/>
-  <object x="23" y="-16" width="428" height="20"/>
+  <object x="0" y="0" width="32" height="320"/>
+  <object x="448" y="0" width="32" height="192"/>
+  <object x="448" y="288" width="32" height="32"/>
+  <object x="0" y="-32" width="480" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="15" height="10">
+  <object x="448" y="192" width="32" height="96"/>
  </objectgroup>
 </map>
