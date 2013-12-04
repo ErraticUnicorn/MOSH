@@ -106,6 +106,11 @@ namespace SunsetHigh
             reputationScreen.setPopLocations(200, 480, 200, 0);
             components.Add(reputationScreen);
             
+            // sound config screen
+            SoundConfigPanel soundConfigScreen = new SoundConfigPanel(200, 480, 440, 380);
+            soundConfigScreen.setPopLocations(200, 480, 200, 100);
+            components.Add(soundConfigScreen);
+
             // key config screen
             KeyConfigPanel keyConfigScreen = new KeyConfigPanel(200, 480, 440, 380);
             KeyModifierEntry keyAction = new KeyModifierEntry("Talk/Action/Confirm", keyConfigScreen, KeyInputType.Talk);
@@ -131,7 +136,9 @@ namespace SunsetHigh
             keyEntry.setNewMessage("Configuring key controls... Press [" + 
                 Enum.GetName(typeof(Keys), KeyboardManager.getKeyControl(KeyInputType.Action)) + 
                 "] to modify the key.");
-            configPrompt.loadEntries(keyEntry);
+            ScreenSpecifierEntry soundEntry = new ScreenSpecifierEntry("Sound", configPrompt, soundConfigScreen);
+            soundEntry.setNewMessage("Configuring sound settings...");
+            configPrompt.loadEntries(keyEntry, soundEntry);            
             configPrompt.setPopLocations(200, -100, 200, 0);
             configPrompt.setYMargin(20);
             configPrompt.setYDivider(configPrompt.getHeight() - 30);
@@ -205,11 +212,12 @@ namespace SunsetHigh
             PanelGroup pg4 = new PanelGroup(reputationScreen);
             PanelGroup pg5 = new PanelGroup(configPrompt);
             PanelGroup pg5a = new PanelGroup(keyConfigScreen);
+            PanelGroup pg5b = new PanelGroup(soundConfigScreen);
             PanelGroup pg6 = new PanelGroup(saveScreen, savePrompt);
             PanelGroup pg7 = new PanelGroup(exitPrompt);
 
             PanelGroupSorter.addPanelGroups(pg0, pg1, pg1a, pg1b, pg1c, pg1d, 
-                pg2, pg3, pg4, pg5, pg5a, pg6, pg7);
+                pg2, pg3, pg4, pg5, pg5a, pg5b, pg6, pg7);
         }
 
         public static void reset()

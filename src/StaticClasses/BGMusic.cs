@@ -29,6 +29,7 @@ namespace SunsetHigh
         private static FadeInOutSampleProviderAdapted fadeInOut;
         private static SampleToWaveProvider sampleToWave;
         private static bool playing = false;
+        private static bool paused = false;
         private static Timer transitionTimer;
         private static string queuedSongName;
         private static double queuedFadeTime;
@@ -59,8 +60,11 @@ namespace SunsetHigh
             sampleToWave = new SampleToWaveProvider(fadeInOut);
             wavePlayer.Init(sampleToWave);
 
-            wavePlayer.Play();
-            playing = true;
+            if (!paused)
+            {
+                wavePlayer.Play();
+                playing = true;
+            }
         }
 
         /// <summary>
@@ -114,22 +118,6 @@ namespace SunsetHigh
         public static void transitionToSongWithFadeIn(string fileName)
         {
             transitionToSongWithFadeIn(fileName, DEFAULT_FADE_TIME, DEFAULT_LAG_BETWEEN_SONGS);
-        }
-
-        /// <summary>
-        /// Switches between a play and pause state (i.e. if the song is playing, it will pause,
-        /// and vice-versa)
-        /// </summary>
-        public static void togglePlay()
-        {
-            if (wavePlayer != null && file != null)
-            {
-                if (playing)
-                    wavePlayer.Pause();
-                else
-                    wavePlayer.Play();
-                playing = !playing;
-            }
         }
 
         /// <summary>
@@ -231,6 +219,37 @@ namespace SunsetHigh
             if (fadeInOut != null)
                 return fadeInOut.isLooping();
             return false;
+        }
+
+        /// <summary>
+        /// Sets whether the soundtrack is paused or not
+        /// </summary>
+        /// <param name="paused"></param>
+        public static void setPaused(bool pause)
+        {
+            if (wavePlayer != null && file != null)
+            {
+                if (pause)
+                {
+                    wavePlayer.Pause();
+                    playing = false;
+                }
+                else
+                {
+                    wavePlayer.Play();
+                    playing = true;
+                }
+                paused = pause;
+            }
+        }
+
+        /// <summary>
+        /// Specifies whether the soundtrack is paused (false if is playing)
+        /// </summary>
+        /// <returns></returns>
+        public static bool isPaused()
+        {
+            return paused;
         }
 
         private static bool tryAllFileTypes(string fileName)

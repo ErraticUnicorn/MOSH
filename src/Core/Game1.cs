@@ -81,7 +81,9 @@ namespace SunsetHigh
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // play the title track first
+            BGMusic.playSong("sunset high menu track.mp3"); 
+
             WorldManager.loadMaps(Content);
 
             //In the future, all Sprites will call loadContent(this.Content), and child
@@ -93,8 +95,6 @@ namespace SunsetHigh
             StartScreen.loadContent(Content);
             InGameMenu.loadContent(Content);
             LocationNamePanel.instance.loadContent(Content);
-
-           //BGMusic.playSong("Stickerbrush_Symphony.m4a"); 
         }
 
         /// <summary>
@@ -122,7 +122,10 @@ namespace SunsetHigh
             {
                 KeyboardManager.update();
                 if (KeyboardManager.isNewKeyPressed())
+                {
                     gameState = GameState.InGame;   //annoying to click
+                    BGMusic.transitionToSong(Directories.MUSIC + "sunset high ambient.mp3");
+                }
             }
 
             else
