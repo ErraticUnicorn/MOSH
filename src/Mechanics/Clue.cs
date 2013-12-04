@@ -26,12 +26,12 @@ namespace SunsetHigh {
         // - trigger a flashback (not yet implemented)
         // - replace one or more old clues with one or more new ones?
         // - trigger dialogue?
-        private static Dictionary<SortedSet<Clue>, ClueAction> s_matchTriggers;
+        private static Dictionary<Clue[], ClueAction> s_matchTriggers;
 
         // static initialization
         static Clue() {
             s_clueSet = new SortedSet<Clue>();
-            s_matchTriggers = new Dictionary<SortedSet<Clue>, ClueAction>(new ClueSetEqualityComparer());
+            s_matchTriggers = new Dictionary<Clue[], ClueAction>(new ClueArrayEqualityComparer());
 
             // TODO: remove later, the player shouldn't really start out with any clues from the beginning (unless we want him to)
             s_clueSet.Add(K_NOTE);
@@ -40,8 +40,8 @@ namespace SunsetHigh {
             s_clueSet.Add(K_TESTIMONY);
 
             // All the match triggers go here. Enjoy x2.
-            s_matchTriggers.Add(new SortedSet<Clue>(new Clue[] { K_NOTE, K_ROTATE }), new AddNewClueAction(K_IDIOT));
-            s_matchTriggers.Add(new SortedSet<Clue>(new Clue[] { K_MAGAZINE, K_TESTIMONY }), new AddNewClueAction(K_HOLD_IT));
+            s_matchTriggers.Add(new Clue[] { K_NOTE, K_ROTATE }, new AddNewClueAction(K_IDIOT));
+            s_matchTriggers.Add(new Clue[] { K_MAGAZINE, K_TESTIMONY }, new AddNewClueAction(K_HOLD_IT));
         }
 
         private int m_id;
@@ -65,20 +65,20 @@ namespace SunsetHigh {
         public override int GetHashCode() { return m_id.GetHashCode(); }
         public int CompareTo(Clue p_clue) { return m_id - p_clue.m_id; }
 
-        public static List<MenuEntry> createMenuEntryList() {
+        public static List<MenuEntry> createMenuEntryList(SortedSet<Clue> p_selectedClues) {
             List<MenuEntry> l_toReturn = new List<MenuEntry>();
             foreach (Clue c in s_clueSet) {
-                l_toReturn.Add(new ClueEntry(c));
+                l_toReturn.Add(new ClueEntry(c, p_selectedClues.Contains(c)));
             }
             return l_toReturn;
         }
 
         // If the selected clues can be pieced together, perform the action associated with that set of clues and return true.
         // Otherwise, return flase.
-        public static bool performAction(List<Clue> p_selectedClues) {
-            SortedSet<Clue> l_selectedCluesSet = new SortedSet<Clue>(p_selectedClues);
-            if (s_matchTriggers.ContainsKey(l_selectedCluesSet)) {
-                s_matchTriggers[l_selectedCluesSet].doAction();
+        public static bool performAction(SortedSet<Clue> p_selectedClues) {
+            Clue[] l_selectedClueArray = p_selectedClues.ToArray();
+            if (s_matchTriggers.ContainsKey(l_selectedClueArray)) {
+                s_matchTriggers[l_selectedClueArray].doAction();
                 return true;
             }
             return flase;
@@ -104,14 +104,12 @@ namespace SunsetHigh {
             }
         }
 
-        // A class for comparing sorted sets of clues.
-        // I implemented this because SortedSet<Clue> is used as a keyspace for the s_matchTriggers map.
-        // C#'s implementation for set equality checking is pretty weird.
-        private class ClueSetEqualityComparer : IEqualityComparer<SortedSet<Clue>> {
-            public bool Equals(SortedSet<Clue> p_hsc1, SortedSet<Clue> p_hsc2) { return p_hsc1.SetEquals(p_hsc2); }
-            public int GetHashCode(SortedSet<Clue> p_hsc) {
+        // A class for comparing arrays of clues.
+        private class ClueArrayEqualityComparer : IEqualityComparer<Clue[]> {
+            public bool Equals(Clue[] p_cArr1, Clue[] p_cArr2) { return Enumerable.SequenceEqual(p_cArr1, p_cArr2); }
+            public int GetHashCode(Clue[] p_cArr) {
                 int l_hash = 17;
-                foreach (Clue c in p_hsc) {
+                foreach (Clue c in p_cArr) {
                     l_hash = l_hash * 33 + c.GetHashCode();
                 }
                 return l_hash;
