@@ -39,6 +39,12 @@
   <object x="66" y="490" width="29" height="22"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="Teleport" width="30" height="20">
-  <object x="896" y="416" width="32" height="128"/>
+  <object x="896" y="416" width="32" height="128">
+   <properties>
+    <property name="warpMap" value="map_HallwayWest"/>
+    <property name="warpX" value="2"/>
+    <property name="warpY" value="4"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
