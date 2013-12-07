@@ -239,8 +239,8 @@ namespace SunsetHigh
                     wavePlayer.Play();
                     playing = true;
                 }
-                paused = pause;
             }
+            paused = pause;
         }
 
         /// <summary>

@@ -57,8 +57,9 @@ namespace SunsetHigh
             cow = content.Load<Texture2D>(Directories.SPRITES + "cattle");
             hamburger = content.Load<Texture2D>(Directories.SPRITES + "burger");
             cheese = content.Load<Texture2D>(Directories.SPRITES + "cheese");
+
             npcHiding.loadImage(content, Directories.CHARACTERS + "sprite_sheet_herbert", 4, 3, 0.25f);
-            npcDruggie.loadImage(content, Directories.CHARACTERS + "sprite_ffwriter");
+            npcDruggie.loadImage(content, Directories.CHARACTERS_TEMP + "slacker2");
 
         }
         public override void updateState()
