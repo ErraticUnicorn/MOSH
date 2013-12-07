@@ -28,17 +28,17 @@ namespace SunsetHigh {
             m_rooms = new Dictionary<String, Room>();
         
             // there's probably a way to do this using loops but listing everything out is safer
-            Room bathroom = new Room();
+            Room bathroom = new Bathroom();
             Room cafeteria = new Cafeteria();
-            Room computerLab = new Room();
-            Room entrance = new Room();
-            Room hallwayEast = new Room();
-            Room hallwayWest = new Room();
+            Room computerLab = new ComputerLab();
+            Room entrance = new MainEntrance();
+            Room hallwayEast = new HallwayEast();
+            Room hallwayWest = new HallwayWest();
             Room library = new Library();
-            Room magazineOffice = new Room();
-            Room math = new Room();
-            Room science = new Room();
-            Room studentLounge = new Room();
+            Room magazineOffice = new MagazineOffice();
+            Room math = new MathClassroom();
+            Room science = new ScienceClassroom();
+            Room studentLounge = new StudentLounge();
             //Room questHall = new Room();
             //Room questHallEnd = new Room();
 
