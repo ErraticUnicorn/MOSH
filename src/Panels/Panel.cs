@@ -40,8 +40,8 @@ namespace SunsetHigh
         private bool backgroundVisible;
         private int marginX;
         private int marginY;
-        private BorderSystem borders;
         private bool highlighted;
+        protected BorderSystem borders;
 
         public Panel()
             : this(0, 0, 0, 0) { }
@@ -135,7 +135,7 @@ namespace SunsetHigh
             this.borders.draw(sb);
         }
 
-        private class BorderSystem
+        protected class BorderSystem
         {
             private const int DEFAULT_THICKNESS = 10;
 

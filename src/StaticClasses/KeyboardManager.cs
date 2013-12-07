@@ -125,6 +125,13 @@ namespace SunsetHigh
             return currentState.IsKeyUp(key) && !priorState.IsKeyUp(key);
         }
 
+        /// <summary>
+        /// A check for whether the given key is already registered with a certain
+        /// type of input. Called when customizing key controls
+        /// </summary>
+        /// <param name="key">The possible key to shift the input type to</param>
+        /// <param name="exclude">Input type to exclude (i.e. the input being considered)</param>
+        /// <returns>True if another input type uses the key, false otherwise</returns>
         public static bool keyControlExists(Keys key, KeyInputType exclude)
         {
             for (int i = 0; i < keyTypes.Length; i++)
@@ -179,8 +186,8 @@ namespace SunsetHigh
             keyTypes[(int)KeyInputType.MoveEast] = Keys.Right;
             keyTypes[(int)KeyInputType.MoveSouth] = Keys.Down;
             keyTypes[(int)KeyInputType.MoveWest] = Keys.Left;
-            keyTypes[(int)KeyInputType.Pickpocket] = Keys.P;
-            keyTypes[(int)KeyInputType.Shoot] = Keys.O;
+            keyTypes[(int)KeyInputType.Pickpocket] = Keys.S;
+            keyTypes[(int)KeyInputType.Shoot] = Keys.A;
             keyTypes[(int)KeyInputType.Talk] = Keys.F;
             keyTypes[(int)KeyInputType.Action] = Keys.Z;
             keyTypes[(int)KeyInputType.Cancel] = Keys.X;

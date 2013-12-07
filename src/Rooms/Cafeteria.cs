@@ -90,6 +90,7 @@ namespace SunsetHigh
                     foodType++;
                     FC1timer = 0;
                     Projectile food = new Projectile(5 * 32, 21 * 32, 150f, Direction.North);
+                    food.setCollideEvent(new ProjectileCollideEvent(foodCollideEvent));
 
                     if (foodType % 3 == 0)
                     {
@@ -109,6 +110,8 @@ namespace SunsetHigh
                     if (FC2counter >= 0 && FC2counter <= 5)
                     {
                         Projectile food = new Projectile(10 * 32, 0, 90f, Direction.South);
+                        food.setCollideEvent(new ProjectileCollideEvent(foodCollideEvent));
+
                         if (foodType % 3 == 0)
                         {
                             food.setImage(hamburger);
@@ -130,10 +133,12 @@ namespace SunsetHigh
                 if (FC3timer > .35)
                 {
                     FC3timer = 0;
+                    FC3Counter++;
                     if (FC3Counter <= 14 && FC3Counter >= 0)
                     {
-                        ++FC3Counter;
                         Projectile food = new Projectile(15 * 32, 21 * 32, 120f, Direction.North);
+                        food.setCollideEvent(new ProjectileCollideEvent(foodCollideEvent));
+
                         if (foodType % 3 == 0)
                         {
                             food.setImage(hamburger);
@@ -144,6 +149,10 @@ namespace SunsetHigh
                         }
                         this.addObject(food);
                     }
+                    if (FC3Counter > 17)
+                    {
+                        FC3Counter = 0;
+                    }
 
                 }
                 if (FC4timer > .65)
@@ -153,6 +162,8 @@ namespace SunsetHigh
                     if (FC4counter >= 0 && FC4counter <= 15)
                     {
                         Projectile food = new Projectile(20 * 32, 0, 120f, Direction.South);
+                        food.setCollideEvent(new ProjectileCollideEvent(foodCollideEvent));
+
                         if (FC4counter == 13)
                         {
                             food.setImage(cow);
@@ -183,5 +194,12 @@ namespace SunsetHigh
             }
         }
 
+        public void foodCollideEvent()
+        {
+            WorldManager.setRoom("map_HallwayEast");
+            Hero.instance.setX(19 * 32);
+            Hero.instance.setY(3 * 32);
+            Hero.instance.setDirection(Direction.East);
+        }
     }
 }

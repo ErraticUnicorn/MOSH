@@ -6,10 +6,14 @@ using Microsoft.Xna.Framework;
 
 namespace SunsetHigh
 {
-    public class Projectile : FreeMovingSprite, IInteractable
+    public delegate void ProjectileCollideEvent();
+
+    public class Projectile : FreeMovingSprite
     {
         private const float DEFAULT_ANGLE = 0.0f;
         private float angle;
+
+        ProjectileCollideEvent mEvent;
 
         /// <summary>
         /// Initializes a Projectile at the origin with a default speed and heading east.
@@ -117,10 +121,28 @@ namespace SunsetHigh
             this.angle = angle;
         }
 
+        public void setCollideEvent(ProjectileCollideEvent e)
+        {
+            mEvent = e;
+        }
+        public void addCollideEvent(ProjectileCollideEvent e)
+        {
+            mEvent += e;
+        }
+
         public override void update(float elapsed)
         {
             base.update(elapsed);
             this.move(this.getAngle(), elapsed, false);
+        }
+
+        public override void onCollide()
+        {
+            base.onCollide();
+            if (mEvent != null)
+            {
+                mEvent();
+            }
         }
 
         private float convertDirectionToAngle(Direction dir)

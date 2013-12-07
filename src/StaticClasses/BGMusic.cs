@@ -22,7 +22,7 @@ namespace SunsetHigh
         public const float SILENCE = 0.0f;
 
         private const double DEFAULT_FADE_TIME = 2000;          // time to fade out = 2 seconds 
-        private const double DEFAULT_LAG_BETWEEN_SONGS = 1000;  // time between songs (EXCLUDES FADE OUT TIME) = 1 second
+        private const double DEFAULT_LAG_BETWEEN_SONGS = 50;  // time between songs (EXCLUDES FADE OUT TIME) = 1 second
 
         private static IWavePlayer wavePlayer;
         private static AudioFileReader file;
