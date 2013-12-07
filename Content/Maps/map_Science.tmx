@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="20" height="19" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="science" tilewidth="32" tileheight="32">
   <image source="Tilesets/science.png" trans="ffffff" width="640" height="640"/>
  </tileset>
- <layer name="Tile Layer 1" width="20" height="20">
+ <layer name="Tile Layer 1" width="20" height="19">
   <data encoding="base64" compression="zlib">
-   eJyt0WVwF2QABvD/RAQVBMSN7txg9KjR3TmcLBgdwkBAGZ1KGzRYNEpJSHcpoQgGEgYhZdAooaC/3fGB4yPne+/v3rvn7nm+vMGBQCCETGQmC1nJRnZykJNc5CYPeclHfgpQkEIUJpQwilCUcIpRnBKUpBSlKUMEZSlHeSpQkUgqUZkqVKUa1alBTWpRmzrUpR71aUBDGtGYJjSlGc1pQUuiaMWLRPMSrYkhljjiaUMCbWlHezrQkU50pgtd6cbLdKcHifSkF6/Qmz705VVeox9J9GcAAxnEYIYwlGEMZwQjGcXrvMFoxjCWcYxnAhN5k7d4m3eYxGSmMJVpTGcGM5nFu7zH+3zAh8xmDnOZx3wWsJBFfMTHLGYJS1nGcj5hBStZxWo+ZQ1rWcd6NrCRTWxmC1vZxnZ2sJNd7GYPn/E5e9nHfg7wBV9ykK84xGG+5hu+5TuO8D1HOcZxTvADP/ITP3OSU5zmDL9wlnOc5wIX+ZXf+J0/uMRlrnCVa1znBjf5k7+4xW3ucJe/+Yd73OdfAkEuT5CCJ0nJU6QiNU/zDM+ShrQ8RzrSk4HnycgLBBNCJjKThaxkIzs5yEkucpOHvOQjPwUoSCEKE0rFB5L/N9xbjOKUoCSlKE0ZIihLOcpT4UE3kkpUfmgvWXVqUJNa1KYOdalHfRrQkEY0pglNaUbzR/YGBgXmdKYFVQgjRh5LHPG0IYG2tKM9Hej4yFayQfpdaElVihAtf1yD9bsSRTWKkiR/HIlBgf/9/AeViKzA
+   eJyd0WVwF3QcBvA/iKSogGN0jcGIbXTnBtvYBmOEwMYYDRJiAVISCpLSKKFSigJKK42SBoqCSgvYBah0KHx2xwuOl9z9Pve9e+6e580vKBAI5CeYAhSkEIUpQlGKUZwSlKQUIZQmlDKUJYxylKcCFQkngkgqUZkqVKUa1alBTWpRmzrUpR71aUBDGtGYKKJpQlNiiCWOZsSTQCLNaUESLUmmFa1pQ1sepx3t6UAKqXQkjU6k05kudKUb3elBT3rRmyfoQ1/60Z8nGcBTPM0zPMtzDGQQg3meIQxlGMMZwQuMZBSjGcOLvMRYxvEy45nARCYxmSm8wlSmMZ0ZzGQWs5nDq7zGXOYxnwW8zhu8yUIWsZglLOUt3mYZ7/Auy1nBSt7jfVaxmjWsZR3r2cAHfMhGNrGZLWxlG9vZwUd8zE52sZs97GUfn/Apn/E5+/mCLznAV3zNQQ7xDd/yHYc5wlGOcZwTnOR7TnGaM/zAj/zEz/zCr/zG7/zBn/zFWc5xnr/5h3+5wEUucZkrXOUa17nBTf7jf24RyOSRmQfIwoNkJRvZyUFOcvEQuXmYR3iUPOQlH48RRH6CKUBBClGYIhSlGMUpQUlKEUJpQilDWcIoR507Mv433I0gkkpUpgpVqUZ1alCTWtS+061LPerftZehMVFE04SmxBBLHM2IJ4FEmtOCJFqSfM/e0EyBhT1pRQPKkyJPpSNpdCKdznShK93ofs9WhmH6vWhNQyrQTn6/huv3pg2NqMhg+f3oz22WXqzA
   </data>
  </layer>
- <objectgroup color="#ff00ff" name="Solid" width="20" height="20">
+ <objectgroup color="#ff00ff" name="Solid" width="20" height="19">
   <object x="170" y="135" width="62" height="61"/>
   <object x="1" y="-2" width="636" height="41"/>
   <object x="2" y="35" width="13" height="572"/>
@@ -20,7 +20,7 @@
   <object x="49" y="370" width="57" height="50"/>
   <object x="22" y="557" width="121" height="32"/>
  </objectgroup>
- <objectgroup color="#ff0000" name="Teleport" width="20" height="20">
+ <objectgroup color="#ff0000" name="Teleport" width="20" height="19">
   <object x="640" y="416" width="32" height="192">
    <properties>
     <property name="warpMap" value="map_HallwayWest"/>

@@ -28,24 +28,50 @@ namespace SunsetHigh {
             m_rooms = new Dictionary<String, Room>();
         
             // there's probably a way to do this using loops but listing everything out is safer
-            Room library = new Library();
-            library.loadContent(p_content, Directories.MAPS + "map_Library");
+            Room bathroom = new Room();
             Room cafeteria = new Cafeteria();
-            cafeteria.loadContent(p_content, Directories.MAPS + "map_Cafeteria");
-            Room hallway = new Room();
-            hallway.loadContent(p_content, Directories.MAPS + "map_Hallway");
+            Room computerLab = new Room();
+            Room entrance = new Room();
+            Room hallwayEast = new Room();
+            Room hallwayWest = new Room();
+            Room library = new Library();
+            Room magazineOffice = new Room();
+            Room math = new Room();
+            Room science = new Room();
+            Room studentLounge = new Room();
             //Room questHall = new Room();
-            //questHall.loadContent(p_content, "map_longhallwaymission");
             //Room questHallEnd = new Room();
+
+            bathroom.loadContent(p_content, Directories.MAPS + "map_Bathroom");
+            cafeteria.loadContent(p_content, Directories.MAPS + "map_Cafeteria");
+            computerLab.loadContent(p_content, Directories.MAPS + "map_ComputerLab");
+            entrance.loadContent(p_content, Directories.MAPS + "map_Entrance");
+            hallwayEast.loadContent(p_content, Directories.MAPS + "map_HallwayEast");
+            hallwayWest.loadContent(p_content, Directories.MAPS + "map_HallwayWest");
+            library.loadContent(p_content, Directories.MAPS + "map_Library");
+            magazineOffice.loadContent(p_content, Directories.MAPS + "map_MagazineOffice");
+            math.loadContent(p_content, Directories.MAPS + "map_Math");
+            science.loadContent(p_content, Directories.MAPS + "map_Science");
+            studentLounge.loadContent(p_content, Directories.MAPS + "map_StudentLounge");
+            //questHall.loadContent(p_content, "map_longhallwaymission");
             //questHallEnd.loadContent(p_content, "map_longhallwayend");
-            m_rooms.Add("map_Library", library);
+
+            m_rooms.Add("map_Bathroom", bathroom);
             m_rooms.Add("map_Cafeteria", cafeteria);
-            m_rooms.Add("map_Hallway", hallway);
+            m_rooms.Add("map_ComputerLab", computerLab);
+            m_rooms.Add("map_Entrance", entrance);
+            m_rooms.Add("map_HallwayEast", hallwayEast);
+            m_rooms.Add("map_HallwayWest", hallwayWest);
+            m_rooms.Add("map_Library", library);
+            m_rooms.Add("map_MagazineOffice", magazineOffice);
+            m_rooms.Add("map_Math", math);
+            m_rooms.Add("map_Science", science);
+            m_rooms.Add("map_StudentLounge", studentLounge);
             //m_rooms.Add("map_longhallwaymission", questHall);
             //m_rooms.Add("map_longhallwayend", questHallEnd);
 
-            m_currentRoom = m_rooms["map_Library"];
-            m_currentRoomName = "map_Library";
+            m_currentRoom = m_rooms["map_HallwayWest"];
+            m_currentRoomName = "map_HallwayWest";
         }
 
         public static void setRoom(String p_roomName) {
