@@ -45,7 +45,7 @@ namespace SunsetHigh
 
             npcDruggie = new Character(25 * 32, 1 * 32);
             npcDruggie.inventory.addItem(Item.Meds, 1);
-            npcDruggie.setScript(Directories.INTERACTIONS + "Chess.druggieInteraction.txt");
+            npcDruggie.setScript(Directories.INTERACTIONS + "Stoner.chessInteraction.txt");
             npcDruggie.setDirection(Direction.South);
             this.addObject(npcDruggie);
         }

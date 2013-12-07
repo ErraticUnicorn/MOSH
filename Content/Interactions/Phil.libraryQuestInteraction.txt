@@ -1,4 +1,5 @@
-"HELP!!!" -> ["What's wrong?" -> 2, "You're annoying." -> End]
+"HELP!!!" -> ["What's wrong?" -> 2, "You're annoying." -> End, "You smell like poop!" -> End, "I eat punks like you for breakfast!" -> End, "You're pretty." -> 5]
 "My friend Lucas is stuck in the cafeteria and there's a massive food fight going on! Will you go rescue him?" -> ["Sure, I can try!" -> 3, "I'm busy right now." -> 4]
 "Rescue or don't rescue, there is no try! Good luck!" -> [Quest #1]
 "May you die a thousand frozen deaths. I will find the chosen one yet!" -> [End]
+"(blushing and giggling ensues...)" -> [End]

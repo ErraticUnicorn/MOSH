@@ -41,7 +41,6 @@ namespace SunsetHigh
         private bool canShoot;      // whether player can shoot a projectile
         
         //Speech vars
-        private bool talking;
         private Dialogue dialogue;
 
         //Reputation vars
@@ -105,7 +104,6 @@ namespace SunsetHigh
             projectiles = new List<Projectile>();
             canShoot = true;
             shootTimer = 0.0f;
-            talking = false;
             dialogue = new Dialogue();
             nerdRep = 0;
             jockRep = 0;
@@ -147,7 +145,7 @@ namespace SunsetHigh
 
         public void converse(Character c)
         {
-            talking = true;
+            dialogue.talking = true;
             dialogue.loadInteraction(c);
             dialogue.end = false;
             System.Diagnostics.Debug.WriteLine("Spoke!");
@@ -155,12 +153,12 @@ namespace SunsetHigh
 
         public bool isTalking()
         {
-            return talking;
+            return dialogue.talking;
         }
 
         public void stopTalking()
         {
-            talking = false;
+            dialogue.talking = false;
         }
         public override void loadContent(ContentManager content)
         {
@@ -179,7 +177,7 @@ namespace SunsetHigh
                 ppSystem.draw(sb);
             }
 
-            if (talking)
+            if (dialogue.talking)
             {
                 dialogue.draw(sb);
             }
@@ -201,10 +199,12 @@ namespace SunsetHigh
             shootTimer += elapsed;
             if (shootTimer >= RECHARGE_TIME)
                 canShoot = true;
-            if (talking)
+
+            if (dialogue.talking)
             {
                dialogue.update();
             }
+
             foreach (Projectile p in projectiles)
             {
                 p.update(elapsed);  //TODO: remove if off the screen
@@ -327,31 +327,42 @@ namespace SunsetHigh
         /// </summary>
         private class Dialogue
         {
-            private Interaction current;
-            private int index = 0;
+            private Interaction interaction;
+            private InteractionTreeNode current;
             private SpriteFont font;
             private Sprite bg;
+            private Sprite nameBg;
             private string say = "...";
             public bool end = false;
+            public bool talking = false;
+            private int place;
+            private int lower;
+            private readonly InteractionTreeNode defaultNode = new InteractionTreeNode { eventType = Events.End, line = "You're out of line!", responses = new List<Tuple<string, Events, int>>() };
+            
             public Dialogue()
             {
                 bg = new Sprite(0, 0, 0, 0);
+                nameBg = new Sprite(0, 0, 0, 0);
+                place = 0;
+                lower = 0;
             }
 
             public string buildString()
             {
-                var text = current.dialogue[index].line;
-                string[] words = text.Split(' ');
+                string[] words = current.line.Split(' ');
                 StringBuilder wrappedText = new StringBuilder();
                 wrappedText.Append(buildString(words));
-                foreach (var resp in current.dialogue[index].responses)
+                for (int i = lower; i <= lower + 3 && i < current.responses.Count; ++i)
                 {
+                    var resp = current.responses[i];
                     wrappedText.Append("\n");
-                    wrappedText.Append("> "+buildString(resp.Item1.Split(' ')));
+                    var signifier = (i == place) ? " > " : " - ";
+                    wrappedText.Append(signifier + buildString(resp.Item1.Split(' ')));
                 }
 
                 return wrappedText.ToString();
             }
+
             private string buildString(string[] words)
             {
                 StringBuilder wrappedText = new StringBuilder();
@@ -375,53 +386,85 @@ namespace SunsetHigh
 
                 return wrappedText.ToString();
             }
+
             public void loadContent(ContentManager content)
             {
                 font = content.Load<SpriteFont>(Directories.FONTS + "Arial");
                 bg.loadImage(content, Directories.SPRITES + "bg");
+                nameBg.loadImage(content, Directories.SPRITES + "bg");
+                nameBg.setHeight(20);
+                nameBg.setY(0);
             }
+
             public void draw(SpriteBatch sb)
             {
-                if (current != null)
+                if (interaction != null)
                 {
                     int width = sb.GraphicsDevice.Viewport.Width;
                     int height = sb.GraphicsDevice.Viewport.Height;
-                    bg.setX(width / 3);
-                    bg.setY(height - 90);
-                    bg.draw(sb);
                     say = end ? "(end)" : buildString();
-                    sb.DrawString(font, say, new Vector2(width / 3, height - 90), Color.Black, 0f, new Vector2(), 0.80f, SpriteEffects.None, 0f);
+                    bg.setWidth((int)font.MeasureString(say).X + 20);
+                    bg.setY(height - 90);
+                    bg.setX(width / 3);
+                    bg.draw(sb);
+                    nameBg.setWidth((int)font.MeasureString(interaction.name).X + 10);
+                    nameBg.setX(width / 2);
+                    nameBg.draw(sb);
+                    say = end ? "(end)" : buildString();
+                    sb.DrawString(font, say, new Vector2(bg.getX() + 10, height - 90), Color.Black, 0f, new Vector2(), 0.80f, SpriteEffects.None, 0f);
+                    sb.DrawString(font, interaction.name, new Vector2(nameBg.getX() + 5, 0), Color.Black, 0f, new Vector2(), 0.80f, SpriteEffects.None, 0f);
                 }
 
             }
+
             public void update()
             {
                 Tuple<string, Events, int> next = null;
-                // Only handling a binary choice for right now, to make this work for Friday
-                if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Z))
+
+                if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
                 {
-                    if(current.dialogue[index].eventType != Events.End)
-                        next = current.dialogue[index].responses[0];
+                    if(current.eventType != Events.End)
+                        next = current.responses[place];
                     else 
                     {
                         end = true;
+                        if (talking)
+                            talking = false;
                         return;
                     }
                     
                 }
-                else if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.X))
-                {
-                    if(current.dialogue[index].eventType != Events.End)
-                        next = current.dialogue[index].responses[1];
-                    else 
-                    {
-                        end = true;
-                        return;
+
+                else if(KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down)) {
+                    ++place;
+                    if (place >= current.responses.Count)
+                    { 
+                        place = 0;
+                        lower = 0;
                     }
+
+                    if (place == lower + 4)
+                        ++lower; 
+                }
+                else if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+                {
+                    --place;
+                    if (place < 0)
+                    {
+                        place = current.responses.Count - 1;
+                        lower = current.responses.Count - 4;
+                    }
+
+                    if (place < lower)
+                        --lower;
+
+                    if (lower < 0)
+                        lower = 0;
                 }
 
                 if (next != null)
                 {
+                    current = interaction.dialogue.ElementAtOrDefault(next.Item3 - 1) ?? defaultNode;
                     switch (next.Item2)
                     {
                         case Events.Quest:
@@ -432,16 +475,15 @@ namespace SunsetHigh
                             end = true;
                             break;
                         default:
-                            index = next.Item3-1;
-                            say = current.dialogue[index].line;
+                            place = 0;
                             break;
                     }
                 }
             }
             public void loadInteraction(Character c)
             {
-                current = c.script;
-                index = 0;
+                interaction = c.script;
+                current = interaction.dialogue.ElementAtOrDefault(0) ?? defaultNode;
             }
         }
         

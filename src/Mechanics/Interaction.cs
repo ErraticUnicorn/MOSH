@@ -28,6 +28,7 @@ namespace SunsetHigh
         {
             this.responses = new List<Tuple<string,Events,int>>();
         }
+
     }
 
     /// <summary>
@@ -59,7 +60,8 @@ namespace SunsetHigh
     {
         private const string matcherString = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight)(, )*)*(?<end>End)??,??(?<quest>Quest (#|%)\d+)??,??(?<fight>Fight)??\]";
         private static Regex lineMatcher = new Regex(matcherString, RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.Singleline);
-        public List<InteractionTreeNode> dialogue;   
+        public List<InteractionTreeNode> dialogue;
+        public string name;
         public Interaction(string interactionFile)
         {
             if (interactionFile.StartsWith(Directories.INTERACTIONS))
@@ -67,6 +69,7 @@ namespace SunsetHigh
 
             string[] lines = System.IO.File.ReadAllLines(Directories.INTERACTIONS + interactionFile);
             this.dialogue = new List<InteractionTreeNode>();
+            this.name = interactionFile.Split(new char[] { '.' })[0];
             foreach (var line in lines)
             {
                 var temp = new InteractionTreeNode();
@@ -84,7 +87,7 @@ namespace SunsetHigh
                     int questNum = 1;
                     int numIndex = 0;
                     string questSay = string.Empty;
-                    // Kids, this is terrible, terrible practice. *Never* do it. I'm disappointed that C# lets you. I'm fixing it after Friday.
+                   
                     if((numIndex = questLine.IndexOf('#')+1) == 0) 
                     {
                         questNum = int.Parse(questLine.Substring(questLine.IndexOf('%') + 1));
@@ -120,6 +123,14 @@ namespace SunsetHigh
                                 eventType = Events.Fight;
                                 next = 0;
                                 break;
+                            case "End, ":
+                                eventType = Events.End;
+                                next = 0;
+                                break;
+                            case "Fight, ":
+                                eventType = Events.Fight;
+                                next = 0;
+                                break;
                             default:
                                 eventType = Events.None;
                                 next = parseNext(responseparts[1]);
@@ -133,6 +144,7 @@ namespace SunsetHigh
                 this.dialogue.Add(temp);
             }
         }
+
         private int parseNext(string next)
         {
             int val = 0, temp = 0;

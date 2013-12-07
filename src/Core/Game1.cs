@@ -142,11 +142,13 @@ namespace SunsetHigh
                 KeyboardManager.handleInGameMenu();
                 if (!InGameMenu.isOpen())
                 {
-                    KeyboardManager.handleCharacterMovement(h1, elapsed);
-                    KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
-                    KeyboardManager.handleShooting(h1);
-                    //KeyboardManager.handleTalking(h1, WorldManager.m_currentRoom.CharList);
                     KeyboardManager.handleInteractions(h1, WorldManager.m_currentRoom.Interactables);
+                    if (!h1.isTalking())
+                    {
+                        KeyboardManager.handleCharacterMovement(h1, elapsed);
+                        KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
+                        KeyboardManager.handleShooting(h1);
+                    }
                 } 
                 
                 // Updates based on time

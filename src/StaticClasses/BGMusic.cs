@@ -275,7 +275,7 @@ namespace SunsetHigh
                 file = new AudioFileReader(Directories.MUSIC + fileName + ".wma");
                 return true;
             }
-            return true;
+            return false;
         }
 
         private static void OnFadeOver(object source, ElapsedEventArgs e)
