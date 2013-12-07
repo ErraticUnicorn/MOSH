@@ -313,7 +313,6 @@ namespace SunsetHigh
 
             if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk])) //we will replace this with "action" key later
             {
-                // End NOTE
                 for (int i = 0; i < targets.Count; i++)
                 {
                     if (hero.inRangeAction(targets[i]) && hero.facing(targets[i]))

@@ -423,13 +423,16 @@ namespace SunsetHigh
 
                 if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
                 {
-                    if(current.eventType != Events.End)
+                    if(end)
+                    {
+                        talking = false;
+                        return;
+                    }
+                    else if (current.eventType != Events.End)
                         next = current.responses[place];
-                    else 
+                    else
                     {
                         end = true;
-                        if (talking)
-                            talking = false;
                         return;
                     }
                     
@@ -484,6 +487,7 @@ namespace SunsetHigh
             {
                 interaction = c.script;
                 current = interaction.dialogue.ElementAtOrDefault(0) ?? defaultNode;
+                place = 0;
             }
         }
         
