@@ -14,6 +14,7 @@ namespace SunsetHigh
             : base()
         {
             npc1 = new Character(4 * TILE_SIZE, 7 * TILE_SIZE);
+            npc1.setScript(Directories.INTERACTIONS + "Enforcer.npc1.magoffice.txt");
             this.addObject(npc1);
         }
 

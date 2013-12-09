@@ -18,6 +18,7 @@ namespace SunsetHigh
             npc2 = new Character(17 * TILE_SIZE, 12 * TILE_SIZE);
             this.addObject(npc2);
             npc3 = new Character(21 * TILE_SIZE, 7 * TILE_SIZE);
+            npc3.setScript(Directories.INTERACTIONS + "Jock.npc3.computer.txt");
             this.addObject(npc3);
         }
 

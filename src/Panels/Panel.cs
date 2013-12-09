@@ -41,7 +41,7 @@ namespace SunsetHigh
         private int marginX;
         private int marginY;
         private bool highlighted;
-        protected BorderSystem borders;
+        private BorderSystem borders;
 
         public Panel()
             : this(0, 0, 0, 0) { }
@@ -176,6 +176,8 @@ namespace SunsetHigh
             {
                 this.x = p.getX();
                 this.y = p.getY();
+                this.width = p.getWidth();
+                this.height = p.getHeight();
             }
             public void draw(SpriteBatch sb)
             {

@@ -68,7 +68,6 @@ namespace SunsetHigh
             this.smoothMove(this.panel.getAppearX() + this.targetEntry.getX() + ARROW_X_OFFSET,
                 this.panel.getAppearY() + this.targetEntry.getY() + ARROW_Y_OFFSET,
                 moveTime);
-            //System.Diagnostics.Debug.WriteLine(this.getX() + " " + this.getY());
         }
 
         public override void loadContent(ContentManager content)

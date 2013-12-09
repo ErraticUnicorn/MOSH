@@ -176,7 +176,6 @@ namespace SunsetHigh
                 string[] files = Directory.GetFiles(Directories.SAVEDATA);
                 for (int i = 0; i < files.Length; i++)
                 {
-                    System.Diagnostics.Debug.WriteLine(files[i]);
                     SaveGameData data = getSaveData(files[i].Substring(Directories.SAVEDATA.Length), encrypt);
                     if (data != null)
                     {

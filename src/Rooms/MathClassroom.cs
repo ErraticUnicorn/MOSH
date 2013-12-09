@@ -14,6 +14,7 @@ namespace SunsetHigh
             : base()
         {
             npc1 = new Character(8 * TILE_SIZE, 4 * TILE_SIZE);
+            npc1.setScript(Directories.INTERACTIONS + "BoringTeacher.npc1.math.txt");
             this.addObject(npc1);
 
             npc2 = new Character(17 * TILE_SIZE, 16 * TILE_SIZE);
@@ -23,6 +24,7 @@ namespace SunsetHigh
             this.addObject(npc3);
 
             npc4 = new Character(12 * TILE_SIZE, 14 * TILE_SIZE);
+            npc4.setScript(Directories.INTERACTIONS + "ConfusedDude.npc4.math.txt");
             this.addObject(npc4);
         }
 

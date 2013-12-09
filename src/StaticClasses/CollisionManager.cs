@@ -45,59 +45,15 @@ namespace SunsetHigh {
             return collisionWithObjectAtRelative(p_sprite, p_offset, "Solid");
         }
 
-        // returns a Character that p_sprite collides with if its position were changed
-        // if p_sprite is colliding with p_exclude, that collision doesn't count
-        // (i.e. it doesn't make sense to check whether something is colliding with itself)
-        public static Character collisionWithCharacterAtRelative(Sprite p_sprite, Point p_offset, Character p_exclude) {
-            Character l_collidedObject = null;
-
-            foreach (Character c in WorldManager.m_currentRoom.CharList) {
-                if (c == p_exclude) {
-                    continue;
-                }
-                Rectangle l_spriteBounds = new Rectangle(
-                    p_sprite.getX() + p_offset.X,
-                    p_sprite.getY() + p_offset.Y,
-                    p_sprite.getWidth(),
-                    p_sprite.getHeight());
-                Rectangle l_charBounds = new Rectangle(c.getX(), c.getY(), c.getWidth(), c.getHeight());
-                if (l_spriteBounds.Intersects(l_charBounds)) {
-                    l_collidedObject = c;
-                    break;
-                }
-            }
-
-            return l_collidedObject;
-        }
-
-        //Clone of Character collision method, with Sprite instead, for testing
-        public static Sprite collisionWithSpriteAtRelative(Sprite p_sprite, Point p_offset, Sprite p_exclude)
-        {
-            Sprite l_collidedObject = null;
-
-            foreach (Sprite s in WorldManager.m_currentRoom.CharList)
-            {
-                if (s == p_exclude)
-                {
-                    continue;
-                }
-                Rectangle l_spriteBounds = new Rectangle(
-                    p_sprite.getX() + p_offset.X,
-                    p_sprite.getY() + p_offset.Y,
-                    p_sprite.getWidth(),
-                    p_sprite.getHeight());
-                Rectangle l_charBounds = new Rectangle(s.getX(), s.getY(), s.getWidth(), s.getHeight());
-                if (l_spriteBounds.Intersects(l_charBounds))
-                {
-                    l_collidedObject = s;
-                    break;
-                }
-            }
-
-            return l_collidedObject;
-        }
-
-        // clone of Character collision method with Interactable
+        /// <summary>
+        /// Returns an interactable in the current world's scene that p_interactable collides with if its position were changed.
+        /// if p_interactable is colliding with p_interactable, that collision doesn't count
+        /// (i.e. it doesn't make sense to check whether something is colliding with itself)
+        /// </summary>
+        /// <param name="p_interactable">Interactable to check</param>
+        /// <param name="p_offset">The proposed movement of the Interactable</param>
+        /// <param name="p_exclude">An interactable to exclude from collision checking</param>
+        /// <returns>An interactable that p_interactable collides with; null if no collisions are detected</returns>
         public static IInteractable collisionWithInteractableAtRelative(IInteractable p_interactable, Point p_offset, IInteractable p_exclude)
         {
             IInteractable l_collidedObject = null;

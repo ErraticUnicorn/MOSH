@@ -14,6 +14,7 @@ namespace SunsetHigh
             : base()
         {
             npc1 = new Character(13 * TILE_SIZE, 1 * TILE_SIZE);
+            npc1.setScript(Directories.INTERACTIONS + "Stoner.npc1.bathroom.txt");
             this.addObject(npc1);
         }
 

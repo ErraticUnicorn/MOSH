@@ -1,0 +1,5 @@
+﻿"Psst! Want an answer key to the next chem exam?" -> ["Sure!" -> 5, "No way!" -> 2]
+"Oh, come on, everyone has one. Don't let a misplaced sense of honor deter you." -> ["Oh, OK.." -> 5, "Uh, No." -> 3]
+"Fine. You're going to fail, you know." -> ["On second thought.." -> 5, "Well, I have my honor." -> 4]
+"Aww, you're no fun." -> [End]
+"...WHAT'S THAT?! I'll report you to the professor for such dishonest thoughts!!" -> [End]

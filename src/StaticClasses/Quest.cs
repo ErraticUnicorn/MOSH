@@ -10,7 +10,7 @@ namespace SunsetHigh
     /// </summary>
     public enum QuestID
     {
-        FoodFight = 1,
+        FoodFight = 0,
         TeacherChase,
         //and so on...
     }

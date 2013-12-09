@@ -164,16 +164,20 @@ namespace SunsetHigh
                 return true;
             }
 
-            // collision checking here
-            Sprite other = CollisionManager.collisionWithSpriteAtRelative(this, l_offset, this);
-            if (other != null)
+            IInteractable interactObj = CollisionManager.collisionWithInteractableAtRelative(this, l_offset, this);
+            if (interactObj != null)
             {
-                if ((l_offset.X == 0) != (l_offset.Y == 0))     //only one offset is zero (multiple cannot be handled yet)
+                interactObj.onCollide();
+                if (interactObj is Character)
                 {
-                    return CollisionManager.setSpriteOutsideRectangle(this, other.getBoundingRect());
+                    if ((l_offset.X == 0) != (l_offset.Y == 0))     //only one offset is zero (multiple cannot be handled yet)
+                    {
+                        return CollisionManager.setSpriteOutsideRectangle(this, interactObj.getBoundingRect());
+                    }
                 }
             }
 
+            // collision checking here
             MapObject mapObj = CollisionManager.collisionWithObjectAtRelative(this, l_offset);
             if (mapObj != null)
             {
@@ -182,10 +186,6 @@ namespace SunsetHigh
                     return CollisionManager.setSpriteOutsideRectangle(this, mapObj.Bounds);
                 }
             }
-
-            IInteractable interactObj = CollisionManager.collisionWithInteractableAtRelative(this, l_offset, this);
-            if (interactObj != null)
-                interactObj.onCollide();
 
             //no collisions detected!
             this.setX(this.getX() + l_offset.X);

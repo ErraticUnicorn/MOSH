@@ -67,12 +67,10 @@ namespace SunsetHigh
                 int width = (int)font.MeasureString(message).X;
                 if (width + 2 * this.getXMargin() > DEFAULT_PANEL_WIDTH)
                 {
-                    this.borders.setWidth(this.getXMargin() * 2 + width);
                     this.setWidth(this.getXMargin() * 2 + width);
                 }
                 else
                 {
-                    this.borders.setWidth(DEFAULT_PANEL_WIDTH);
                     this.setWidth(DEFAULT_PANEL_WIDTH);
                 }
             }

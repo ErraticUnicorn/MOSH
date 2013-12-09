@@ -307,20 +307,37 @@ namespace SunsetHigh
             }
         }
 
+        /// <summary>
+        /// Handles the Hero talking with Characters. Will be expanded later to "interact" with
+        /// scenery as well.
+        /// </summary>
+        /// <param name="hero">The main character</param>
+        /// <param name="targets">List of interactables in the scene</param>
         public static void handleInteractions(Hero hero, List<IInteractable> targets)
         {
             nullCheck();
-
-            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Talk])) //we will replace this with "action" key later
+            if (!hero.isTalking())
             {
-                for (int i = 0; i < targets.Count; i++)
+                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
                 {
-                    if (hero.inRangeAction(targets[i]) && hero.facing(targets[i]))
+                    for (int i = 0; i < targets.Count; i++)
                     {
-                        targets[i].onInteract();
-                        break;
+                        if (hero.inRangeAction(targets[i]) && hero.facing(targets[i]))
+                        {
+                            targets[i].onInteract();
+                            break;
+                        }
                     }
                 }
+            }
+            else
+            {
+                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveNorth]))
+                    hero.dialogueChoiceMove(Direction.North);
+                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveSouth]))
+                    hero.dialogueChoiceMove(Direction.South);
+                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
+                    hero.dialogueConfirm();
             }
         }
 

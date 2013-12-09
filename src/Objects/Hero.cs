@@ -41,7 +41,7 @@ namespace SunsetHigh
         private bool canShoot;      // whether player can shoot a projectile
         
         //Speech vars
-        private Dialogue dialogue;
+        private DialoguePanel dialogue;
 
         //Reputation vars
         private int nerdRep;
@@ -104,7 +104,7 @@ namespace SunsetHigh
             projectiles = new List<Projectile>();
             canShoot = true;
             shootTimer = 0.0f;
-            dialogue = new Dialogue();
+            dialogue = new DialoguePanel();
             nerdRep = 0;
             jockRep = 0;
             prepRep = 0;
@@ -145,10 +145,12 @@ namespace SunsetHigh
 
         public void converse(Character c)
         {
-            dialogue.talking = true;
-            dialogue.loadInteraction(c);
-            dialogue.end = false;
-            System.Diagnostics.Debug.WriteLine("Spoke!");
+            if (c.script != null)
+            {
+                dialogue.talking = true;
+                dialogue.loadInteraction(c);
+                dialogue.end = false;
+            }
         }
 
         public bool isTalking()
@@ -202,7 +204,7 @@ namespace SunsetHigh
 
             if (dialogue.talking)
             {
-               dialogue.update();
+               dialogue.update(elapsed);
             }
 
             foreach (Projectile p in projectiles)
@@ -220,7 +222,7 @@ namespace SunsetHigh
         /// Begins the pickpocketing minigame with the given character as the target
         /// </summary>
         /// <param name="character">The targeted Character</param>
-        public void startPickpocket(Character character) //need content manager?
+        public void startPickpocket(Character character)
         {
             if (!ppActive)
             {
@@ -322,149 +324,91 @@ namespace SunsetHigh
             return data;
         }
 
+        public void dialogueChoiceMove(Direction dir)
+        {
+            this.dialogue.onMoveCursor(dir);
+        }
+
+        public void dialogueConfirm()
+        {
+            this.dialogue.onConfirm();
+        }
+
         /// <summary>
-        /// Class to handle the dialogue box/moving through the line tree, etc. Godawful and ugly, but works for right now.
+        /// Class to handle the dialogue box/moving through the line tree, etc.
         /// </summary>
-        private class Dialogue
+        private class DialoguePanel : ListPanel
         {
             private Interaction interaction;
             private InteractionTreeNode current;
-            private SpriteFont font;
-            private Sprite bg;
-            private Sprite nameBg;
+            private CursorArrow cursorArrow;
             private string say = "...";
             public bool end = false;
             public bool talking = false;
-            private int place;
-            private int lower;
-            private readonly InteractionTreeNode defaultNode = new InteractionTreeNode { eventType = Events.End, line = "You're out of line!", responses = new List<Tuple<string, Events, int>>() };
-            
-            public Dialogue()
+            private readonly InteractionTreeNode defaultNode = new InteractionTreeNode { 
+                eventType = Events.End, line = "You're out of line!", responses = new List<Tuple<string, Events, int>>() };
+
+            private const int DIALOGUE_X_MARGIN = 35;
+            private const int DIALOGUE_Y_MARGIN = 15;
+            private const int DIALOGUE_WIDTH = 600;
+            private const int DIALOGUE_HEIGHT = 200;
+            private const int DIALOGUE_X = 400 - (DIALOGUE_WIDTH / 2);
+            private const int DIALOGUE_Y = 480 - DIALOGUE_HEIGHT;
+            private const int NUM_RESPONSES_ON_PANEL = 3;
+            private const int RESPONSE_START_Y = 100;
+
+            public DialoguePanel()
+                : base(DIALOGUE_X, DIALOGUE_Y, DIALOGUE_WIDTH, DIALOGUE_HEIGHT)
             {
-                bg = new Sprite(0, 0, 0, 0);
-                nameBg = new Sprite(0, 0, 0, 0);
-                place = 0;
-                lower = 0;
+                this.setVisible(true);
+                this.setPopLocations(DIALOGUE_X, DIALOGUE_Y, DIALOGUE_X, DIALOGUE_Y);
+                this.popIn();
+                this.setHighlighted(true);
+
+                this.cursorArrow = new CursorArrow(DIALOGUE_X, DIALOGUE_Y, 20, 20, this);
+                this.cursorArrow.setPopLocations(DIALOGUE_X, DIALOGUE_Y + RESPONSE_START_Y, 
+                    DIALOGUE_X, DIALOGUE_Y + RESPONSE_START_Y);
+                this.cursorArrow.popIn();
+                
+                this.setXMargin(DIALOGUE_X_MARGIN);
+                this.setYMargin(DIALOGUE_Y_MARGIN);
+                this.setScrolling(NUM_RESPONSES_ON_PANEL, 1, this.getXMargin(), this.getWidth() - this.getXMargin(), RESPONSE_START_Y);
+                scrollBar.setInitParameters(RESPONSE_START_Y, this.getHeight() - RESPONSE_START_Y - this.getYMargin());
             }
 
             public string buildString()
             {
-                string[] words = current.line.Split(' ');
                 StringBuilder wrappedText = new StringBuilder();
-                wrappedText.Append(buildString(words));
-                for (int i = lower; i <= lower + 3 && i < current.responses.Count; ++i)
+                wrappedText.Append(SunsetUtils.wordWrapText(interaction.name + ": " + current.line, 
+                    font, this.getWidth() - this.getXMargin() * 2));
+
+                List<MenuEntry> tempEntries = new List<MenuEntry>();
+                for (int i = 0; i < current.responses.Count; ++i)
                 {
                     var resp = current.responses[i];
-                    wrappedText.Append("\n");
-                    var signifier = (i == place) ? " > " : " - ";
-                    wrappedText.Append(signifier + buildString(resp.Item1.Split(' ')));
+                    tempEntries.Add(new DialogueEntry(SunsetUtils.wordWrapText(current.responses[i].Item1, 
+                        font, this.getWidth() - this.getXMargin() * 2)));
                 }
-
+                this.clearEntries();
+                this.loadEntries(tempEntries.ToArray());
+                this.cursor = 0;
+                this.cursorArrow.updateCursor();
+                this.cursorArrow.setVisible(tempEntries.Count > 0);
+                this.scrollBar.setVisible(tempEntries.Count > NUM_RESPONSES_ON_PANEL);
                 return wrappedText.ToString();
             }
 
-            private string buildString(string[] words)
-            {
-                StringBuilder wrappedText = new StringBuilder();
-                float linewidth = 0f;
-                float spaceWidth = font.MeasureString(" ").X;
-                for (int i = 0; i < words.Length; ++i)
-                {
-                    Vector2 size = font.MeasureString(words[i]);
-                    if (linewidth + size.X < 400)
-                    {
-                        linewidth += size.X + spaceWidth;
-                    }
-                    else
-                    {
-                        wrappedText.Append("\n");
-                        linewidth = size.X + spaceWidth;
-                    }
-                    wrappedText.Append(words[i]);
-                    wrappedText.Append(" ");
-                }
-
-                return wrappedText.ToString();
-            }
-
-            public void loadContent(ContentManager content)
-            {
-                font = content.Load<SpriteFont>(Directories.FONTS + "Arial");
-                bg.loadImage(content, Directories.SPRITES + "bg");
-                nameBg.loadImage(content, Directories.SPRITES + "bg");
-                nameBg.setHeight(20);
-                nameBg.setY(0);
-            }
-
-            public void draw(SpriteBatch sb)
-            {
-                if (interaction != null)
-                {
-                    int width = sb.GraphicsDevice.Viewport.Width;
-                    int height = sb.GraphicsDevice.Viewport.Height;
-                    say = end ? "(end)" : buildString();
-                    bg.setWidth((int)font.MeasureString(say).X + 20);
-                    bg.setY(height - 90);
-                    bg.setX(width / 3);
-                    bg.draw(sb);
-                    nameBg.setWidth((int)font.MeasureString(interaction.name).X + 10);
-                    nameBg.setX(width / 2);
-                    nameBg.draw(sb);
-                    say = end ? "(end)" : buildString();
-                    sb.DrawString(font, say, new Vector2(bg.getX() + 10, height - 90), Color.Black, 0f, new Vector2(), 0.80f, SpriteEffects.None, 0f);
-                    sb.DrawString(font, interaction.name, new Vector2(nameBg.getX() + 5, 0), Color.Black, 0f, new Vector2(), 0.80f, SpriteEffects.None, 0f);
-                }
-
-            }
-
-            public void update()
+            public override void onConfirm()
             {
                 Tuple<string, Events, int> next = null;
-
-                if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
+                if (current.eventType != Events.End)
                 {
-                    if(end)
-                    {
-                        talking = false;
-                        return;
-                    }
-                    else if (current.eventType != Events.End)
-                        next = current.responses[place];
-                    else
-                    {
-                        end = true;
-                        return;
-                    }
-                    
+                    next = current.responses[cursor];
                 }
-
-                else if(KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down)) {
-                    ++place;
-                    if (place >= current.responses.Count)
-                    { 
-                        place = 0;
-                        lower = 0;
-                    }
-
-                    if (place == lower + 4)
-                        ++lower; 
-                }
-                else if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+                else
                 {
-                    --place;
-                    if (place < 0)
-                    {
-                        place = current.responses.Count - 1;
-                        lower = current.responses.Count - 4;
-                    }
-
-                    if (place < lower)
-                        --lower;
-
-                    if (lower < 0)
-                        lower = 0;
+                    end = true;
                 }
-
                 if (next != null)
                 {
                     current = interaction.dialogue.ElementAtOrDefault(next.Item3 - 1) ?? defaultNode;
@@ -472,24 +416,80 @@ namespace SunsetHigh
                     {
                         case Events.Quest:
                             Quest.setQuestAccepted((QuestID)next.Item3);
+                            // Set up a HUD later that registers what happened with the quest.
                             end = true;
                             break;
                         case Events.End:
                             end = true;
                             break;
                         default:
-                            place = 0;
+                            cursor = 0;
                             break;
                     }
                 }
+                if (end)
+                {
+                    talking = false;
+                    return;
+                }
+                say = end ? "(end)" : buildString();
             }
+
+            public override void onMoveCursor(Direction dir)
+            {
+                base.onMoveCursor(dir);
+                cursorArrow.updateCursor();
+            }
+
+            public override void loadContent(ContentManager content)
+            {
+                base.loadContent(content);
+                font = content.Load<SpriteFont>(Directories.FONTS + "pf_ronda_seven");
+                cursorArrow.loadContent(content);
+            }
+
+            public override void draw(SpriteBatch sb)
+            {
+                if (interaction != null)
+                {
+                    base.draw(sb);
+                    sb.DrawString(font, say, new Vector2(this.getX() + this.getXMargin(), this.getY() + this.getYMargin()), 
+                        Color.Black, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f);
+                    cursorArrow.draw(sb);                    
+                }
+            }
+
+            public override void update(float elapsed)
+            {
+                base.update(elapsed);
+                cursorArrow.update(elapsed);
+            }
+
             public void loadInteraction(Character c)
             {
                 interaction = c.script;
-                current = interaction.dialogue.ElementAtOrDefault(0) ?? defaultNode;
-                place = 0;
+                if (interaction != null)
+                {
+                    current = interaction.dialogue.ElementAtOrDefault(0) ?? defaultNode;
+                    say = buildString();
+                    cursor = 0;   // puts cursor at top
+                }
             }
         }
+
+        private class DialogueEntry : MenuEntry
+        {
+            public DialogueEntry()
+                : base() { }
+            public DialogueEntry(string name)
+                : base(name) { }
+            public DialogueEntry(string name, int x, int y)
+                : base(name, x, y) { }
+            public override void onPress()
+            {
+            }
+        }
+
         
         private class PickpocketSystem  //A container for three sprites
         {
@@ -517,8 +517,6 @@ namespace SunsetHigh
                 positiveBar = new Sprite(0, 0, (int)(NEGATIVE_WIDTH * DEFAULT_POSITIVE_WIDTH_FACTOR), BAR_HEIGHT);
                 arrow = new Sprite(0, 0, ARROW_WIDTH, ARROW_HEIGHT);
                 displacement = 0;
-                //speed = DEFAULT_SPEED;
-                //goingRight = true;
                 speedFactor = DEFAULT_SPEED_FACTOR;
                 randomOffset = 0;
                 arrowTimer = 0;
@@ -544,8 +542,6 @@ namespace SunsetHigh
                 //update moving arrow
                 //moves sinusoidally
                 arrowTimer += elapsed;
-                //if (arrowTimer > Math.PI * 2)
-                //    arrowTimer -= (float)(Math.PI * 2);     //keep timer between 0 and 2*PI
                 displacement = (int)(NEGATIVE_WIDTH / 2 * Math.Sin(arrowTimer * speedFactor + randomOffset));
                 arrow.setX(arrow.getX() + displacement);
             }

@@ -13,7 +13,8 @@ namespace SunsetHigh
         public HallwayEast()
             : base()
         {
-            npc1 = new Character(19 * TILE_SIZE, 2 * TILE_SIZE);
+            npc1 = new Character(19 * TILE_SIZE, 1 * TILE_SIZE);
+            npc1.setScript(Directories.INTERACTIONS + "HungryJock.npc1.hallwayEast.txt");
             this.addObject(npc1);
         }
 

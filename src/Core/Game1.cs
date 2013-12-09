@@ -67,8 +67,6 @@ namespace SunsetHigh
             InGameMenu.init();
             InGameMenu.loadInventoryPanel(h1.inventory);
 
-            //Quest.setTrigger(QuestID.FoodFight1);
-
             base.Initialize();
         }
 
@@ -139,7 +137,8 @@ namespace SunsetHigh
                 WorldManager.updateCameraOffset(h1, GraphicsDevice, SCALE_FACTOR);
                
                 // Keyboard listening
-                KeyboardManager.handleInGameMenu();
+                if (!h1.isTalking())
+                    KeyboardManager.handleInGameMenu();
                 if (!InGameMenu.isOpen())
                 {
                     KeyboardManager.handleInteractions(h1, WorldManager.m_currentRoom.Interactables);
@@ -159,6 +158,14 @@ namespace SunsetHigh
                     h1.update(elapsed);
                     WorldManager.update(elapsed);
                 }
+
+                //DEBUG
+                IInteractable interactable = CollisionManager.collisionWithInteractableAtRelative(Hero.instance, Point.Zero, Hero.instance);
+                if (interactable != null)
+                {
+                    interactable.onCollide();
+                }
+                //end DEBUG
 
                 base.Update(gameTime);
 

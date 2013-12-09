@@ -27,7 +27,7 @@ namespace SunsetHigh
         private bool rowFirst;
 
         //scrolling variables
-        private ScrollBar scrollBar;
+        protected ScrollBar scrollBar;
         private bool scrolling;
         private int scrollOffsetBetweenEntries;
         private int scrollRowsOnPanel;
@@ -73,8 +73,8 @@ namespace SunsetHigh
             if (this.isScrolling() && this.entries.Count > 0)
             {
                 this.rows = ((this.entries.Count - 1) / this.cols) + 1;
-                this.alignEntriesTable(this.rows, this.cols, this.getXMargin(), this.getWidth() - this.getXMargin(),
-                    this.getYMargin(), this.getYMargin() + scrollOffsetBetweenEntries * this.rows, this.rowFirst);
+                this.endY = (this.startY + this.scrollOffsetBetweenEntries * this.rows);
+                this.alignEntriesTable(this.rows, this.cols, this.startX, this.endX, this.startY, this.endY, this.rowFirst);
                 this.scrollBar.adjustHeight(this.scrollRowsOnPanel, this.rows);
             }
         }
@@ -82,10 +82,16 @@ namespace SunsetHigh
         public void clearEntries()
         { 
             this.entries.Clear();
+            this.cursor = 0;
+            if (this.isScrolling())
+            {
+                this.scrollTopRow = 0;
+                this.scrollBar.adjustY(this.scrollTopRow, this.scrollRowsOnPanel);
+            }
         }
 
         // only vertical scrolling enabled now
-        public void setScrolling(int numRowsVisible, int numCols)
+        public void setScrolling(int numRowsVisible, int numCols, int startX, int endX, int startY)
         {
             this.scrolling = true;
             this.scrollBar.setVisible(true);
@@ -94,8 +100,18 @@ namespace SunsetHigh
             if (this.cols == 1) this.rowFirst = false;
             else this.rowFirst = true;
             this.scrollTopRow = 0;
-            this.scrollOffsetBetweenEntries = (this.getHeight() - this.getYMargin() * 2) / this.scrollRowsOnPanel;
+            this.scrollOffsetBetweenEntries = (this.getHeight() - this.getYMargin() - startY) / this.scrollRowsOnPanel;
+
+            this.startX = startX;
+            this.startY = startY;
+            this.endX = endX;
         }
+
+        public void setScrolling(int numRowsVisible, int numCols)
+        {
+            setScrolling(numRowsVisible, numCols, this.getXMargin(), this.getWidth() - this.getXMargin(), this.getYMargin());
+        }
+
         public bool isScrolling() { return this.scrolling; }
 
 
@@ -309,6 +325,7 @@ namespace SunsetHigh
         {
             base.reset();
             this.cursor = 0;
+            this.scrollTopRow = 0;
         }
 
         public override void loadContent(ContentManager content)
@@ -365,7 +382,7 @@ namespace SunsetHigh
             }
         }
 
-        private class ScrollBar : SmoothMovingSprite
+        protected class ScrollBar : SmoothMovingSprite
         {
             private const int DEFAULT_WIDTH = 20;
             private const int DEFAULT_X_OFFSET_FROM_RIGHT_MARGIN = 0;
@@ -375,6 +392,8 @@ namespace SunsetHigh
             private int y_relative;
             private int x_offset;
             private int y_offset;
+            private int startY;
+            private int maxHeight;
             private Panel owner;
 
             public ScrollBar(Panel owner, int width)
@@ -385,22 +404,30 @@ namespace SunsetHigh
                 y_relative = owner.getYMargin();
                 x_offset = owner.getX();
                 y_offset = owner.getY();
+                this.startY = owner.getYMargin();
+                this.maxHeight = owner.getHeight() - owner.getYMargin() * 2;
                 this.setX(x_offset + x_relative);
                 this.setY(y_offset + y_relative);
             }
             public ScrollBar(Panel owner)
                 : this(owner, DEFAULT_WIDTH) { }
 
+            public void setInitParameters(int startY, int height)
+            {
+                this.startY = startY;
+                this.setY(y_offset + startY);  //assume cursor starts at top row
+                this.maxHeight = height;
+            }
+
             public void adjustHeight(int rowsOnScreen, int totalRows)
             {
-                int space = owner.getHeight() - 2 * owner.getYMargin();
-                this.setHeight((int)(space * (1.0f * rowsOnScreen / totalRows)));
+                this.setHeight((int)(this.maxHeight * (1.0f * rowsOnScreen / totalRows)));
             }
 
             public void adjustY(int topRow, int totalRows)
             {
-                int spacePerRow = (owner.getHeight() - 2 * owner.getYMargin()) / totalRows;
-                y_relative = owner.getYMargin() + (spacePerRow * topRow);
+                int spacePerRow = this.maxHeight / totalRows;
+                y_relative = this.startY + (spacePerRow * topRow);
                 if (owner.isMovingIn())
                 {
                     x_offset = owner.getAppearX();
