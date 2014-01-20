@@ -1,6 +1,13 @@
-"Hello" -> ["Are you Lucas? Phil sent me to find you." -> 2]
+if Quest FoodFight Accepted and not Progress1 and not Progress2
+"Hello." -> ["Are you Lucas? Phil sent me to find you." -> 2]
 "Yes, thank you. Thank you very much! What brings you out to this quadrant?" -> ["I'm looking for information." -> 3, "I was hungry." -> 4]
 "What do you want to know?" -> ["Do you know anything about her disappearance?" -> 5, "What's for lunch today?" -> 6]
-"OK, then.  Thanks again and may the Force be with you!" -> [Quest %0]
-"I don't know much, but I can tell you that one of the lieutenants might have seen something important on that night. That's all I know." -> [Quest %0]
-"Pizza, I think. I've got Calculus soon, so bye!" -> [Quest %0]
+"OK, then.  Thanks again and may the Force be with you!" -> [Quest FoodFight Progress2]
+"I don't know much, but I can tell you that one of the lieutenants might have seen something important on that night. That's all I know." -> [Quest FoodFight Progress1]
+"Pizza, I think. I've got Calculus soon, so bye!" -> [Quest FoodFight Progress2]
+
+if Quest FoodFight Progress1 or Progress2 and not Complete
+"Looks like the fight is over now. You don't need to worry about me. I'll tell Phil I'm OK." -> [End]
+
+default
+"Wassup?... I'm trying to learn the teenage vernacular." -> [End]

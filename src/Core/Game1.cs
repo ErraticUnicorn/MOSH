@@ -67,6 +67,8 @@ namespace SunsetHigh
             InGameMenu.init();
             InGameMenu.loadInventoryPanel(h1.inventory);
 
+            Quest.setQuestAvailable(QuestID.FoodFight);
+
             base.Initialize();
         }
 
@@ -80,7 +82,8 @@ namespace SunsetHigh
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // play the title track first
-            BGMusic.playSong("sunset high menu track.mp3"); 
+            BGMusic.playSong("sunset high menu track.mp3");
+            //BGMusic.setPaused(true);
 
             WorldManager.loadMaps(Content);
 

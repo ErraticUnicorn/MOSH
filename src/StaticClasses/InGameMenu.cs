@@ -41,11 +41,6 @@ namespace SunsetHigh
             menuOpen = false;
             initialized = true;
 
-            // journal info screen
-            TextPanel journalInfoScreen = new TextPanel(200, 480, 400, 480);
-            journalInfoScreen.setPopLocations(200, 480, 200, 0);
-            components.Add(journalInfoScreen);
-
             // places list
             ListPanel placesScreen = new ListPanel(200, 480, 440, 380);
             placesScreen.setPopLocations(200, 480, 200, 100);
@@ -57,8 +52,10 @@ namespace SunsetHigh
             components.Add(peopleScreen);
 
             // quest list
-            ListPanel questScreen = new ListPanel(200, 480, 440, 380);
+            QuestPanel questScreen = new QuestPanel(200, 480, 440, 380);
             questScreen.setPopLocations(200, 480, 200, 100);
+            questScreen.setScrolling(5, 1);
+            questScreen.loadEntriesFromFile();
             components.Add(questScreen);
 
             // journal prompt
@@ -113,7 +110,7 @@ namespace SunsetHigh
 
             // key config screen
             KeyConfigPanel keyConfigScreen = new KeyConfigPanel(200, 480, 440, 380);
-            KeyModifierEntry keyAction = new KeyModifierEntry("Talk/Action/Confirm", keyConfigScreen, KeyInputType.Talk);
+            KeyModifierEntry keyAction = new KeyModifierEntry("Talk/Action/Confirm", keyConfigScreen, KeyInputType.Action);
             KeyModifierEntry keyCancel = new KeyModifierEntry("Go Back/Cancel", keyConfigScreen, KeyInputType.Cancel);
             KeyModifierEntry keyShoot = new KeyModifierEntry("Shoot", keyConfigScreen, KeyInputType.Shoot);
             KeyModifierEntry keyPickpocket = new KeyModifierEntry("Pickpocket", keyConfigScreen, KeyInputType.Pickpocket);
@@ -200,13 +197,17 @@ namespace SunsetHigh
                 menuBody.getAppearX() + 25, menuBody.getAppearY() + 67);
             components.Add(menuArrow);
 
+            // journal entry info screen
+            // this panel "covers" the menu cursor, so it goes last
+            components.Add(JournalInfoPanel.instance);
+
             //group panels that pop in and out together
             PanelGroup pg0 = new PanelGroup(menuBody);
             PanelGroup pg1 = new PanelGroup(journalPrompt);
             PanelGroup pg1a = new PanelGroup(questScreen);
             PanelGroup pg1b = new PanelGroup(peopleScreen);
             PanelGroup pg1c = new PanelGroup(placesScreen);
-            PanelGroup pg1d = new PanelGroup(journalInfoScreen);
+            PanelGroup pg1d = new PanelGroup(JournalInfoPanel.instance);
             PanelGroup pg2 = new PanelGroup(cluesScreen, cluesInfoScreen);
             PanelGroup pg3 = new PanelGroup(inventoryScreen, inventoryInfoScreen);
             PanelGroup pg4 = new PanelGroup(reputationScreen);
@@ -220,6 +221,9 @@ namespace SunsetHigh
                 pg2, pg3, pg4, pg5, pg5a, pg5b, pg6, pg7);
         }
 
+        /// <summary>
+        /// We'll need a cleaner method later of resetting the game.
+        /// </summary>
         public static void reset()
         {
             foreach (Sprite sprite in components)

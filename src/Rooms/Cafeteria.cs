@@ -65,7 +65,8 @@ namespace SunsetHigh
         public override void updateState()
         {
             base.updateState();
-            if (Quest.isQuestAccepted(QuestID.FoodFight))
+            if (Quest.isQuestAccepted(QuestID.FoodFight) && 
+                Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress1 | QuestState.Progress2))
             {
                 isFoodFight = true;
             }

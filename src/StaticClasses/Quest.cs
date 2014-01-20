@@ -39,6 +39,13 @@ namespace SunsetHigh
         Complete = 0x1000,
     }
 
+    public class QuestEventArgs : EventArgs
+    {
+        public QuestID questID;
+        public QuestState questStateChange;
+        public bool add;
+    }
+
     /// <summary>
     /// Static class for managing quest triggers (events that set up changes in the game)
     /// </summary>
@@ -46,6 +53,8 @@ namespace SunsetHigh
     {
         private static int NUM_QUEST_IDS = Enum.GetValues(typeof(QuestID)).Length;
         private static QuestState[] triggers;
+
+        public static event EventHandler<QuestEventArgs> QuestStateChanged;
 
         public static void setQuestAvailable(QuestID id)
         {
@@ -69,6 +78,13 @@ namespace SunsetHigh
         {
             nullCheck();
             triggers[(int)id] |= state;
+            
+            //push event
+            QuestEventArgs args = new QuestEventArgs();
+            args.questID = id;
+            args.questStateChange = state;
+            args.add = true;
+            pushEvent(args);
         }
         /// <summary>
         /// Removes the given state(s) from the quest with the given ID (keeping other states)
@@ -79,6 +95,13 @@ namespace SunsetHigh
         {
             nullCheck();
             triggers[(int)id] &= ~state;
+
+            //push event
+            QuestEventArgs args = new QuestEventArgs();
+            args.questID = id;
+            args.questStateChange = state;
+            args.add = false;
+            pushEvent(args);
         }
         /// <summary>
         /// Sets the quest with the given ID to a given state (overwrites any old states!)
@@ -89,6 +112,13 @@ namespace SunsetHigh
         {
             nullCheck();
             triggers[(int)id] = state;
+
+            //push event
+            QuestEventArgs args = new QuestEventArgs();
+            args.questID = id;
+            args.questStateChange = state;
+            args.add = true;
+            pushEvent(args);
         }
 
         public static bool isQuestAvailable(QuestID id)
@@ -160,6 +190,14 @@ namespace SunsetHigh
                 loadableTriggers.CopyTo(triggers, 0);
             else
                 System.Diagnostics.Debug.WriteLine("Invalid array input; size must be same");
+        }
+
+        private static void pushEvent(QuestEventArgs e)
+        {
+            if (QuestStateChanged != null)
+            {
+                QuestStateChanged(null, e);
+            }
         }
 
         private static void nullCheck()

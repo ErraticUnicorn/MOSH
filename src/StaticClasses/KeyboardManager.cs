@@ -17,7 +17,6 @@ namespace SunsetHigh
         MoveWest,
         Pickpocket,
         Shoot,
-        Talk,
         Action,
         Cancel,
         MenuToggle,
@@ -188,7 +187,6 @@ namespace SunsetHigh
             keyTypes[(int)KeyInputType.MoveWest] = Keys.Left;
             keyTypes[(int)KeyInputType.Pickpocket] = Keys.S;
             keyTypes[(int)KeyInputType.Shoot] = Keys.A;
-            keyTypes[(int)KeyInputType.Talk] = Keys.F;
             keyTypes[(int)KeyInputType.Action] = Keys.Z;
             keyTypes[(int)KeyInputType.Cancel] = Keys.X;
             keyTypes[(int)KeyInputType.MenuToggle] = Keys.Space;

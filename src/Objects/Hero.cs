@@ -346,7 +346,7 @@ namespace SunsetHigh
             public bool end = false;
             public bool talking = false;
             private readonly InteractionTreeNode defaultNode = new InteractionTreeNode { 
-                eventType = Events.End, line = "You're out of line!", responses = new List<Tuple<string, Events, int>>() };
+                eventType = Events.End, line = "You're out of line!", responses = new List<InteractionResponseNode>() };
 
             private const int DIALOGUE_X_MARGIN = 35;
             private const int DIALOGUE_Y_MARGIN = 15;
@@ -386,7 +386,7 @@ namespace SunsetHigh
                 for (int i = 0; i < current.responses.Count; ++i)
                 {
                     var resp = current.responses[i];
-                    tempEntries.Add(new DialogueEntry(SunsetUtils.wordWrapText(current.responses[i].Item1, 
+                    tempEntries.Add(new DialogueEntry(SunsetUtils.wordWrapText(current.responses[i].line, 
                         font, this.getWidth() - this.getXMargin() * 2)));
                 }
                 this.clearEntries();
@@ -400,27 +400,30 @@ namespace SunsetHigh
 
             public override void onConfirm()
             {
-                Tuple<string, Events, int> next = null;
-                if (current.eventType != Events.End)
+                InteractionResponseNode next = null;
+                if (current.eventType != Events.End && current.eventType != Events.Quest)
                 {
                     next = current.responses[cursor];
                 }
                 else
                 {
                     end = true;
+                    if (current.eventType == Events.Quest)
+                    {
+                        Quest.addQuestState(current.questID, current.questState);
+                    }
                 }
                 if (next != null)
                 {
-                    current = interaction.dialogue.ElementAtOrDefault(next.Item3 - 1) ?? defaultNode;
-                    switch (next.Item2)
+                    current = interaction.dialogue.ElementAtOrDefault(next.nextLine - 1) ?? defaultNode;
+                    switch (next.eventType)
                     {
-                        case Events.Quest:
-                            Quest.setQuestAccepted((QuestID)next.Item3);
-                            // Set up a HUD later that registers what happened with the quest.
-                            end = true;
-                            break;
                         case Events.End:
                             end = true;
+                            break;
+                        case Events.Quest:
+                            end = true;
+                            Quest.addQuestState(next.questID, next.questState);
                             break;
                         default:
                             cursor = 0;
@@ -470,7 +473,7 @@ namespace SunsetHigh
                 interaction = c.script;
                 if (interaction != null)
                 {
-                    current = interaction.dialogue.ElementAtOrDefault(0) ?? defaultNode;
+                    current = interaction.getStartingLine();
                     say = buildString();
                     cursor = 0;   // puts cursor at top
                 }
