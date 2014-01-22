@@ -39,6 +39,7 @@ namespace SunsetHigh
                         { or_on = true; continue; }
                         if (args[i].Equals("not"))
                         { not_on = true; continue; }
+                        if (args[i].Equals("is")) continue;
 
                         if (args[i].StartsWith("!"))
                         {

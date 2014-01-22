@@ -132,7 +132,8 @@ namespace SunsetHigh
             if (!this.isPanelBackgroundVisible())
                 return;
             base.draw(sb);
-            this.borders.draw(sb);
+            if (this.isVisible())
+                this.borders.draw(sb);
         }
 
         protected class BorderSystem

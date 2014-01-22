@@ -64,25 +64,37 @@ namespace SunsetHigh
     {
         IMessagePanel owner;
         private string newMessage;
+        private List<Panel> invisibleOthers;
 
         public ScreenSpecifierEntry(string name, IMessagePanel owner, Panel next)
             : base(name, next) 
         {
             this.owner = owner;
+            this.invisibleOthers = new List<Panel>();
         }
         public void setNewMessage(string newMessage) { this.newMessage = newMessage; }
         public string getNewMessage() { return this.newMessage; }
+        public void setOtherPanels(params Panel[] otherPanels)
+        {
+            if (otherPanels != null)
+            {
+                foreach (Panel p in otherPanels)
+                    if (p != null)
+                        this.invisibleOthers.Add(p);
+            }
+        }
 
         public override void onHover()
         {
             base.onHover();
-            PanelGroupSorter.panelIn(this.getNextPanel());
+            this.getNextPanel().setVisible(true);
+            foreach (Panel p in invisibleOthers)
+                p.setVisible(false);
         }
 
         public override void onUnhover()
         {
             base.onUnhover();
-            PanelGroupSorter.panelOut(this.getNextPanel());
         }
 
         public override void onPress()

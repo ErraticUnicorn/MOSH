@@ -13,35 +13,28 @@ namespace SunsetHigh
 
         private InventoryPanel owner;
         private Item mItem;
-        private int mQuantity;
+        private string mDescription;
 
-        public ItemEntry(InventoryPanel owner, Item type, int quantity)
-            : base("Temp", 0, 0)
+        public ItemEntry(InventoryPanel owner, Item type)
+            : base(SunsetUtils.enumToString<Item>(type), 0, 0)
         {
             this.owner = owner;
             this.mItem = type;
-            this.mQuantity = quantity;
-            convertItemTypeToName();
         }
 
-        public string getItemNameString()
-        {
-            return Enum.GetName(typeof(Item), mItem);
-        }
         public string getQuantityString()
         {
-            return "x" + mQuantity;
+            return "x" + Hero.instance.inventory.numItem(mItem);
         }
         public Item getItemType() { return this.mItem; }
-        public int getQuantity() { return this.mQuantity; }
-
         public void setItemType(Item itemType) { this.mItem = itemType; }
-        public void setQuantity(int quantity) { this.mQuantity = quantity; }
+        public string getDescription() { return this.mDescription; }
+        public void setDescription(string description) { this.mDescription = description; }
 
         public override void onPress() { }  // nothing happens
         public override void onHover()
         {
-            this.owner.getMessagePanel().setMessage("Information about " + getItemNameString());
+            this.owner.getMessagePanel().setMessage(this.mDescription);
         }
 
         public override void draw(SpriteBatch sb, int x_offset, int y_offset, SpriteFont font, Color c)
@@ -50,17 +43,12 @@ namespace SunsetHigh
             sb.DrawString(font, this.getQuantityString(),
                 new Vector2(x_offset + this.getX() + NEXT_COLUMN_OFFSET, y_offset + this.getY()), c);
         }
-
-        private void convertItemTypeToName()
-        {
-            this.setName(Enum.GetName(typeof(Item), mItem));
-        }
     }
 
     public class InventoryPanel : ListPanel
     {
-        private Inventory inventory;
         private IMessagePanel messagePanel;
+        private ItemEntry[] allEntries;
 
         public InventoryPanel()
             : this(0, 0, 0, 0) { }
@@ -68,6 +56,7 @@ namespace SunsetHigh
             : base(x, y, width, height)
         {
             Hero.instance.inventory.InventoryChanged += updateInventory;
+            allEntries = new ItemEntry[Inventory.NUM_TYPE_ITEMS];
         }
 
         public void setMessagePanel(IMessagePanel panel) { this.messagePanel = panel; }
@@ -76,12 +65,10 @@ namespace SunsetHigh
         public void registerInventory(Inventory inventory)
         {
             this.clearEntries();
-            this.inventory = inventory;
             List<MenuEntry> tempEntries = new List<MenuEntry>();
             foreach (Item i in inventory)
             {
-                int quantity = inventory.numItem(i);
-                ItemEntry itemEntry = new ItemEntry(this, i, quantity);
+                ItemEntry itemEntry = allEntries[(int)i];
                 tempEntries.Add(itemEntry);
             }
             this.loadEntries(tempEntries.ToArray());
@@ -89,7 +76,6 @@ namespace SunsetHigh
 
         /// <summary>
         /// Listens for inventory changed events and updates the entries.
-        /// Inefficient - O(n) - refactor if it's an issue with LARGE amounts of items
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -98,32 +84,59 @@ namespace SunsetHigh
             Item item = e.type;
             int quantity = e.quantity;
 
-            bool found = false;
-            MenuEntry removeEntry = null;
-            foreach (MenuEntry entry in this.entries)
+            if (Hero.instance.inventory.numItem(item) == 0)     // no more items of this type
             {
-                if (entry is ItemEntry)
+                this.entries.Remove(allEntries[(int)item]);
+                this.loadEntries(); // !! this automatically resizes the list of entries on the panel
+            }
+            else if (Hero.instance.inventory.numItem(item) == quantity)
+            {
+                ItemEntry itemEntry = allEntries[(int)item];
+                this.loadEntries(itemEntry);
+            }
+        }
+
+        public void loadEntriesFromFile(string filename)
+        {
+            string[] lines = System.IO.File.ReadAllLines(filename);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith("#entry "))
                 {
-                    ItemEntry iEntry = (ItemEntry)entry;
-                    if (iEntry.getItemType() == item)
+                    Item type = SunsetUtils.parseEnum<Item>(lines[i].Substring("#entry ".Length));
+                    allEntries[(int)type] = new ItemEntry(this, type);
+                    string baseText = "";
+
+                    for (int j = i + 1; j < lines.Length; j++)
                     {
-                        iEntry.setQuantity(iEntry.getQuantity() + quantity);
-                        if (iEntry.getQuantity() == 0)
-                            removeEntry = iEntry;
-                        found = true;
-                        break;
+                        if (lines[j].Trim().Length == 0) continue;
+
+                        if (lines[j].StartsWith("#title "))
+                        {
+                            allEntries[(int)type].setName(lines[j].Substring("#title ".Length));
+                        }
+                        else if (lines[j].StartsWith("#end"))
+                        {
+                            //finished entry
+                            allEntries[(int)type].setDescription(baseText);
+                            i = j;
+                            break;
+                        }
+                        else
+                        {
+                            baseText += lines[j] + "\n";
+                        }
                     }
                 }
             }
-            if (found && removeEntry != null)
+
+            for (int i = 0; i < allEntries.Length; i++)
             {
-                this.entries.Remove(removeEntry);
-                this.loadEntries(); // !! this automatically resizes the list of entries on the panel
-            }
-            if (!found)
-            {
-                ItemEntry itemEntry = new ItemEntry(this, item, quantity);
-                this.loadEntries(itemEntry);
+                if (allEntries[i] == null)
+                {
+                    allEntries[i] = new ItemEntry(this, (Item)i);
+                    allEntries[i].setDescription("No description loaded.");
+                }
             }
         }
     }

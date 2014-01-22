@@ -43,7 +43,7 @@ namespace SunsetHigh
     /// </summary>
     public class Inventory : IEnumerable
     {
-        private static int NUM_TYPE_ITEMS = Enum.GetValues(typeof(Item)).Length - 1;
+        public static int NUM_TYPE_ITEMS = Enum.GetValues(typeof(Item)).Length - 1;
                                              //number of values in Item enum excluding Nothing
                                              //don't change this variable please
         private int total;

@@ -1,0 +1,5 @@
+﻿#entry PokeBall
+#title Poke Ball
+A small red-and-white sphere popular among the nerds. Has no practical use (except for chucking at people).
+#end
+

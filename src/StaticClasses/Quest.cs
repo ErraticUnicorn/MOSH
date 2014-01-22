@@ -51,7 +51,7 @@ namespace SunsetHigh
     /// </summary>
     public static class Quest
     {
-        private static int NUM_QUEST_IDS = Enum.GetValues(typeof(QuestID)).Length;
+        public static int NUM_QUEST_IDS = Enum.GetValues(typeof(QuestID)).Length;
         private static QuestState[] triggers;
 
         public static event EventHandler<QuestEventArgs> QuestStateChanged;

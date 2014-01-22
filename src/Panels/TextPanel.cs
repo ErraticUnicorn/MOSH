@@ -44,7 +44,7 @@ namespace SunsetHigh
         public override void draw(SpriteBatch sb)
         {
             base.draw(sb);
-            if (this.isInFocus() || this.isSmoothMoving())  //i.e. can be seen on screen
+            if ((this.isInFocus() || this.isSmoothMoving()) && this.isVisible())  //i.e. can be seen on screen
             {
                 sb.DrawString(font, SunsetUtils.wordWrapText(this.message, font, this.getWidth() - 2 * this.getXMargin()),
                     new Vector2(this.getX() + this.getXMargin(), this.getY() + this.getYMargin()),

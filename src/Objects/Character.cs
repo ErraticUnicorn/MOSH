@@ -22,6 +22,22 @@ namespace SunsetHigh
     }
 
     /// <summary>
+    /// Specifies a certain person (used for linking external text files to objects in the code)
+    /// </summary>
+    public enum PersonID
+    {
+        Generic = -1,
+        Phil = 0,
+        Lucas,
+        Jay,
+        David,
+        Wil,
+        Rainier,
+        Nick,
+        DeadPeople
+    }
+
+    /// <summary>
     /// Character extends from FreeMovingSprite, adding behavior for movement and inventory.
     /// Each character also has an Inventory (all his/her items).
     /// </summary>
@@ -31,6 +47,8 @@ namespace SunsetHigh
                                                     //the "action box" being area where character can interact with environment
         private const int COLLISION_OFFSET = 0;     //pixels offset between sprite and other sprites for collisions
 
+        public static int NUM_PERSON_IDS = Enum.GetValues(typeof(PersonID)).Length - 1;
+
         //mechanics
         private Direction direction;                //which direction the character is facing
         private bool moving;                        //whether character is currently in motion
@@ -39,7 +57,8 @@ namespace SunsetHigh
         private bool male;                          //male or female (male by default)
         private string name;                        //character's name ("NAMELESS" by default)
         private Clique clique;                      //clique type of this character (None by default)
-        
+        private PersonID personID;                  //ID for NPCs that get journal entries (Generic by default)
+
         public Interaction script;                  //script given to NPCs
         public Inventory inventory { get; set; }    //all the items this character has
 
@@ -73,6 +92,7 @@ namespace SunsetHigh
             setName("NAMELESS");
             setMale(true);
             setClique(Clique.None);
+            setPersonID(PersonID.Generic);
             setMoving(false);
             setDirection(Direction.South);
             if(file != string.Empty)
@@ -82,6 +102,7 @@ namespace SunsetHigh
         public Direction getDirection() { return this.direction; }
         public string getName() { return this.name; }
         public Clique getClique() { return this.clique; }
+        public PersonID getPersonID() { return this.personID; }
         public bool isMoving() { return this.moving; }
         public bool isMale() { return this.male; }
         public bool isFemale() { return !this.male; }
@@ -90,6 +111,7 @@ namespace SunsetHigh
         public void setMale(bool male) { this.male = male; }
         public void setName(string name) { this.name = name; }
         public void setClique(Clique clique) { this.clique = clique; }
+        public void setPersonID(PersonID id) { this.personID = id; }
         public void setScript(string file) { this.script = new Interaction(file); }
 
         /// <summary>
@@ -133,21 +155,13 @@ namespace SunsetHigh
         }
 
         /// <summary>
-        /// Checks in this Character is within a given range with another Sprite to perform any action.
+        /// Checks in this Character is within a given range with another Interactable to perform any action.
         /// The range is another rectangle a given number of pixels thicker than the sprite's drawing rectangle.
         /// E.g. talk to another character, pickup an item, collision detection
         /// </summary>
-        /// <param name="other">The other Sprite to range check against</param>
+        /// <param name="other">The other Interactable to range check against</param>
         /// <param name="offset">The pixels offset for the range check</param>
         /// <returns>True if the Character is in range, false if not</returns>
-        public bool inRange(Sprite other, int offset)
-        {
-            return (((this.getX() <= other.getX() && this.getX() + this.getWidth() + offset >= other.getX() - offset) ||
-                    (this.getX() >= other.getX() && this.getX() - offset <= other.getX() + other.getWidth() + offset)) &&
-                   ((this.getY() <= other.getY() && this.getY() + this.getHeight() + offset >= other.getY() - offset) ||
-                    (this.getY() >= other.getY() && this.getY() - offset <= other.getY() + other.getHeight() + offset)));
-        }
-
         public bool inRange(IInteractable other, int offset)
         {
             Rectangle copy = other.getBoundingRect();   // not sure if it returns the reference
@@ -179,18 +193,10 @@ namespace SunsetHigh
         }
 
         /// <summary>
-        /// Checks if this Character is facing another Character; used as a check for talking action
+        /// Checks if this Character is facing another Interactable (e.g. other Character); used as a check for talking action
         /// </summary>
-        /// <param name="other">The other Character</param>
+        /// <param name="other">The other Interactable</param>
         /// <returns>True if this character is facing the other, false if not</returns>
-        public bool facing(Character other)
-        {
-            return ((this.getDirection().Equals(Direction.North) && this.getY() > other.getY()) ||
-                   (this.getDirection().Equals(Direction.South) && this.getY() < other.getY()) ||
-                   (this.getDirection().Equals(Direction.East) && this.getX() < other.getX()) ||
-                   (this.getDirection().Equals(Direction.West) && this.getX() > other.getX()));
-        }
-
         public bool facing(IInteractable other)
         {
             Rectangle rect = other.getBoundingRect();
@@ -201,7 +207,7 @@ namespace SunsetHigh
         }
 
         /// <summary>
-        /// Checks if both Characters are facing each other
+        /// Checks if two Characters are facing each other
         /// </summary>
         /// <param name="other">The other Character</param>
         /// <returns>True if both characters are facing each other, false if not</returns>

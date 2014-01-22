@@ -347,7 +347,7 @@ namespace SunsetHigh
         public override void draw(SpriteBatch sb)
         {
             base.draw(sb);
-            if (this.isInFocus() || this.isSmoothMoving())  //i.e. can be seen on screen
+            if ((this.isInFocus() || this.isSmoothMoving()) && this.isVisible())  //i.e. can be seen on screen
             {
                 if (this.isScrolling())
                 {

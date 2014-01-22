@@ -42,20 +42,24 @@ namespace SunsetHigh
             initialized = true;
 
             // places list
-            ListPanel placesScreen = new ListPanel(200, 480, 440, 380);
+            PlacesPanel placesScreen = new PlacesPanel(200, 480, 440, 380);
             placesScreen.setPopLocations(200, 480, 200, 100);
+            placesScreen.setScrolling(7, 1);
+            placesScreen.loadEntriesFromFile(Directories.TEXTDATA + "PlacesJournalInfo.txt");
             components.Add(placesScreen);
 
             // people list
-            ListPanel peopleScreen = new ListPanel(200, 480, 440, 380);
+            PeoplePanel peopleScreen = new PeoplePanel(200, 480, 440, 380);
             peopleScreen.setPopLocations(200, 480, 200, 100);
+            peopleScreen.setScrolling(7, 1);
+            peopleScreen.loadEntriesFromFile(Directories.TEXTDATA + "PeopleJournalInfo.txt");
             components.Add(peopleScreen);
 
             // quest list
             QuestPanel questScreen = new QuestPanel(200, 480, 440, 380);
             questScreen.setPopLocations(200, 480, 200, 100);
-            questScreen.setScrolling(5, 1);
-            questScreen.loadEntriesFromFile();
+            questScreen.setScrolling(7, 1);
+            questScreen.loadEntriesFromFile(Directories.TEXTDATA + "QuestJournalInfo.txt");
             components.Add(questScreen);
 
             // journal prompt
@@ -64,10 +68,13 @@ namespace SunsetHigh
             journalPrompt.setRefreshMessage(journalPrompt.getMessage());
             ScreenSpecifierEntry questEntry = new ScreenSpecifierEntry("Quests", journalPrompt, questScreen);
             questEntry.setNewMessage("Looking up past and current quests...");
+            questEntry.setOtherPanels(peopleScreen, placesScreen);
             ScreenSpecifierEntry peopleEntry = new ScreenSpecifierEntry("People", journalPrompt, peopleScreen);
             peopleEntry.setNewMessage("Looking up intel on individuals...");
+            peopleEntry.setOtherPanels(questScreen, placesScreen);
             ScreenSpecifierEntry placesEntry = new ScreenSpecifierEntry("Places", journalPrompt, placesScreen);
             placesEntry.setNewMessage("Looking up intel on locations...");
+            placesEntry.setOtherPanels(questScreen, peopleScreen);
             journalPrompt.loadEntries(questEntry, peopleEntry, placesEntry);
             journalPrompt.setPopLocations(200, -100, 200, 0);
             journalPrompt.setYMargin(20);
@@ -94,6 +101,7 @@ namespace SunsetHigh
             // inventory screen
             inventoryScreen = new InventoryPanel(200, -330, 440, 330);
             inventoryScreen.setMessagePanel(inventoryInfoScreen);
+            inventoryScreen.loadEntriesFromFile(Directories.TEXTDATA + "ItemInfo.txt");
             inventoryScreen.setScrolling(5, 2);
             inventoryScreen.setPopLocations(200, -330, 200, 0);
             components.Add(inventoryScreen);
@@ -133,8 +141,10 @@ namespace SunsetHigh
             keyEntry.setNewMessage("Configuring key controls... Press [" + 
                 Enum.GetName(typeof(Keys), KeyboardManager.getKeyControl(KeyInputType.Action)) + 
                 "] to modify the key.");
+            keyEntry.setOtherPanels(soundConfigScreen);
             ScreenSpecifierEntry soundEntry = new ScreenSpecifierEntry("Sound", configPrompt, soundConfigScreen);
             soundEntry.setNewMessage("Configuring sound settings...");
+            soundEntry.setOtherPanels(keyConfigScreen);
             configPrompt.loadEntries(keyEntry, soundEntry);            
             configPrompt.setPopLocations(200, -100, 200, 0);
             configPrompt.setYMargin(20);
@@ -203,22 +213,16 @@ namespace SunsetHigh
 
             //group panels that pop in and out together
             PanelGroup pg0 = new PanelGroup(menuBody);
-            PanelGroup pg1 = new PanelGroup(journalPrompt);
-            PanelGroup pg1a = new PanelGroup(questScreen);
-            PanelGroup pg1b = new PanelGroup(peopleScreen);
-            PanelGroup pg1c = new PanelGroup(placesScreen);
-            PanelGroup pg1d = new PanelGroup(JournalInfoPanel.instance);
+            PanelGroup pg1 = new PanelGroup(journalPrompt, questScreen, peopleScreen, placesScreen);
+            PanelGroup pg1a = new PanelGroup(JournalInfoPanel.instance);
             PanelGroup pg2 = new PanelGroup(cluesScreen, cluesInfoScreen);
             PanelGroup pg3 = new PanelGroup(inventoryScreen, inventoryInfoScreen);
             PanelGroup pg4 = new PanelGroup(reputationScreen);
-            PanelGroup pg5 = new PanelGroup(configPrompt);
-            PanelGroup pg5a = new PanelGroup(keyConfigScreen);
-            PanelGroup pg5b = new PanelGroup(soundConfigScreen);
+            PanelGroup pg5 = new PanelGroup(configPrompt, keyConfigScreen, soundConfigScreen);
             PanelGroup pg6 = new PanelGroup(saveScreen, savePrompt);
             PanelGroup pg7 = new PanelGroup(exitPrompt);
 
-            PanelGroupSorter.addPanelGroups(pg0, pg1, pg1a, pg1b, pg1c, pg1d, 
-                pg2, pg3, pg4, pg5, pg5a, pg5b, pg6, pg7);
+            PanelGroupSorter.addPanelGroups(pg0, pg1, pg1a, pg2, pg3, pg4, pg5, pg6, pg7);
         }
 
         /// <summary>

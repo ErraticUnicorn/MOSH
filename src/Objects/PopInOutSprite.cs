@@ -79,7 +79,7 @@ namespace SunsetHigh
 
             this.inFocus = true;
             this.setVisible(true);
-            if ((this.isSmoothMoving() && this.movingOut) /*|| (this.getX() != this.getHideX() || this.getY() != this.getHideY())*/)
+            if ((this.isSmoothMoving() && this.movingOut) || !(this.getX() == this.getHideX() && this.getY() == this.getHideY()))
             {
                 Vector2 startToEnd = new Vector2(this.getAppearX() - this.getHideX(), this.getAppearY() - this.getHideY());
                 Vector2 currentToEnd = new Vector2(this.getX() - appearX, this.getY() - appearY);
@@ -100,7 +100,7 @@ namespace SunsetHigh
                 return;
 
             this.inFocus = false;
-            if ((this.isSmoothMoving() && this.movingIn) || (this.getX() != this.getAppearX() || this.getY() != this.getAppearY()))
+            if ((this.isSmoothMoving() && this.movingIn) || !(this.getX() == this.getAppearX() && this.getY() == this.getAppearY()))
             {
                 Vector2 startToEnd = new Vector2(this.getAppearX() - this.getHideX(), this.getAppearY() - this.getHideY());
                 Vector2 currentToEnd = new Vector2(this.getX() - hideX, this.getY() - hideY);

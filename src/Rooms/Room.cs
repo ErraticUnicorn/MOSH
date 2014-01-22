@@ -26,9 +26,19 @@ namespace SunsetHigh
         Rectangle getBoundingRect();
     }
 
+    /// <summary>
+    /// Specifies a certain room (used for linking external text files to objects in the code)
+    /// </summary>
+    public enum PlaceID
+    {
+        Generic = -1,
+        Cafeteria = 0,
+    }
+
     public class Room
     {
         public const int TILE_SIZE = 32;
+        public static int NUM_PLACE_IDS = Enum.GetValues(typeof(PlaceID)).Length - 1;
 
         public Map background;
         public List<Sprite> Sprites { private set; get; }

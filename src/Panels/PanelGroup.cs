@@ -64,9 +64,9 @@ namespace SunsetHigh
 
     public static class PanelGroupSorter
     {
-        private static List<PanelGroup> panelGroups;
-        private static List<Panel> activePanels;
-        private static List<PanelGroup> activeGroups;
+        private static HashSet<PanelGroup> panelGroups;
+        private static HashSet<Panel> activePanels;
+        private static HashSet<PanelGroup> activeGroups;
 
         public static void addPanelGroups(params PanelGroup[] pGroups)
         {
@@ -128,11 +128,11 @@ namespace SunsetHigh
         private static void nullCheck()
         {
             if (panelGroups == null)
-                panelGroups = new List<PanelGroup>();
+                panelGroups = new HashSet<PanelGroup>();
             if (activeGroups == null)
-                activeGroups = new List<PanelGroup>();
+                activeGroups = new HashSet<PanelGroup>();
             if (activePanels == null)
-                activePanels = new List<Panel>();
+                activePanels = new HashSet<Panel>();
         }
     }
 }
