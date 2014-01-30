@@ -7,9 +7,9 @@ Organization
 ---
 Some pointers on file organization in this repo:
 
-1) Source files go in the src directory, in the appropriate subfolder. Make sure the namespace for these files is always "SunsetHigh"! When adding source with VS in these folders, additional names may be appended to the namespace.
+1) Source files go in the SunsetHigh/src directory, in the appropriate subfolder. Make sure the namespace for these files is always "SunsetHigh"! When adding source with VS in these folders, additional names may be appended to the namespace.
 
-2) All content (music, art, text, maps) go into the "Content" folder, in the appropriate subfolder. Note that tile sheets go into Content/Maps/Tilesets/, while Content/Maps/ is for Tiled maps.
+2) All content (music, art, text, maps) go into the SunsetHigh/Content folder, in the appropriate subfolder. Note that tile sheets go into Content/Maps/Tilesets/, while Content/Maps/ is for Tiled maps.
 
 4) All outside libraries and utilities (e.g. NAudio.dll) go into the "Resources" folder.
 
@@ -17,23 +17,25 @@ Some pointers on file organization in this repo:
 
 Running and Debugging Instructions
 ---
-Until we can figure out if there are viable and easy-to-use Git extensions for Visual Studio, we'll have to manually copy code into our local project folders and run it from there. To do that:
+1) Download Visual Studio 2012 or 2013 (if you have an earlier version you can try that, but I'm not sure how it'll work) at http://www.visualstudio.com/en-us/downloads/. VS Express is free; alternatively, you can go to DreamSpark (Microsoft's student thing) and get VS Professional for free.
 
-1) If you haven't already done so, create a new project in Visual Studio (C#) and select the Monogame WindowsGL template (it should be visible after downloading Monogame at http://monogame.codeplex.com/)
+2) Download Monogame at http://monogame.codeplex.com/. You should have some new project templates for C# afterward.
 
-2) Download the source and assets from Github by either downloading as a ZIP or cloning to Desktop. Both options are on the right side of the Github website. Cloning is preferred; it should be possible after downloading Git for Windows at http://windows.github.com/ . Once you clone the repo, you can find it under Documents/Github/
+3) Download Git; I used Git for Windows at http://windows.github.com/. Now clone the repo to desktop. You can find this option on the right side of the repo webpage. Once you clone the repo, you can find it under Documents/Github/
 
-3) Copy the downloaded content into your newly created project in Visual Studio. Some files may be replaced.
+4) If you want, you can download some Git extensions for VS. I am using Visual Studio Tools for Git http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c, which works on VS 2012, but apparently is already included on 2013. Alternatively, you can just control Git using the command line or the GUI.
 
-4) The assets should be in the "Content" folder. Once they are copied, inspect their properties and change the "Copy to output directory" attribute to "Copy if newer."
+5) Now start up Visual Studio and open the solution file found in the top level of your cloned MOSH repo. If you have an earlier version of VS, you probably cannot open it, so try opening the .csproj file in the SunsetHigh directory.
 
-5) Build and run the project. Use "Game1.cs" as your sandbox for new features. When you need to commit code, copy your files back into the repo folder and use the GitHub GUI to commit and sync the changes.
+6) Hopefully, the project will load fine. Try building and running it. If there are issues then email me.
 
-Importing NAudio (for background music)
+7) Congrats, now it works. You can start coding and committing. Please only commit when the game is in a stable state; otherwise create a new branch or something.
+
+8) The assets should be in the Content folder. Please note that whenever you copy new assets into that folder, you MUST change the file's "Copy to output directory" attribute to "Copy if newer." Otherwise, you won't find the file when you're debugging the game.
+
+Adding references to other libraries
 ---
-In Visual Studio, go to Project->Add reference and find "naudio.dll" (which is in this repo under "Resources"). NOTE: Do NOT get the NAudio release DLL from online, as that is an earlier version. Either try the one in this repo or build it from the source code. Email me if there are questions.
-
-BGMusic.cs should compile with the NAudio reference. Use its static methods to manipulate background music. When passing in a filename as a string, do include the file extension.
+In Visual Studio, go to Project->Add reference. From there, browse to find the libraries in the Resources folder. Currently, there are two such resources, NAudio.dll and Tiled.exe.
 
 Adding Warp to a .tmx File
 ---

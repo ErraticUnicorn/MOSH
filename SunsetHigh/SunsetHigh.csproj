@@ -123,6 +123,16 @@
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ConceptArt\Art Styles.jpg" />
+    <Content Include="ConceptArt\Brace-Face Concept 2.jpg" />
+    <Content Include="ConceptArt\Brace-Face Concept Art.jpg" />
+    <Content Include="ConceptArt\concept art mag editer.jpg" />
+    <Content Include="ConceptArt\Herbert Concept Art.jpg" />
+    <Content Include="ConceptArt\Janitor Concept.jpg" />
+    <Content Include="ConceptArt\Janitor Knight Concept.jpg" />
+    <Content Include="ConceptArt\Protagonist Concept 2.jpg" />
+    <Content Include="ConceptArt\Protagonist Concept Art.jpg" />
+    <Content Include="ConceptArt\protagonist concept.png" />
     <Content Include="Content\CharactersTemp\bully.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -522,6 +532,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="ConceptArt\instructions.md" />
     <None Include="Content\Fonts\Arial.spritefont">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
