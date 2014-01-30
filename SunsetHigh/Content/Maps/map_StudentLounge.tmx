@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="studentlounge" tilewidth="32" tileheight="32">
+  <image source="Tilesets/studentlounge.png" trans="ffffff" width="960" height="640"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJx11VO2GAYARdEX27Zt27Zt21Zj27Zto03a2LZtW90dQNe6++dO4AQKCAgITBCCEozghCAkoQhNGMISjvBEICKRiEwUohKN6MQgJrGITRziEo/4JCAhiUhMEpKSjOSkICWpSE0a0pKO9GQgI5nITBayko3s5CAnuchNHvKSj/wUoCCFKEwRilKM4pSgJKUoTRnKUo7yVKAilahMFapSjerUoCa1qE0d6lKP+jSgIY1oTBOa0ozmtKAlrWhNG9rSjvZ0oCOd6EwXutKN7vSgJ73oTR/60o8/6M8ABjKIwQxhKMMYzghGMorRjGEs4xjPBCYyiclMYSrTmM4MZjKL2cxhLvOYzwIWsojFLGEpy1jOClayitWsYS3rWM8GNrKJzWxhK9vYzg52sovd7GEv+/iTv9jPAf7mHw5yiMMc4SjHOM4JTnKK05zhLOc4zwUuconLXOEq17jODW5yi9vc4S73uM8DHvKIxzzhKc94zgte8orXvOEt73jPBz7yic984Svf+M4PfvKL3wQEMgIThKAEIzghCEkoQhOGsIQjPBGISCQiE4WoRCM6MYhJLGITh7jEIz4JSEgiEpOEpCQjOSlISSpSk4a0pCM9GchIJjKThaxkIzs5yEkucpOHvOQjPwUoSCEKU4SiFKM4JShJKUpThrKUozwVqEglKlOFqlSjOjWoSS1qU4e61KM+DWhIIxrThKY0ozktaEkrWtOGtrSjPR3oSCc604WudKM7PehJL3rTh7704w/6M4CBDGIwQxjKMIYzgpGMYjRjGMs4xjOBiUxiMlOYyjSmM4OZzGI2c5jLPOazgIUsYjFLWMoylrOClaxiNWtYyzrWs4GNbGIzW9jKNrazg53sYjd72Ms+/uQv9nOAv/mHgxziMEc4yjGOc4KTnOI0ZzjLOc5zgYtc4jJXuMo1rnODm9ziNne4yz3u84CHPOIxT3jKM57zgpe84jVveMs73vOBj3ziM1/4yje+84Of/OI3/4U/EIEJQlCCEZwQhCQUoQlDWMIRnghEJBKRiUJUohGdGMQkFrGJQ1ziEZ8EJCQRiUlCUpKRnBSkJBWpSUNa0pGeDGQkE5nJQlaykZ0c5CQXuclDXvKRnwL/8xWkEIUpQlGKUZwSlKQUpSlDWcpRngpUpBKVqcK/NGEPkQ==
+  </data>
+ </layer>
+ <objectgroup color="#000000" name="Solid" width="30" height="20">
+  <object x="0" y="0" width="960" height="64"/>
+  <object x="0" y="64" width="64" height="512"/>
+  <object x="0" y="576" width="960" height="64"/>
+  <object x="864" y="64" width="96" height="352"/>
+  <object x="864" y="544" width="96" height="32"/>
+  <object x="928" y="416" width="32" height="128"/>
+  <object x="786" y="76" width="61" height="50"/>
+  <object x="384" y="263" width="7" height="88"/>
+  <object x="388" y="271" width="28" height="8"/>
+  <object x="388" y="332" width="27" height="19"/>
+  <object x="630" y="262" width="9" height="90"/>
+  <object x="608" y="269" width="25" height="9"/>
+  <object x="608" y="334" width="25" height="17"/>
+  <object x="855" y="198" width="15" height="88"/>
+  <object x="833" y="206" width="26" height="7"/>
+  <object x="833" y="269" width="52" height="19"/>
+  <object x="856" y="294" width="34" height="90"/>
+  <object x="833" y="302" width="37" height="9"/>
+  <object x="833" y="364" width="51" height="19"/>
+  <object x="41" y="135" width="33" height="89"/>
+  <object x="68" y="143" width="26" height="7"/>
+  <object x="63" y="204" width="32" height="20"/>
+  <object x="56" y="263" width="16" height="89"/>
+  <object x="69" y="270" width="26" height="11"/>
+  <object x="65" y="331" width="30" height="21"/>
+  <object x="58" y="422" width="14" height="90"/>
+  <object x="67" y="429" width="28" height="11"/>
+  <object x="66" y="490" width="29" height="22"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="30" height="20">
+  <object x="896" y="416" width="32" height="128">
+   <properties>
+    <property name="warpMap" value="map_HallwayWest"/>
+    <property name="warpX" value="2"/>
+    <property name="warpY" value="4"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

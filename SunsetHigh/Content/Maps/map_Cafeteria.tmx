@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="27" height="22" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Stairs chalkboard etc" tilewidth="32" tileheight="32">
+  <image source="Tilesets/Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="257" name="ScreenshotSchool" tilewidth="32" tileheight="32">
+  <image source="Tilesets/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
+ </tileset>
+ <tileset firstgid="392" name="Various objects" tilewidth="32" tileheight="32">
+  <image source="Tilesets/Various objects.png" trans="ffffff" width="718" height="1214"/>
+ </tileset>
+ <tileset firstgid="1206" name="Appliances" tilewidth="32" tileheight="32">
+  <image source="Tilesets/Appliances.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="1462" name="cafeteria" tilewidth="32" tileheight="32">
+  <image source="Tilesets/cafeteria.png" trans="ffffff" width="320" height="320"/>
+ </tileset>
+ <layer name="Floor" width="27" height="22">
+  <data encoding="base64" compression="zlib">
+   eJzrY2Rg6KcDngDES4B4KR3wMqh99nTAfVD76GHXkmHsL3rYA/MXvewazv4arulw1F+j/hos/jKkA4b5ix52LYHaNxzbGwDy9MOF
+  </data>
+ </layer>
+ <layer name="Tables" width="27" height="22">
+  <data encoding="base64" compression="zlib">
+   eJxjYKA94GahgyVQoEgnuxqY6GMPCEwjYNdvFsKYkFpi7eJmJYwJqSXWLmqCNXS0Cx+gNJ5+k5C+KY0nZDUjHVAj3oiNO2rE20iNO1LKQkLqCQFSykJC6kfB0AYA1CxEzw==
+  </data>
+ </layer>
+ <layer name="Chairs" width="27" height="22">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4A0cJ0FgpH52NjIfHR6FNAH4Ap/bHE2GleDByDHAb78ha4Wn7pRQF2AL47QxbDpw6Z3FAxNAAAeVhqG
+  </data>
+ </layer>
+ <layer name="Food etc" width="27" height="22">
+  <data encoding="base64" compression="zlib">
+   eJxjYMANdrMwMOxhwRSXIkKtFQ4zrYHYBov4aaDeM1jswgbQ1XrhUOcNxD7EGUkyuMFKI4OxgCdE2gVSB1P7CEkPsluRxc9B2W/o6BdkgOwWbyLjnhpgMNh1ixUR/ufwhP8tNDl8cUVPf41E8AZLPsKVN2HyyPGHHpejgPoAuaxDjhtQ3IHC/xGeOHhDIE5HwSjABQC5lCIl
+  </data>
+ </layer>
+ <objectgroup color="#000000" name="Solid" width="27" height="22">
+  <object x="0" y="0" width="864" height="64"/>
+  <object x="0" y="64" width="32" height="128"/>
+  <object x="0" y="320" width="32" height="320"/>
+  <object x="0" y="640" width="864" height="64"/>
+  <object x="832" y="64" width="32" height="576"/>
+  <object x="768" y="64" width="32" height="160"/>
+  <object x="160" y="128" width="288" height="64"/>
+  <object x="512" y="128" width="192" height="64"/>
+  <object x="128" y="256" width="256" height="64"/>
+  <object x="448" y="256" width="224" height="64"/>
+  <object x="192" y="384" width="256" height="64"/>
+  <object x="512" y="384" width="256" height="64"/>
+  <object x="128" y="512" width="288" height="64"/>
+  <object x="512" y="512" width="224" height="64"/>
+  <object x="32" y="64" width="64" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="27" height="22">
+  <object x="0" y="192" width="32" height="128">
+   <properties>
+    <property name="warpMap" value="map_HallwayEast"/>
+    <property name="warpX" value="18"/>
+    <property name="warpY" value="3"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

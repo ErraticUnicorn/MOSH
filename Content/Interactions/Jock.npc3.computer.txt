@@ -1,3 +1,0 @@
-﻿"Sup, dude. I'm just checking my fantasy team. Who should I pick up?" -> ["Alfred Morris" -> 2, "Tim Tebow" -> 3]
-"Hmm... I'm not so high on Alf. Think I'll go with Megatron." -> [End]
-"Hmm... good idea! Thanks, man!" -> [End]

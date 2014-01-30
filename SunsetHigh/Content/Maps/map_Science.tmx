@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="19" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="science" tilewidth="32" tileheight="32">
+  <image source="Tilesets/science.png" trans="ffffff" width="640" height="640"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="19">
+  <data encoding="base64" compression="zlib">
+   eJyd0WVwF3QcBvA/iKSogGN0jcGIbXTnBtvYBmOEwMYYDRJiAVISCpLSKKFSigJKK42SBoqCSgvYBah0KHx2xwuOl9z9Pve9e+6e580vKBAI5CeYAhSkEIUpQlGKUZwSlKQUIZQmlDKUJYxylKcCFQkngkgqUZkqVKUa1alBTWpRmzrUpR71aUBDGtGYKKJpQlNiiCWOZsSTQCLNaUESLUmmFa1pQ1sepx3t6UAKqXQkjU6k05kudKUb3elBT3rRmyfoQ1/60Z8nGcBTPM0zPMtzDGQQg3meIQxlGMMZwQuMZBSjGcOLvMRYxvEy45nARCYxmSm8wlSmMZ0ZzGQWs5nDq7zGXOYxnwW8zhu8yUIWsZglLOUt3mYZ7/Auy1nBSt7jfVaxmjWsZR3r2cAHfMhGNrGZLWxlG9vZwUd8zE52sZs97GUfn/Apn/E5+/mCLznAV3zNQQ7xDd/yHYc5wlGOcZwTnOR7TnGaM/zAj/zEz/zCr/zG7/zBn/zFWc5xnr/5h3+5wEUucZkrXOUa17nBTf7jf24RyOSRmQfIwoNkJRvZyUFOcvEQuXmYR3iUPOQlH48RRH6CKUBBClGYIhSlGMUpQUlKEUJpQilDWcIoR507Mv433I0gkkpUpgpVqUZ1alCTWtS+061LPerftZehMVFE04SmxBBLHM2IJ4FEmtOCJFqSfM/e0EyBhT1pRQPKkyJPpSNpdCKdznShK93ofs9WhmH6vWhNQyrQTn6/huv3pg2NqMhg+f3oz22WXqzA
+  </data>
+ </layer>
+ <objectgroup color="#ff00ff" name="Solid" width="20" height="19">
+  <object x="170" y="135" width="62" height="61"/>
+  <object x="1" y="-2" width="636" height="41"/>
+  <object x="2" y="35" width="13" height="572"/>
+  <object x="15" y="590" width="626" height="17"/>
+  <object x="621" y="30" width="19" height="416"/>
+  <object x="498" y="136" width="123" height="38"/>
+  <object x="556" y="32" width="67" height="56"/>
+  <object x="51" y="274" width="56" height="56"/>
+  <object x="49" y="370" width="57" height="50"/>
+  <object x="22" y="557" width="121" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="20" height="19">
+  <object x="640" y="416" width="32" height="192">
+   <properties>
+    <property name="warpMap" value="map_HallwayWest"/>
+    <property name="warpX" value="2"/>
+    <property name="warpY" value="28"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

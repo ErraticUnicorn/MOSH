@@ -1,2 +1,0 @@
-﻿"Duuuuude... care to get by with a little help from your friend?" -> ["Nah, dude." -> 2]
-"Suit yourself... did you know we are living the dream of a child? Life, so transient, is but an illusion." -> [End]

@@ -1,9 +1,0 @@
-﻿#entry Cafeteria
-#title Cafeteria
-A gathering place for all students between the hours of 12:00 and 2:00 for lunch. Famous for its hot dogs.
-
-#if Quest FoodFight Complete
-Occasionally, the bullies rally the students to start a food fight, which can present very real physical danger. Avoid the area when this happens.
-#end
-
-#end

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="10" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="ScreenshotSchool" tilewidth="32" tileheight="32">
+  <image source="Tilesets/ScreenshotSchool.png" trans="ffffff" width="480" height="318"/>
+ </tileset>
+ <tileset firstgid="136" name="wallright" tilewidth="32" tileheight="32">
+  <image source="Tilesets/wallright.png" trans="ffffff" width="33" height="33"/>
+ </tileset>
+ <tileset firstgid="137" name="wallleft" tilewidth="32" tileheight="32">
+  <image source="Tilesets/wallleft.png" trans="ffffff" width="33" height="33"/>
+ </tileset>
+ <tileset firstgid="138" name="Stairs chalkboard etc" tilewidth="32" tileheight="32">
+  <image source="Tilesets/Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="10" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzrZGBg0CeAO4C4c1TdqLpRdaPqKFR3F4jvAfF9LOpqkPBbIH4HxO+RxEDqALTZUdo=
+  </data>
+ </layer>
+</map>

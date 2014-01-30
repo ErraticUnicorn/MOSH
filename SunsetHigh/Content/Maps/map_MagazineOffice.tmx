@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="15" height="10" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="300px-Pokémon.FRLG.PokémonLabR1" tilewidth="32" tileheight="32">
+  <image source="Tilesets/300px-Pokémon.FRLG.PokémonLabR1.png" trans="ffffff" width="300" height="205"/>
+ </tileset>
+ <tileset firstgid="55" name="map6" tilewidth="32" tileheight="32">
+  <image source="Tilesets/map6.png" trans="ffffff" width="471" height="394"/>
+ </tileset>
+ <tileset firstgid="223" name="magazinebrain" tilewidth="32" tileheight="32">
+  <image source="Tilesets/magazinebrain.png" trans="ffffff" width="227" height="227"/>
+ </tileset>
+ <tileset firstgid="272" name="computer" tilewidth="32" tileheight="32">
+  <image source="Tilesets/computer.png" trans="ffffff" width="32" height="64"/>
+ </tileset>
+ <tileset firstgid="274" name="Stairs chalkboard etc" tilewidth="32" tileheight="32">
+  <image source="Tilesets/Stairs chalkboard etc.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="15" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYAJiVjIwFxBzAzEfGVgYiGXJxDIU6FUdtZdorAfE+mTqBQARkQ7W
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="15" height="10">
+  <data encoding="base64" compression="zlib">
+   eJyNz0cOwjAQheEMHYQod8iNKHvKnrKnXJUg0Xvv8CMcCRxIePInSx6/xRiGMx1Y6H6Z/UoPfQwwxAhjTP7oTjHDHAssscJazTPIIoe81t1gix32OOCIk5oXUEQJZa17xgVX3HB/PgpHXvMKqqihrnV9/PEjgCBCCCOiug000UJb60b5E0MKcXUnkBTvfe2k5fO247avV9z2fY8pzjd93wf0kylR
+  </data>
+ </layer>
+ <objectgroup color="#000000" name="Solid" width="15" height="10">
+  <object x="378" y="82" width="94" height="61"/>
+  <object x="378" y="212" width="98" height="60"/>
+  <object x="160" y="209" width="28" height="26"/>
+  <object x="227" y="212" width="27" height="29"/>
+  <object x="-32" y="0" width="32" height="320"/>
+  <object x="480" y="0" width="32" height="320"/>
+  <object x="0" y="0" width="480" height="32"/>
+  <object x="128" y="64" width="160" height="160"/>
+  <object x="96" y="192" width="32" height="32"/>
+  <object x="288" y="192" width="32" height="32"/>
+  <object x="0" y="320" width="192" height="32"/>
+  <object x="224" y="320" width="256" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="Teleport" width="15" height="10">
+  <object x="192" y="320" width="32" height="32">
+   <properties>
+    <property name="warpMap" value="map_HallwayWest"/>
+    <property name="warpX" value="21"/>
+    <property name="warpY" value="10"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

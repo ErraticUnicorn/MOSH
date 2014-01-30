@@ -1,0 +1,5 @@
+﻿"What're you looking at, bub?" -> ["Your shiny, bald head." -> 2, "Please don't kill me!" -> 5]
+"Huh!? You want a piece of me? I eat twerps like you for breakfast!" -> ["I'm being perfectly honest" -> 3, "I was joking. Chill, bro." -> 5]
+"Wait...are you...complimenting me?" -> ["Yeah, dude." -> 4, "Uhh.." -> 4]
+"Well, thank you! I'll have you know I wax it everyday." -> [End]
+"Heh. You're not worth the time, anyway." -> [End]
