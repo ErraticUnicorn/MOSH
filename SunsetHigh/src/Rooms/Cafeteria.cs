@@ -29,6 +29,8 @@ namespace SunsetHigh
 
         public Cafeteria() : base()
         {
+            this.placeID = PlaceID.Cafeteria;
+
             isFoodFight = false;
             FC1timer = 0;
             FC2timer = 0;
@@ -187,13 +189,20 @@ namespace SunsetHigh
                     }
                 }
             }
-            else
-            {
-                //Interactables.Clear();
 
-                // too lazy to clean up projectiles..
-                // it can be done easily though
+            //cleanup of projectiles offscreen
+            foreach (IInteractable i in new List<IInteractable>(this.Interactables))
+            {
+                if (i is Projectile)
+                {
+                    Projectile p = (Projectile)i;
+                    if (p.getY() > 21 * 32 + 100 || p.getY() < 0 - 100)
+                    {
+                        this.removeObject(p);
+                    }
+                }
             }
+
         }
 
         public void foodCollideEvent()

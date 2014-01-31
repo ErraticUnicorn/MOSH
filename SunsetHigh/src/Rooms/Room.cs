@@ -33,6 +33,7 @@ namespace SunsetHigh
     {
         Generic = -1,
         Cafeteria = 0,
+        //TODO: put other rooms here later
     }
 
     public class Room
@@ -44,12 +45,14 @@ namespace SunsetHigh
         public List<Sprite> Sprites { private set; get; }
         public List<Character> CharList { private set; get; }
         public List<IInteractable> Interactables { private set; get; }
+        public PlaceID placeID { protected set; get; }
 
         public Room()
         {
             Sprites = new List<Sprite>();
             CharList = new List<Character>();
             Interactables = new List<IInteractable>();
+            placeID = PlaceID.Generic;
         }
 
         public virtual void loadContent(ContentManager content, String filename)

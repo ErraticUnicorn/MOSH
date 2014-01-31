@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src\Mechanics\Clue.cs" />
+    <Compile Include="src\Mechanics\InnerMonologue.cs" />
     <Compile Include="src\Mechanics\Interaction.cs" />
     <Compile Include="src\Mechanics\Inventory.cs" />
     <Compile Include="src\Objects\Character.cs" />
@@ -515,6 +516,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\TextData\ItemInfo.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\TextData\MonologueLines.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\TextData\PeopleJournalInfo.txt">

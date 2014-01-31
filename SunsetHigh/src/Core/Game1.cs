@@ -83,7 +83,7 @@ namespace SunsetHigh
 
             // play the title track first
             BGMusic.playSong("sunset high menu track.mp3");
-            //BGMusic.setPaused(true);
+            BGMusic.setPaused(true);
 
             WorldManager.loadMaps(Content);
 
@@ -140,8 +140,6 @@ namespace SunsetHigh
                 WorldManager.updateCameraOffset(h1, GraphicsDevice, SCALE_FACTOR);
                
                 // Keyboard listening
-                if (!h1.isTalking())
-                    KeyboardManager.handleInGameMenu();
                 if (!InGameMenu.isOpen())
                 {
                     KeyboardManager.handleInteractions(h1, WorldManager.m_currentRoom.Interactables);
@@ -151,7 +149,9 @@ namespace SunsetHigh
                         KeyboardManager.handlePickpocketing(h1, WorldManager.m_currentRoom.CharList);
                         KeyboardManager.handleShooting(h1);
                     }
-                } 
+                }
+                if (!h1.isTalking())
+                    KeyboardManager.handleInGameMenu();
                 
                 // Updates based on time
                 InGameMenu.update(elapsed);

@@ -42,6 +42,7 @@ namespace SunsetHigh
         
         //Speech vars
         private DialoguePanel dialogue;
+        private InnerMonologue monologue;
 
         //Reputation vars
         private int nerdRep;
@@ -105,6 +106,7 @@ namespace SunsetHigh
             canShoot = true;
             shootTimer = 0.0f;
             dialogue = new DialoguePanel();
+            monologue = new InnerMonologue();
             nerdRep = 0;
             jockRep = 0;
             prepRep = 0;
@@ -155,13 +157,9 @@ namespace SunsetHigh
 
         public bool isTalking()
         {
-            return dialogue.talking;
+            return dialogue.talking || dialogue.selfTalking;
         }
 
-        public void stopTalking()
-        {
-            dialogue.talking = false;
-        }
         public override void loadContent(ContentManager content)
         {
             base.loadContent(content);
@@ -169,6 +167,7 @@ namespace SunsetHigh
             dialogue.loadContent(content);
             SoundFX.loadSound(content, Directories.SOUNDS + "LTTP_Rupee1");
             Sprite.loadCommonImage(content, PROJECTILE_IMAGE_NAME);
+            monologue.loadEntriesFromFile(Directories.TEXTDATA + "MonologueLines.txt");
         }
 
         public override void draw(SpriteBatch sb)
@@ -179,7 +178,7 @@ namespace SunsetHigh
                 ppSystem.draw(sb);
             }
 
-            if (dialogue.talking)
+            if (this.isTalking())
             {
                 dialogue.draw(sb);
             }
@@ -192,7 +191,11 @@ namespace SunsetHigh
 
         public override void update(float elapsed) 
         {
-            base.update(elapsed);
+            if (!this.isTalking())
+            {
+                base.update(elapsed);
+            }
+
             if (ppActive)
             {
                 ppSystem.update(this, elapsed);
@@ -202,7 +205,7 @@ namespace SunsetHigh
             if (shootTimer >= RECHARGE_TIME)
                 canShoot = true;
 
-            if (dialogue.talking)
+            if (this.isTalking())
             {
                dialogue.update(elapsed);
             }
@@ -334,6 +337,19 @@ namespace SunsetHigh
             this.dialogue.onConfirm();
         }
 
+        public void dialogueCancel()
+        {
+            // nothing much yet
+            if (dialogue.selfTalking)
+                this.dialogue.onConfirm();
+        }
+
+        public void talkToSelf()
+        {
+            dialogue.loadSelfThought(monologue.chooseLine());
+            dialogue.selfTalking = true;
+        }
+
         /// <summary>
         /// Class to handle the dialogue box/moving through the line tree, etc.
         /// </summary>
@@ -345,16 +361,17 @@ namespace SunsetHigh
             private string say = "...";
             public bool end = false;
             public bool talking = false;
+            public bool selfTalking = false;
             private readonly InteractionTreeNode defaultNode = new InteractionTreeNode { 
                 eventType = Events.End, line = "You're out of line!", responses = new List<InteractionResponseNode>() };
 
             private const int DIALOGUE_X_MARGIN = 35;
             private const int DIALOGUE_Y_MARGIN = 15;
-            private const int DIALOGUE_WIDTH = 600;
-            private const int DIALOGUE_HEIGHT = 200;
+            private const int DIALOGUE_WIDTH = 800;
+            private const int DIALOGUE_HEIGHT = 175;
             private const int DIALOGUE_X = 400 - (DIALOGUE_WIDTH / 2);
             private const int DIALOGUE_Y = 480 - DIALOGUE_HEIGHT;
-            private const int NUM_RESPONSES_ON_PANEL = 3;
+            private const int NUM_RESPONSES_ON_PANEL = 2;
             private const int RESPONSE_START_Y = 100;
 
             public DialoguePanel()
@@ -365,7 +382,7 @@ namespace SunsetHigh
                 this.popIn();
                 this.setHighlighted(true);
 
-                this.cursorArrow = new CursorArrow(DIALOGUE_X, DIALOGUE_Y, 20, 20, this);
+                this.cursorArrow = new CursorArrow(DIALOGUE_X, DIALOGUE_Y + RESPONSE_START_Y, 20, 20, this);
                 this.cursorArrow.setPopLocations(DIALOGUE_X, DIALOGUE_Y + RESPONSE_START_Y, 
                     DIALOGUE_X, DIALOGUE_Y + RESPONSE_START_Y);
                 this.cursorArrow.popIn();
@@ -394,48 +411,56 @@ namespace SunsetHigh
                 this.cursor = 0;
                 this.cursorArrow.updateCursor();
                 this.cursorArrow.setVisible(tempEntries.Count > 0);
-                this.scrollBar.setVisible(tempEntries.Count > NUM_RESPONSES_ON_PANEL);
+                //this.scrollBar.setVisible(tempEntries.Count > NUM_RESPONSES_ON_PANEL);
                 return wrappedText.ToString();
             }
 
             public override void onConfirm()
             {
-                InteractionResponseNode next = null;
-                if (current.eventType != Events.End && current.eventType != Events.Quest)
+                if (!selfTalking)   //having dialogue instead of thinking
                 {
-                    next = current.responses[cursor];
+                    InteractionResponseNode next = null;
+                    if (current.eventType != Events.End && current.eventType != Events.Quest)
+                    {
+                        next = current.responses[cursor];
+                    }
+                    else
+                    {
+                        end = true;
+                        if (current.eventType == Events.Quest)
+                        {
+                            Quest.addQuestState(current.questID, current.questState);
+                        }
+                    }
+                    if (next != null)
+                    {
+                        current = interaction.dialogue.ElementAtOrDefault(next.nextLine - 1) ?? defaultNode;
+                        switch (next.eventType)
+                        {
+                            case Events.End:
+                                end = true;
+                                break;
+                            case Events.Quest:
+                                end = true;
+                                Quest.addQuestState(next.questID, next.questState);
+                                break;
+                            default:
+                                cursor = 0;
+                                break;
+                        }
+                    }
+                    if (end)
+                    {
+                        talking = false;
+                        return;
+                    }
+                    say = end ? "(end)" : buildString();
                 }
                 else
                 {
+                    selfTalking = false;
                     end = true;
-                    if (current.eventType == Events.Quest)
-                    {
-                        Quest.addQuestState(current.questID, current.questState);
-                    }
                 }
-                if (next != null)
-                {
-                    current = interaction.dialogue.ElementAtOrDefault(next.nextLine - 1) ?? defaultNode;
-                    switch (next.eventType)
-                    {
-                        case Events.End:
-                            end = true;
-                            break;
-                        case Events.Quest:
-                            end = true;
-                            Quest.addQuestState(next.questID, next.questState);
-                            break;
-                        default:
-                            cursor = 0;
-                            break;
-                    }
-                }
-                if (end)
-                {
-                    talking = false;
-                    return;
-                }
-                say = end ? "(end)" : buildString();
             }
 
             public override void onMoveCursor(Direction dir)
@@ -453,12 +478,12 @@ namespace SunsetHigh
 
             public override void draw(SpriteBatch sb)
             {
-                if (interaction != null)
+                if (interaction != null || selfTalking)
                 {
                     base.draw(sb);
                     sb.DrawString(font, say, new Vector2(this.getX() + this.getXMargin(), this.getY() + this.getYMargin()), 
                         Color.Black, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f);
-                    cursorArrow.draw(sb);                    
+                    cursorArrow.draw(sb);
                 }
             }
 
@@ -477,6 +502,17 @@ namespace SunsetHigh
                     say = buildString();
                     cursor = 0;   // puts cursor at top
                 }
+            }
+
+            public void loadSelfThought(string str)
+            {
+                say = SunsetUtils.wordWrapText(str, font, this.getWidth() - this.getXMargin() * 2);
+
+                this.clearEntries();
+                this.cursor = 0;
+                this.cursorArrow.updateCursor();
+                this.cursorArrow.setVisible(false);
+                //this.scrollBar.setVisible(false);
             }
         }
 

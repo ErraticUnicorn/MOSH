@@ -327,15 +327,21 @@ namespace SunsetHigh
                         }
                     }
                 }
+                else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Cancel]))
+                {
+                    hero.talkToSelf();
+                }
             }
             else
             {
                 if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveNorth]))
                     hero.dialogueChoiceMove(Direction.North);
-                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveSouth]))
+                else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveSouth]))
                     hero.dialogueChoiceMove(Direction.South);
-                if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
+                else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
                     hero.dialogueConfirm();
+                else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Cancel]))
+                    hero.dialogueCancel();
             }
         }
 

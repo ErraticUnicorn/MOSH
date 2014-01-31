@@ -1,0 +1,24 @@
+﻿#default
+(meh...)
+(I think too much..)
+(...)
+#end
+
+#if Location Cafeteria and not Accepted
+(What's for lunch?)
+(Hmm.. nothing too appetizing here..)
+#end
+
+#if Location not Cafeteria and Quest FoodFight Accepted and not Progress1 and not Progress2
+(I need to find Lucas in the cafeteria.)
+(Wonder if Lucas is safe?)
+#end
+
+#if Location Cafeteria and Quest FoodFight Accepted and not Progress1 and not Progress2
+(Lucas must on the other side of this battlefield.)
+#end
+
+#if Quest FoodFight Complete
+#once
+(Well, that was a pointless errand.)
+#end
