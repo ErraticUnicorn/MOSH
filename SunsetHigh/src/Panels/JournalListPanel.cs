@@ -60,6 +60,7 @@ namespace SunsetHigh
         public virtual void refreshJournalList(object sender, EventArgs e)
         {
             //todo: add only when you talk to the person
+            this.clearEntries();
             this.loadEntries(allEntries);
         }
         

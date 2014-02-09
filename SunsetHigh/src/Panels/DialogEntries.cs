@@ -23,7 +23,12 @@ namespace SunsetHigh
             // if this entry confirms exiting the game
             if (this.isExiting())
             {
-                // Cleanup and return to title screen
+                // Cleanup?
+                ScreenTransition.requestTransition(delegate()
+                {
+                    InGameMenu.reset();
+                    Game1.changeScreen(GameState.SplashScreen);
+                });
             }
             // this entry cancels exiting
             else

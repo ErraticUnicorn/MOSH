@@ -207,10 +207,7 @@ namespace SunsetHigh
 
         public void foodCollideEvent()
         {
-            WorldManager.setRoom("map_HallwayEast");
-            Hero.instance.setX(19 * 32);
-            Hero.instance.setY(3 * 32);
-            Hero.instance.setDirection(Direction.East);
+            WorldManager.setRoom("map_HallwayEast", 19 * 32, 3 * 32, Direction.East);
         }
     }
 }

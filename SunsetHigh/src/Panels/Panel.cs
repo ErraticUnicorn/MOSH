@@ -55,7 +55,7 @@ namespace SunsetHigh
             this.setXMargin(DEFAULT_X_MARGIN);
             this.setYMargin(DEFAULT_Y_MARGIN);
             this.setHighlighted(false);
-            this.borders = new BorderSystem(this.getWidth(), this.getHeight());
+            this.borders = new BorderSystem(this);
             this.setColor(Color.DarkCyan);
 
             WorldManager.OffsetChanged += updateOffsets;
@@ -119,12 +119,6 @@ namespace SunsetHigh
             this.borders.loadContent(content);
         }
 
-        public override void update(float elapsed)
-        {
-            base.update(elapsed);
-            this.borders.update(this, elapsed);
-        }
-
         public override void draw(SpriteBatch sb)
         {
             if (!this.isInFocus() && !this.isSmoothMoving())  //i.e. cannot be seen on screen
@@ -140,31 +134,21 @@ namespace SunsetHigh
         {
             private const int DEFAULT_THICKNESS = 10;
 
-            private int x;
-            private int y;
-            private int width;
-            private int height;
+            private Panel parent;
             private int thickness;
 
             private Texture2D horizontal;
             private Texture2D vertical;
             private Texture2D corner;
 
-            public BorderSystem(int width, int height, int thickness)
+            public BorderSystem(Panel parent, int thickness)
             {
-                this.x = 0;
-                this.y = 0;
-                this.setWidth(width);
-                this.setHeight(height);
+                this.parent = parent;
                 this.setThickness(thickness);
             }
-            public BorderSystem(int width, int height)
-                : this(width, height, DEFAULT_THICKNESS) { }
-            public BorderSystem()
-                : this(0, 0, DEFAULT_THICKNESS) { }
+            public BorderSystem(Panel parent)
+                : this(parent, DEFAULT_THICKNESS) { }
 
-            public void setWidth(int width) { this.width = width; }
-            public void setHeight(int height) { this.height = height; }
             public void setThickness(int thickness) { this.thickness = thickness; }
             
             public void loadContent(ContentManager content)
@@ -173,23 +157,17 @@ namespace SunsetHigh
                 this.vertical = content.Load<Texture2D>(Directories.SPRITES + "InGameMenuBorderVertical");
                 this.corner = content.Load<Texture2D>(Directories.SPRITES + "InGameMenuCorner");
             }
-            public void update(Panel p, float elapsed)
-            {
-                this.x = p.getX();
-                this.y = p.getY();
-                this.width = p.getWidth();
-                this.height = p.getHeight();
-            }
+
             public void draw(SpriteBatch sb)
             {
-                sb.Draw(this.horizontal, new Rectangle(this.x, this.y, this.width, this.thickness), Color.White);
-                sb.Draw(this.horizontal, new Rectangle(this.x, this.y + (this.height - this.thickness), this.width, this.thickness), Color.White);
-                sb.Draw(this.vertical, new Rectangle(this.x, this.y, this.thickness, this.height), Color.White);
-                sb.Draw(this.vertical, new Rectangle(this.x + (this.width - this.thickness), this.y, this.thickness, this.height), Color.White);
-                sb.Draw(this.corner, new Rectangle(this.x, this.y, this.thickness, this.thickness), Color.White);
-                sb.Draw(this.corner, new Rectangle(this.x + (this.width - this.thickness), this.y, this.thickness, this.thickness), Color.White);
-                sb.Draw(this.corner, new Rectangle(this.x, this.y + (this.height - this.thickness), this.thickness, this.thickness), Color.White);
-                sb.Draw(this.corner, new Rectangle(this.x + (this.width - this.thickness), this.y + (this.height - this.thickness), 
+                sb.Draw(this.horizontal, new Rectangle(parent.getX(), parent.getY(), parent.getWidth(), this.thickness), Color.White);
+                sb.Draw(this.horizontal, new Rectangle(parent.getX(), parent.getY() + (parent.getHeight() - this.thickness), parent.getWidth(), this.thickness), Color.White);
+                sb.Draw(this.vertical, new Rectangle(parent.getX(), parent.getY(), this.thickness, parent.getHeight()), Color.White);
+                sb.Draw(this.vertical, new Rectangle(parent.getX() + (parent.getWidth() - this.thickness), parent.getY(), this.thickness, parent.getHeight()), Color.White);
+                sb.Draw(this.corner, new Rectangle(parent.getX(), parent.getY(), this.thickness, this.thickness), Color.White);
+                sb.Draw(this.corner, new Rectangle(parent.getX() + (parent.getWidth() - this.thickness), parent.getY(), this.thickness, this.thickness), Color.White);
+                sb.Draw(this.corner, new Rectangle(parent.getX(), parent.getY() + (parent.getHeight() - this.thickness), this.thickness, this.thickness), Color.White);
+                sb.Draw(this.corner, new Rectangle(parent.getX() + (parent.getWidth() - this.thickness), parent.getY() + (parent.getHeight() - this.thickness), 
                     this.thickness, this.thickness), Color.White);
             }
         }

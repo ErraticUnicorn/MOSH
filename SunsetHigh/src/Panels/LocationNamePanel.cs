@@ -55,6 +55,7 @@ namespace SunsetHigh
             this.setY(this.getHideY());
             showLocationTimer = 0.0f;
             this.popOut();
+            this.setVisible(false);
         }
 
         public override void setMessage(string message)

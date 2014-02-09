@@ -4,7 +4,7 @@
 (...)
 #end
 
-#if Location Cafeteria and not Accepted
+#if Location Cafeteria and Quest FoodFight not Accepted
 (What's for lunch?)
 (Hmm.. nothing too appetizing here..)
 #end

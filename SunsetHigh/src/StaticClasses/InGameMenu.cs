@@ -21,8 +21,13 @@ namespace SunsetHigh
         private static Stack<Panel> panelStack; // stack of panels
         private static Panel activePanel;       // pointer to the panel with our current focus (e.g. cursor control)
         private static ListPanel menuBody;      // the main menu panel
-        private static InventoryPanel inventoryScreen;  //the inventory panel
         private static CursorArrow menuArrow;   // the cursor
+
+        //Panels with dynamic content
+        private static InventoryPanel inventoryScreen;
+        private static PlacesPanel placesScreen;
+        private static PeoplePanel peopleScreen;
+        private static QuestPanel questScreen;
 
         /// <summary>
         /// Initializes all the menu panels and links them togther. Call this in the Game's
@@ -42,21 +47,21 @@ namespace SunsetHigh
             initialized = true;
 
             // places list
-            PlacesPanel placesScreen = new PlacesPanel(200, 480, 440, 380);
+            placesScreen = new PlacesPanel(200, 480, 440, 380);
             placesScreen.setPopLocations(200, 480, 200, 100);
             placesScreen.setScrolling(7, 1);
             placesScreen.loadEntriesFromFile(Directories.TEXTDATA + "PlacesJournalInfo.txt");
             components.Add(placesScreen);
 
             // people list
-            PeoplePanel peopleScreen = new PeoplePanel(200, 480, 440, 380);
+            peopleScreen = new PeoplePanel(200, 480, 440, 380);
             peopleScreen.setPopLocations(200, 480, 200, 100);
             peopleScreen.setScrolling(7, 1);
             peopleScreen.loadEntriesFromFile(Directories.TEXTDATA + "PeopleJournalInfo.txt");
             components.Add(peopleScreen);
 
             // quest list
-            QuestPanel questScreen = new QuestPanel(200, 480, 440, 380);
+            questScreen = new QuestPanel(200, 480, 440, 380);
             questScreen.setPopLocations(200, 480, 200, 100);
             questScreen.setScrolling(7, 1);
             questScreen.loadEntriesFromFile(Directories.TEXTDATA + "QuestJournalInfo.txt");
@@ -253,10 +258,13 @@ namespace SunsetHigh
             menuArrow.setY(67);
         }
 
-        public static void loadInventoryPanel(Inventory hInventory)
+        public static void refreshPanelLists()
         {
             nullCheck();
-            inventoryScreen.registerInventory(hInventory);
+            inventoryScreen.refreshList();
+            placesScreen.refreshJournalList(null, null);
+            peopleScreen.refreshJournalList(null, null);
+            questScreen.refreshJournalList(null, null);
         }
 
         public static void loadContent(ContentManager content)

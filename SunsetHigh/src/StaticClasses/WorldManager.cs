@@ -24,6 +24,15 @@ namespace SunsetHigh {
 
         public static event EventHandler<CameraOffsetEventArgs> OffsetChanged;
 
+        private static GraphicsDevice m_gd;
+        private static double m_scaleFactor;
+
+        public static void init(GraphicsDevice graphicsDevice, double scaleFactor)
+        {
+            m_gd = graphicsDevice;
+            m_scaleFactor = scaleFactor;
+        }
+
         public static void loadMaps(ContentManager p_content) {
             m_rooms = new Dictionary<String, Room>();
         
@@ -74,12 +83,46 @@ namespace SunsetHigh {
             m_currentRoomName = "map_HallwayWest";
         }
 
-        public static void setRoom(String p_roomName) {
+        public static void setRoom(String p_roomName, int p_newX, int p_newY, Direction p_newDirection) {
+            if (m_rooms.ContainsKey(p_roomName))
+            {
+                ScreenTransition.requestTransition(delegate()
+                {
+                    m_currentRoomName = p_roomName;
+                    m_currentRoom = m_rooms[p_roomName];
+                    m_currentRoom.updateState();
+                    Hero.instance.setX(p_newX);
+                    Hero.instance.setY(p_newY);
+                    Hero.instance.setDirection(p_newDirection);
+                    updateCameraOffset(Hero.instance);
+                    LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
+                });
+            }
+        }
+
+        public static void setRoom(String p_roomName)
+        {
+            if (m_rooms.ContainsKey(p_roomName))
+            {
+                ScreenTransition.requestTransition(delegate()
+                {
+                    m_currentRoomName = p_roomName;
+                    m_currentRoom = m_rooms[p_roomName];
+                    m_currentRoom.updateState();
+                    updateCameraOffset(Hero.instance);
+                    LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
+                });
+            }
+        }
+
+        public static void setRoomNoTransition(String p_roomName)
+        {
             if (m_rooms.ContainsKey(p_roomName))
             {
                 m_currentRoomName = p_roomName;
                 m_currentRoom = m_rooms[p_roomName];
                 m_currentRoom.updateState();
+                LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
             }
         }
 
@@ -88,20 +131,19 @@ namespace SunsetHigh {
             MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
 
             if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
-                setRoom((string) l_collidedObject.Properties["warpMap"]);
-                p_hero.setX(m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"]);
-                p_hero.setY(m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"]);
-                LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
+                int l_newX = m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"];
+                int l_newY = m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"];
+                setRoom((string)l_collidedObject.Properties["warpMap"], l_newX, l_newY, Hero.instance.getDirection());
             }
         }
 
-        public static void updateCameraOffset(Hero p_hero, GraphicsDevice p_gd, double l_scaleFactor) {
+        public static void updateCameraOffset(Hero p_hero) {
             Point l_cameraOffset = new Point();
-            l_cameraOffset.X = (int) (p_hero.getXCenter() - p_gd.Viewport.Width / l_scaleFactor / 2);
-            l_cameraOffset.Y = (int) (p_hero.getYCenter() - p_gd.Viewport.Height / l_scaleFactor / 2);
+            l_cameraOffset.X = (int) (p_hero.getXCenter() - m_gd.Viewport.Width / m_scaleFactor / 2);
+            l_cameraOffset.Y = (int) (p_hero.getYCenter() - m_gd.Viewport.Height / m_scaleFactor / 2);
 
-            int l_maxCameraX = (int) (m_currentRoom.background.Width * m_currentRoom.background.TileWidth - p_gd.Viewport.Width / l_scaleFactor);
-            int l_maxCameraY = (int) (m_currentRoom.background.Height * m_currentRoom.background.TileHeight - p_gd.Viewport.Height / l_scaleFactor);
+            int l_maxCameraX = (int) (m_currentRoom.background.Width * m_currentRoom.background.TileWidth - m_gd.Viewport.Width / m_scaleFactor);
+            int l_maxCameraY = (int) (m_currentRoom.background.Height * m_currentRoom.background.TileHeight - m_gd.Viewport.Height / m_scaleFactor);
 
             if (l_cameraOffset.X < 0) { l_cameraOffset.X = 0; }
             if (l_cameraOffset.Y < 0) { l_cameraOffset.Y = 0; }
@@ -129,8 +171,11 @@ namespace SunsetHigh {
             }
         }
 
-        public static void drawMap(SpriteBatch p_spriteBatch, Rectangle p_worldArea) {
-            m_currentRoom.background.Draw(p_spriteBatch, p_worldArea);
+        public static void drawMap(SpriteBatch p_spriteBatch) {
+            Rectangle l_visibleArea = new Rectangle(m_currentCameraOffset.X, m_currentCameraOffset.Y, 
+                (int)(m_gd.Viewport.Width / m_scaleFactor),
+                (int)(m_gd.Viewport.Height / m_scaleFactor));
+            m_currentRoom.background.Draw(p_spriteBatch, l_visibleArea);
             m_currentRoom.draw(p_spriteBatch);
         }
 

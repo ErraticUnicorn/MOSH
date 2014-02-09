@@ -381,6 +381,22 @@ namespace SunsetHigh
             }
         }
 
+        public static void handleSimpleScreen(AbstractScreen sender)
+        {
+            if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveNorth]))
+                sender.moveCursor(Direction.North);
+            else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveWest]))
+                sender.moveCursor(Direction.West);
+            else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveSouth]))
+                sender.moveCursor(Direction.South);
+            else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.MoveEast]))
+                sender.moveCursor(Direction.East);
+            else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
+                sender.confirm();
+            else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Cancel]))
+                sender.cancel();
+        }
+
         private static void nullCheck()
         {
             if (keyTypes == null || keyTypes.Length == 0)

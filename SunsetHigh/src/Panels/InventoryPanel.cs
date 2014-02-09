@@ -62,8 +62,9 @@ namespace SunsetHigh
         public void setMessagePanel(IMessagePanel panel) { this.messagePanel = panel; }
         public IMessagePanel getMessagePanel() { return this.messagePanel; }
 
-        public void registerInventory(Inventory inventory)
+        public void refreshList()
         {
+            Inventory inventory = Hero.instance.inventory;
             this.clearEntries();
             List<MenuEntry> tempEntries = new List<MenuEntry>();
             foreach (Item i in inventory)

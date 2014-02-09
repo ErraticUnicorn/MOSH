@@ -57,8 +57,12 @@ namespace SunsetHigh
                 else
                 {
                     this.owner.getPreviousPanel().setMessage("Game loaded!");
-                    InGameMenu.reset();
-                    SaveManager.unpackData(this.saveData);
+                    ScreenTransition.requestTransition(delegate()
+                    {
+                        InGameMenu.reset();
+                        SaveManager.unpackData(this.saveData);
+                        WorldManager.updateCameraOffset(Hero.instance);
+                    });
                 }
             }
         }

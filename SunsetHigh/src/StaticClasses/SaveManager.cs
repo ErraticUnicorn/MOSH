@@ -148,8 +148,9 @@ namespace SunsetHigh
             h1.loadSaveStructure(data.heroData);
             KeyboardManager.loadKeyControls(data.inputKeys);
             Quest.loadQuestStateSave(data.questStates);
-            WorldManager.setRoom(data.roomName);
+            WorldManager.setRoomNoTransition(data.roomName);
             GameClock.loadSaveStructure(data.playTime);
+            InGameMenu.refreshPanelLists();
         }
 
         public static string generateNewFileName()
