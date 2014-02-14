@@ -7,43 +7,54 @@ using System.Text.RegularExpressions;
 namespace SunsetHigh
 {
     /// <summary>
-    /// Enumeration of the valid event types for a line.
+    /// Enumeration of the valid event types for a line. Can be combined as flags.
     /// </summary>
+    [Flags]
     public enum Events
     {
-        None, End, Quest, Fight
+        None        = 0x0,  //should never be used
+        NextLine    = 0x1,  //specifies next line in dialogue (response node only)
+        Quest       = 0x2,  //quest state changes
+        Reputation  = 0x4,  //reputation state changes
+        Inventory   = 0x8,  //inventory state changes
+        Fight       = 0x10, //not implemented
+        Special     = 0x20, //not implemented
+        End         = 0x40  //end of conversation
     }
 
     /// <summary>
-    /// The basic interaction node type. Consists of a NPC line, an event type, and a list of conditional targets.
+    /// The basic interaction node, used for hero responses. Contains event type and arguments for each event.
     /// </summary>
     public class InteractionTreeNode
     {
         public Events eventType;
         public string line;
-        public QuestID questID;     //for use when eventType is Events.Quest
-        public QuestState questState;   //ditto above
 
-        // This is a stupid design pattern, but I'll fix it later
-        public List<InteractionResponseNode> responses;
+        //for use when eventType is Events.Quest
+        public QuestID questID;
+        public QuestState questState;
+        //for use when eventType is Events.Reputation
+        public Clique repClique;
+        public int repChange;
+        //for use when eventType is Events.Inventory
+        public Item item;
+        public int itemChange; 
 
-        public InteractionTreeNode()
-        {
-            this.responses = new List<InteractionResponseNode>();
-        }
-
+        //for use when eventType is Events.NextLine (indicating the NPC will talk more)
+        public int nextLine;        
     }
 
     /// <summary>
-    /// The node type for the hero's response. Consists of the hero's line, an event type and the appropriate arguments (if applicable)
+    /// An extension of the interaction node with a list of responses. Used for NPC lines (which are linked to hero responses).
     /// </summary>
-    public class InteractionResponseNode
+    public class InteractionLinkedTreeNode : InteractionTreeNode
     {
-        public Events eventType;
-        public string line;
-        public QuestID questID;     //for use when eventType is Events.Quest
-        public QuestState questState;   //ditto above
-        public int nextLine;        //for use when eventType is Events.None (indicating the NPC will talk more)
+        public List<InteractionTreeNode> responses;
+        public InteractionLinkedTreeNode()
+        {
+            this.responses = new List<InteractionTreeNode>();
+        }
+
     }
 
     public class InteractionConditional
@@ -85,9 +96,14 @@ namespace SunsetHigh
     /// </summary>
     public class Interaction
     {
-        private const string matcherString = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight|Quest .+? .+?)(, )*)*(?<end>End)??,??(?<quest>Quest .+? .+?)??,??(?<fight>Fight)??\]";
+        //the old version
+        //private const string matcherString2 = @"(?<line>^""[^""]+"") -> \[(?<response>""[^""]+"" -> (\d+|End|Fight|Quest .+? .+?|Reputation .+? (\+|-)\d+)(, )*)*(?<end>End)??,??(?<quest>Quest .+? .+?)??,??(?<fight>Fight)??\]";
+            
+        //the new version
+        private const string eventTypesString = @"\(?(?<eventargs>(\d+|End|Fight|Quest .+? .+?|Reputation .+? (\+|-)\d+|Inventory .+? (\+|-)\d+|Event .+?)(, )*)+\)?";
+        private const string matcherString = @"(?<line>^""[^""]+"") -> \[((?<response>""[^""]+"" -> ("+eventTypesString+@")(, )*)+|(?<noresponse>"+eventTypesString+@"))\]";
         private static Regex lineMatcher = new Regex(matcherString, RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.Singleline);
-        public List<InteractionTreeNode> dialogue;
+        public List<InteractionLinkedTreeNode> dialogue;
         public string name;
         private int defaultLine;
         private List<InteractionConditional> conditionalList;
@@ -98,7 +114,7 @@ namespace SunsetHigh
                 interactionFile = interactionFile.Substring(Directories.INTERACTIONS.Length);
 
             string[] lines = System.IO.File.ReadAllLines(Directories.INTERACTIONS + interactionFile);
-            this.dialogue = new List<InteractionTreeNode>();
+            this.dialogue = new List<InteractionLinkedTreeNode>();
             this.conditionalList = new List<InteractionConditional>();
             this.name = interactionFile.Split(new char[] { '.' })[0];
             this.defaultLine = 0;
@@ -124,73 +140,143 @@ namespace SunsetHigh
                 }
                 else // otherwise we assume it's a line of dialogue
                 {
-                    var temp = new InteractionTreeNode();
+                    var interactionNode = new InteractionLinkedTreeNode();
                     var matches = lineMatcher.Match(line);
                     if (!matches.Success)
                         throw new LineException(string.Format("Bad Line: {0}", line));
                     var groups = matches.Groups;
-                    temp.line = groups["line"].Value;
-                    if (groups["end"].Success)
-                        temp.eventType = Events.End;
-                    else if (groups["quest"].Success)
+                    interactionNode.line = groups["line"].Value;
+                    //debug
+                    //if (groups["eventargs"].Success)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine("Event args:");
+                    //    for (int i = 0; i < groups["eventargs"].Captures.Count; ++i)
+                    //    {
+                    //        System.Diagnostics.Debug.WriteLine(groups["eventargs"].Captures[i].Value);
+                    //    }
+                    //    System.Diagnostics.Debug.WriteLine("");
+                    //}
+                    //end debug
+                    if (groups["noresponse"].Success)
                     {
-                        temp.eventType = Events.Quest;
-                        var questLine = groups["quest"].Value;
+                        var eventargline = groups["noresponse"].Captures[0].Value.Trim();
+                        if (eventargline.EndsWith(","))
+                            eventargline = eventargline.Substring(0, eventargline.Length - 1);
+                        System.Diagnostics.Debug.WriteLine(eventargline);
 
-                        string[] questLinePieces = questLine.Split(' ');
-                        if (questLinePieces.Length != 3)
-                            throw new LineException(string.Format("Improper quest data formatting: {0}", line));
-                        temp.questID = SunsetUtils.parseEnum<QuestID>(questLinePieces[1]);
-                        temp.questState = SunsetUtils.parseEnum<QuestState>(questLinePieces[2]);
+                        var eventargparts = eventargline.Split(',');
+                        for (int j = 0; j < eventargparts.Length; ++j)
+                        {
+                            eventargparts[j] = eventargparts[j].Trim();
+                            if (eventargparts[j].StartsWith("("))
+                                eventargparts[j] = eventargparts[j].Substring(1);
+                            if (eventargparts[j].EndsWith(")"))
+                                eventargparts[j] = eventargparts[j].Substring(0, eventargparts[j].Length - 1);
+                            string[] eventarguments = eventargparts[j].Split(' ');
+                            System.Diagnostics.Debug.WriteLine(eventargparts[j]);
+                            switch (eventarguments[0])
+                            {
+                                case "End":
+                                    interactionNode.eventType |= Events.End;
+                                    break;
+                                case "Fight":
+                                    interactionNode.eventType |= Events.Fight;
+                                    break;
+                                case "Quest":
+                                    interactionNode.eventType |= Events.Quest;
+                                    interactionNode.questID = SunsetUtils.parseEnum<QuestID>(eventarguments[1]);
+                                    interactionNode.questState = SunsetUtils.parseEnum<QuestState>(eventarguments[2]);
+                                    break;
+                                case "Reputation":
+                                    interactionNode.eventType |= Events.Reputation;
+                                    interactionNode.repClique = SunsetUtils.parseEnum<Clique>(eventarguments[1]);
+                                    interactionNode.repChange = Int32.Parse(eventarguments[2]);
+                                    break;
+                                case "Inventory":
+                                    interactionNode.eventType |= Events.Inventory;
+                                    interactionNode.item = SunsetUtils.parseEnum<Item>(eventarguments[1]);
+                                    interactionNode.itemChange = Int32.Parse(eventarguments[2]);
+                                    break;
+                                case "Event":
+                                    interactionNode.eventType |= Events.Special;
+                                    break;
+                                default:
+                                    interactionNode.eventType |= Events.NextLine;
+                                    interactionNode.nextLine = parseNext(eventarguments[0]);
+                                    break;
+                            }
+                        }
                     }
-                    else if (groups["fight"].Success)
-                        temp.eventType = Events.Fight;
                     else if (groups["response"].Success)
                     {
-                        temp.eventType = Events.None;
+                        interactionNode.eventType = Events.None;
                         for (int i = 0; i < groups["response"].Captures.Count; ++i)
                         {
                             var responseline = groups["response"].Captures[i].Value.Trim();
                             if (responseline.EndsWith(","))
                                 responseline = responseline.Substring(0, responseline.Length - 1);
+                            System.Diagnostics.Debug.WriteLine(responseline);
                             var responseparts = responseline.Split(new string[] { " -> " }, StringSplitOptions.None);
-                            var responsepartsarguments = responseparts[1].Split(' ');
 
-                            InteractionResponseNode responseNode = new InteractionResponseNode();
+                            InteractionTreeNode responseNode = new InteractionTreeNode();
                             responseNode.line = responseparts[0];
-                            switch (responsepartsarguments[0])
+                            string[] responsearguments = responseparts[1].Split(',');
+                            for (int j = 0; j < responsearguments.Length; ++j)
                             {
-                                case "End":
-                                    responseNode.eventType = Events.End;
-                                    responseNode.nextLine = 0;
-                                    break;
-                                case "Fight":
-                                    responseNode.eventType = Events.Fight;
-                                    responseNode.nextLine = 0;
-                                    break;
-                                case "Quest":
-                                    responseNode.eventType = Events.Quest;
-                                    responseNode.questID = SunsetUtils.parseEnum<QuestID>(responsepartsarguments[1]);
-                                    responseNode.questState = SunsetUtils.parseEnum<QuestState>(responsepartsarguments[2]);
-                                    break;
-                                default:
-                                    responseNode.eventType = Events.None;
-                                    responseNode.nextLine = parseNext(responsepartsarguments[0]);
-                                    break;
+                                responsearguments[j] = responsearguments[j].Trim();
+                                if (responsearguments[j].StartsWith("("))
+                                    responsearguments[j] = responsearguments[j].Substring(1);
+                                if (responsearguments[j].EndsWith(")"))
+                                    responsearguments[j] = responsearguments[j].Substring(0, responsearguments[j].Length - 1);
+                                string[] eventarguments = responsearguments[j].Split(' ');
+                                System.Diagnostics.Debug.WriteLine(responsearguments[j]);
+                                switch (eventarguments[0])
+                                {
+                                    case "End":
+                                        responseNode.eventType |= Events.End;
+                                        responseNode.nextLine = 0;
+                                        break;
+                                    case "Fight":
+                                        responseNode.eventType |= Events.Fight;
+                                        responseNode.nextLine = 0;
+                                        break;
+                                    case "Quest":
+                                        responseNode.eventType |= Events.Quest;
+                                        responseNode.questID = SunsetUtils.parseEnum<QuestID>(eventarguments[1]);
+                                        responseNode.questState = SunsetUtils.parseEnum<QuestState>(eventarguments[2]);
+                                        break;
+                                    case "Reputation":
+                                        responseNode.eventType |= Events.Reputation;
+                                        responseNode.repClique = SunsetUtils.parseEnum<Clique>(eventarguments[1]);
+                                        responseNode.repChange = Int32.Parse(eventarguments[2]);
+                                        break;
+                                    case "Inventory":
+                                        responseNode.eventType |= Events.Inventory;
+                                        responseNode.item = SunsetUtils.parseEnum<Item>(eventarguments[1]);
+                                        responseNode.itemChange = Int32.Parse(eventarguments[2]);
+                                        break;
+                                    case "Event":
+                                        responseNode.eventType |= Events.Special;
+                                        break;
+                                    default:
+                                        responseNode.eventType |= Events.NextLine;
+                                        responseNode.nextLine = parseNext(eventarguments[0]);
+                                        break;
+                                }
                             }
-                            temp.responses.Add(responseNode);
+                            interactionNode.responses.Add(responseNode);
                         }
                     }
                     else
                         throw new LineException(string.Format("No valid continuation: {0}", line));
 
-                    this.dialogue.Add(temp);
+                    this.dialogue.Add(interactionNode);
                     lineCounter++;
                 }
             }
         }
 
-        public InteractionTreeNode getStartingLine()
+        public InteractionLinkedTreeNode getStartingLine()
         {
             foreach (InteractionConditional cond in this.conditionalList)
             {

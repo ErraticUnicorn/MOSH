@@ -18,6 +18,8 @@ namespace SunsetHigh
         public int x;
         public int y;
         public Direction dir;
+        public bool[] monologueSave;
+        public int[] reputationSave;
         public string name;
     }
 
@@ -309,6 +311,15 @@ namespace SunsetHigh
             this.setDirection(data.dir);
             this.setName(data.name);
             this.inventory.loadSaveStructure(data.inventorySave);
+            this.monologue.loadSaveStructure(data.monologueSave);
+            if (data.reputationSave.Length >= 5)
+            {
+                this.nerdRep = data.reputationSave[0];
+                this.jockRep = data.reputationSave[1];
+                this.prepRep = data.reputationSave[2];
+                this.bullyRep = data.reputationSave[3];
+                this.slackerRep = data.reputationSave[4];
+            }
             this.resetAnimation();
         }
 
@@ -324,6 +335,8 @@ namespace SunsetHigh
             data.name = this.getName();
             data.dir = this.getDirection();
             data.inventorySave = this.inventory.getSaveStructure();
+            data.monologueSave = this.monologue.getSaveStructure();
+            data.reputationSave = new int[] { nerdRep, jockRep, prepRep, bullyRep, slackerRep };
             return data;
         }
 
@@ -356,14 +369,14 @@ namespace SunsetHigh
         private class DialoguePanel : ListPanel
         {
             private Interaction interaction;
-            private InteractionTreeNode current;
+            private InteractionLinkedTreeNode current;
             private CursorArrow cursorArrow;
             private string say = "...";
             public bool end = false;
             public bool talking = false;
             public bool selfTalking = false;
-            private readonly InteractionTreeNode defaultNode = new InteractionTreeNode { 
-                eventType = Events.End, line = "You're out of line!", responses = new List<InteractionResponseNode>() };
+            private readonly InteractionLinkedTreeNode defaultNode = new InteractionLinkedTreeNode { 
+                eventType = Events.End, line = "You're out of line!", responses = new List<InteractionTreeNode>() };
 
             private const int DIALOGUE_X_MARGIN = 35;
             private const int DIALOGUE_Y_MARGIN = 15;
@@ -419,34 +432,58 @@ namespace SunsetHigh
             {
                 if (!selfTalking)   //having dialogue instead of thinking
                 {
-                    InteractionResponseNode next = null;
-                    if (current.eventType != Events.End && current.eventType != Events.Quest)
+                    InteractionTreeNode next = null;
+                    if (current.responses.Count == 0)   //there are no responses to NPC's line
                     {
-                        next = current.responses[cursor];
-                    }
-                    else
-                    {
-                        end = true;
-                        if (current.eventType == Events.Quest)
+                        if ((current.eventType & Events.Quest) > 0)
                         {
                             Quest.addQuestState(current.questID, current.questState);
                         }
-                    }
-                    if (next != null)
-                    {
-                        current = interaction.dialogue.ElementAtOrDefault(next.nextLine - 1) ?? defaultNode;
-                        switch (next.eventType)
+                        if ((current.eventType & Events.Reputation) > 0)
                         {
-                            case Events.End:
-                                end = true;
-                                break;
-                            case Events.Quest:
-                                end = true;
-                                Quest.addQuestState(next.questID, next.questState);
-                                break;
-                            default:
-                                cursor = 0;
-                                break;
+                            Hero.instance.shiftReputation(current.repClique, current.repChange);
+                        }
+                        if ((current.eventType & Events.Inventory) > 0)
+                        {
+                            if (current.itemChange > 0)
+                                Hero.instance.inventory.addItem(current.item, current.itemChange);
+                            else
+                                Hero.instance.inventory.removeItem(current.item, -1 * current.itemChange);
+                        }
+                        if ((current.eventType & Events.End) > 0 || (current.eventType & Events.NextLine) == 0)
+                        {
+                            end = true;
+                        }
+                        if ((current.eventType & Events.NextLine) > 0)
+                        {
+                            current = interaction.dialogue.ElementAtOrDefault(current.nextLine - 1) ?? defaultNode;
+                        }
+                    }
+                    else
+                    {
+                        next = current.responses[cursor];
+                        if ((next.eventType & Events.Quest) > 0)
+                        {
+                            Quest.addQuestState(next.questID, next.questState);
+                        }
+                        if ((next.eventType & Events.Reputation) > 0)
+                        {
+                            Hero.instance.shiftReputation(next.repClique, next.repChange);
+                        }
+                        if ((next.eventType & Events.Inventory) > 0)
+                        {
+                            if (next.itemChange > 0)
+                                Hero.instance.inventory.addItem(next.item, next.itemChange);
+                            else
+                                Hero.instance.inventory.removeItem(next.item, -1 * next.itemChange);
+                        }
+                        if ((next.eventType & Events.End) > 0 || (next.eventType & Events.NextLine) == 0)
+                        {
+                            end = true;
+                        }
+                        if ((next.eventType & Events.NextLine) > 0)
+                        {
+                            current = interaction.dialogue.ElementAtOrDefault(next.nextLine - 1) ?? defaultNode;
                         }
                     }
                     if (end)

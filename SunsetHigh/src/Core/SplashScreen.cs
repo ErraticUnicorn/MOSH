@@ -47,6 +47,8 @@ namespace SunsetHigh
         public override void refresh()
         {
             showTimer = 0.0f;
+            // play the title track
+            BGMusic.transitionToSong("sunset high menu track.mp3");
         }
     }
 }

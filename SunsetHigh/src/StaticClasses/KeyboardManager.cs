@@ -318,18 +318,20 @@ namespace SunsetHigh
             {
                 if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Action]))
                 {
+                    bool foundTarget = false;
                     for (int i = 0; i < targets.Count; i++)
                     {
                         if (hero.inRangeAction(targets[i]) && hero.facing(targets[i]))
                         {
                             targets[i].onInteract();
+                            foundTarget = true;
                             break;
                         }
                     }
-                }
-                else if (KeyboardManager.isKeyPressed(keyTypes[(int)KeyInputType.Cancel]))
-                {
-                    hero.talkToSelf();
+                    if (!foundTarget)
+                    {
+                        hero.talkToSelf();
+                    }
                 }
             }
             else

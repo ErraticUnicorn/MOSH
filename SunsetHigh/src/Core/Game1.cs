@@ -88,6 +88,10 @@ namespace SunsetHigh
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //play title song first
+            BGMusic.playSong("sunset high menu track.mp3");
+            BGMusic.setPaused(true);
+
             ScreenTransition.loadContent(Content);
             foreach (AbstractScreen screen in gameScreens)
             {

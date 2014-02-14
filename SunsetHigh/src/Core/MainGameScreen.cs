@@ -34,10 +34,6 @@ namespace SunsetHigh
 
         public override void loadContent(ContentManager content)
         {
-            // play the title track first
-            BGMusic.playSong("sunset high menu track.mp3");
-            BGMusic.setPaused(true);
-
             WorldManager.loadMaps(content);
 
             //In the future, all Sprites will call loadContent(this.Content), and child

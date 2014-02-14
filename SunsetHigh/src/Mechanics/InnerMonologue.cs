@@ -70,8 +70,20 @@ namespace SunsetHigh
             else
                 chooseEnd = groupIndices[chooseIndexStart + 1];
 
-            //not weighted yet
             return candidates[rng.Next(chooseStart, chooseEnd)].line;
+        }
+
+        public bool[] getSaveStructure()
+        {
+            return this.seenLine;
+        }
+
+        public void loadSaveStructure(bool[] saveStructure)
+        {
+            if (saveStructure.Length == seenLine.Length)
+                saveStructure.CopyTo(seenLine, 0);
+            else
+                System.Diagnostics.Debug.WriteLine("Monologue: Invalid array input; size must be same");
         }
 
         public void loadEntriesFromFile(string filename)
