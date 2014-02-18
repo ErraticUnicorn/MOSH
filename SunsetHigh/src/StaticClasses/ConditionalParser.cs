@@ -215,9 +215,9 @@ namespace SunsetHigh
                         }
                         PlaceID placeID = SunsetUtils.parseEnum<PlaceID>(args[i]);
                         if (not2_on)
-                            return WorldManager.m_currentRoom.placeID != placeID;
+                            return WorldManager.m_currentRoomID != placeID;
                         else
-                            return WorldManager.m_currentRoom.placeID == placeID;
+                            return WorldManager.m_currentRoomID == placeID;
                     }
                     break;
 

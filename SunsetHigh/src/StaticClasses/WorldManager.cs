@@ -9,6 +9,26 @@ using TiledLib;
 
 namespace SunsetHigh {
 
+    /// <summary>
+    /// Specifies a certain room (used for linking external text files to objects in the code)
+    /// </summary>
+    public enum PlaceID
+    {
+        Generic = -1,
+        Cafeteria = 0,
+        ComputerLab,
+        Entrance,
+        HallwayEast,
+        HallwayWest,
+        Library,
+        MagazineOffice,
+        Math,
+        Science,
+        StudentLounge,
+        Bathroom,
+        //TODO: put other rooms here later
+    }
+
     public class CameraOffsetEventArgs : EventArgs
     {
         public int dx_offset { get; set; }
@@ -16,10 +36,10 @@ namespace SunsetHigh {
     }
 
     public static class WorldManager {
-        private static Dictionary<String, Room> m_rooms;
+        private static Dictionary<PlaceID, Room> m_rooms;
 
         public static Room m_currentRoom { get; private set; }
-        public static string m_currentRoomName { get; private set; }
+        public static PlaceID m_currentRoomID { get; private set; }
         public static Point m_currentCameraOffset { get; private set; }
 
         public static event EventHandler<CameraOffsetEventArgs> OffsetChanged;
@@ -34,7 +54,7 @@ namespace SunsetHigh {
         }
 
         public static void loadMaps(ContentManager p_content) {
-            m_rooms = new Dictionary<String, Room>();
+            m_rooms = new Dictionary<PlaceID, Room>();
         
             // there's probably a way to do this using loops but listing everything out is safer
             Room bathroom = new Bathroom();
@@ -65,65 +85,72 @@ namespace SunsetHigh {
             //questHall.loadContent(p_content, "map_longhallwaymission");
             //questHallEnd.loadContent(p_content, "map_longhallwayend");
 
-            m_rooms.Add("map_Bathroom", bathroom);
-            m_rooms.Add("map_Cafeteria", cafeteria);
-            m_rooms.Add("map_ComputerLab", computerLab);
-            m_rooms.Add("map_Entrance", entrance);
-            m_rooms.Add("map_HallwayEast", hallwayEast);
-            m_rooms.Add("map_HallwayWest", hallwayWest);
-            m_rooms.Add("map_Library", library);
-            m_rooms.Add("map_MagazineOffice", magazineOffice);
-            m_rooms.Add("map_Math", math);
-            m_rooms.Add("map_Science", science);
-            m_rooms.Add("map_StudentLounge", studentLounge);
+            m_rooms.Add(PlaceID.Bathroom, bathroom);
+            m_rooms.Add(PlaceID.Cafeteria, cafeteria);
+            m_rooms.Add(PlaceID.ComputerLab, computerLab);
+            m_rooms.Add(PlaceID.Entrance, entrance);
+            m_rooms.Add(PlaceID.HallwayEast, hallwayEast);
+            m_rooms.Add(PlaceID.HallwayWest, hallwayWest);
+            m_rooms.Add(PlaceID.Library, library);
+            m_rooms.Add(PlaceID.MagazineOffice, magazineOffice);
+            m_rooms.Add(PlaceID.Math, math);
+            m_rooms.Add(PlaceID.Science, science);
+            m_rooms.Add(PlaceID.StudentLounge, studentLounge);
             //m_rooms.Add("map_longhallwaymission", questHall);
             //m_rooms.Add("map_longhallwayend", questHallEnd);
 
-            m_currentRoom = m_rooms["map_HallwayWest"];
-            m_currentRoomName = "map_HallwayWest";
+            m_currentRoom = m_rooms[PlaceID.HallwayWest];
+            m_currentRoomID = PlaceID.HallwayWest;
         }
 
-        public static void setRoom(String p_roomName, int p_newX, int p_newY, Direction p_newDirection) {
+        public static void setRoom(PlaceID p_roomName, int p_newX, int p_newY, Direction p_newDirection) {
             if (m_rooms.ContainsKey(p_roomName))
             {
                 ScreenTransition.requestTransition(delegate()
                 {
-                    m_currentRoomName = p_roomName;
+                    m_currentRoomID = p_roomName;
                     m_currentRoom = m_rooms[p_roomName];
                     m_currentRoom.updateState();
+                    m_currentRoom.onWarpEnter();
                     Hero.instance.setX(p_newX);
                     Hero.instance.setY(p_newY);
                     Hero.instance.setDirection(p_newDirection);
                     updateCameraOffset(Hero.instance);
-                    LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
+                    LocationNamePanel.instance.showNewLocation(SunsetUtils.enumToString<PlaceID>(m_currentRoomID));  //trigger header showing new location name
                 });
             }
         }
 
-        public static void setRoom(String p_roomName)
+        public static void setRoom(PlaceID p_roomName)
         {
-            if (m_rooms.ContainsKey(p_roomName))
-            {
-                ScreenTransition.requestTransition(delegate()
-                {
-                    m_currentRoomName = p_roomName;
-                    m_currentRoom = m_rooms[p_roomName];
-                    m_currentRoom.updateState();
-                    updateCameraOffset(Hero.instance);
-                    LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
-                });
-            }
+            setRoom(p_roomName, Hero.instance.getX(), Hero.instance.getY(), Hero.instance.getDirection());
         }
 
-        public static void setRoomNoTransition(String p_roomName)
+        public static void setRoomNoTransition(PlaceID p_roomName, int p_newX, int p_newY, Direction p_newDirection)
         {
-            if (m_rooms.ContainsKey(p_roomName))
-            {
-                m_currentRoomName = p_roomName;
-                m_currentRoom = m_rooms[p_roomName];
-                m_currentRoom.updateState();
-                LocationNamePanel.instance.showNewLocation(m_currentRoomName);  //trigger header showing new location name
-            }
+            m_currentRoomID = p_roomName;
+            m_currentRoom = m_rooms[p_roomName];
+            m_currentRoom.updateState();
+            m_currentRoom.onWarpEnter();
+            Hero.instance.setX(p_newX);
+            Hero.instance.setY(p_newY);
+            Hero.instance.setDirection(p_newDirection);
+            updateCameraOffset(Hero.instance);
+            LocationNamePanel.instance.showNewLocation(SunsetUtils.enumToString<PlaceID>(m_currentRoomID));  //trigger header showing new location name
+        }
+
+        public static void setRoomNoTransition(PlaceID p_roomName)
+        {
+            setRoomNoTransition(p_roomName, Hero.instance.getX(), Hero.instance.getY(), Hero.instance.getDirection());
+        }
+
+        public static void addObjectToRoom(IInteractable p_obj, PlaceID p_room)
+        {
+            m_rooms[p_room].addObject(p_obj);
+        }
+        public static void removeObjectFromRoom(IInteractable p_obj, PlaceID p_room)
+        {
+            m_rooms[p_room].removeObject(p_obj);
         }
 
         public static void handleWarp(Hero p_hero) {
@@ -131,9 +158,14 @@ namespace SunsetHigh {
             MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
 
             if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
+                m_currentRoom.onWarpExit();
+
                 int l_newX = m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"];
                 int l_newY = m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"];
-                setRoom((string)l_collidedObject.Properties["warpMap"], l_newX, l_newY, Hero.instance.getDirection());
+                string l_newRoomName = (string)l_collidedObject.Properties["warpMap"];
+                if (l_newRoomName.StartsWith("map_")) l_newRoomName = l_newRoomName.Substring("map_".Length);
+                PlaceID l_newRoomID = SunsetUtils.parseEnum<PlaceID>(l_newRoomName);
+                setRoom(l_newRoomID, l_newX, l_newY, Hero.instance.getDirection());
             }
         }
 

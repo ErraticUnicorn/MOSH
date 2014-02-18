@@ -87,6 +87,7 @@
     <Compile Include="src\Rooms\ScienceClassroom.cs" />
     <Compile Include="src\Rooms\StudentLounge.cs" />
     <Compile Include="src\StaticClasses\BGMusic.cs" />
+    <Compile Include="src\StaticClasses\CharacterManager.cs" />
     <Compile Include="src\StaticClasses\CollisionManager.cs" />
     <Compile Include="src\StaticClasses\ConditionalParser.cs" />
     <Compile Include="src\StaticClasses\Directories.cs" />
@@ -259,10 +260,16 @@
     <Content Include="Content\Interactions\Jock.npc3.computer.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Interactions\Librarian.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Interactions\Lucas.cafeteriaInformationInteraction.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Interactions\Phil.libraryQuestInteraction.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Interactions\Phil.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Interactions\Pianist.npc1.lounge.txt">

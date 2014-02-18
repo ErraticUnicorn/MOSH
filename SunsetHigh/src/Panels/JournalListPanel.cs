@@ -185,7 +185,7 @@ namespace SunsetHigh
         public PeoplePanel(int x, int y, int width, int height)
             : base(x, y, width, height)
         {
-            allEntries = new JournalDataEntry<PersonID>[Character.NUM_PERSON_IDS];
+            allEntries = new JournalDataEntry<PersonID>[CharacterManager.NUM_PERSON_IDS];
         }
     }
 

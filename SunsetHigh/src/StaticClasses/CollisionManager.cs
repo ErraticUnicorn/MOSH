@@ -9,6 +9,7 @@ namespace SunsetHigh {
 
     public static class CollisionManager {
         public static readonly Point K_ZERO_OFFSET = new Point(0, 0);
+        private static HashSet<IInteractable> m_excluded = new HashSet<IInteractable>();
 
         // returns whether the specified sprite is currently colliding with a solid object
         public static bool collisionWithSolid(Sprite p_sprite) {
@@ -47,7 +48,7 @@ namespace SunsetHigh {
 
         /// <summary>
         /// Returns an interactable in the current world's scene that p_interactable collides with if its position were changed.
-        /// if p_interactable is colliding with p_interactable, that collision doesn't count
+        /// if p_interactable is colliding with p_exclude, that collision doesn't count
         /// (i.e. it doesn't make sense to check whether something is colliding with itself)
         /// </summary>
         /// <param name="p_interactable">Interactable to check</param>
@@ -59,7 +60,7 @@ namespace SunsetHigh {
             IInteractable l_collidedObject = null;
             foreach (IInteractable i in WorldManager.m_currentRoom.Interactables)
             {
-                if (i == p_exclude)
+                if (i == p_exclude || m_excluded.Contains(i))
                 {
                     continue;
                 }
@@ -78,6 +79,15 @@ namespace SunsetHigh {
                 }
             }
             return l_collidedObject;
+        }
+
+        public static void excludeInteractableCollision(IInteractable p_exclude)
+        {
+            m_excluded.Add(p_exclude);
+        }
+        public static void includeInteractableCollision(IInteractable p_include)
+        {
+            m_excluded.Remove(p_include);
         }
 
         /// <summary>

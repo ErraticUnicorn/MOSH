@@ -78,6 +78,7 @@ namespace SunsetHigh
             {
                 case 0:
                     stateChange = GameState.InGame;
+                    SaveManager.unpackDefaultData();
                     break;
                 case 1:
                     stateChange = GameState.LoadScreen;

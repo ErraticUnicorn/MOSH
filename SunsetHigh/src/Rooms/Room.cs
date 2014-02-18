@@ -26,16 +26,6 @@ namespace SunsetHigh
         Rectangle getBoundingRect();
     }
 
-    /// <summary>
-    /// Specifies a certain room (used for linking external text files to objects in the code)
-    /// </summary>
-    public enum PlaceID
-    {
-        Generic = -1,
-        Cafeteria = 0,
-        //TODO: put other rooms here later
-    }
-
     public class Room
     {
         public const int TILE_SIZE = 32;
@@ -45,14 +35,12 @@ namespace SunsetHigh
         public List<Sprite> Sprites { private set; get; }
         public List<Character> CharList { private set; get; }
         public List<IInteractable> Interactables { private set; get; }
-        public PlaceID placeID { protected set; get; }
 
         public Room()
         {
             Sprites = new List<Sprite>();
             CharList = new List<Character>();
             Interactables = new List<IInteractable>();
-            placeID = PlaceID.Generic;
         }
 
         public virtual void loadContent(ContentManager content, String filename)
@@ -82,6 +70,14 @@ namespace SunsetHigh
             {
                 a.draw(sb);
             }
+        }
+
+        public virtual void onWarpEnter()
+        {
+        }
+
+        public virtual void onWarpExit()
+        {
         }
 
         /// <summary>

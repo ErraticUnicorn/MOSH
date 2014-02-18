@@ -22,22 +22,6 @@ namespace SunsetHigh
     }
 
     /// <summary>
-    /// Specifies a certain person (used for linking external text files to objects in the code)
-    /// </summary>
-    public enum PersonID
-    {
-        Generic = -1,
-        Phil = 0,
-        Lucas,
-        Jay,
-        David,
-        Wil,
-        Rainier,
-        Nick,
-        DeadPeople
-    }
-
-    /// <summary>
     /// Character extends from FreeMovingSprite, adding behavior for movement and inventory.
     /// Each character also has an Inventory (all his/her items).
     /// </summary>
@@ -47,18 +31,21 @@ namespace SunsetHigh
                                                     //the "action box" being area where character can interact with environment
         private const int COLLISION_OFFSET = 0;     //pixels offset between sprite and other sprites for collisions
 
-        public static int NUM_PERSON_IDS = Enum.GetValues(typeof(PersonID)).Length - 1;
-
         //mechanics
         private Direction direction;                //which direction the character is facing
         private bool moving;                        //whether character is currently in motion
+
+        //"AI" move variables
+        private const float CLOSE_TO_DESTINATION = 5.0f;    //in pixels
+        private Vector2 destination;
+        private bool movingToDestination;
 
         //personal data
         private bool male;                          //male or female (male by default)
         private string name;                        //character's name ("NAMELESS" by default)
         private Clique clique;                      //clique type of this character (None by default)
         private PersonID personID;                  //ID for NPCs that get journal entries (Generic by default)
-
+        
         public Interaction script;                  //script given to NPCs
         public Inventory inventory { get; set; }    //all the items this character has
 
@@ -92,7 +79,7 @@ namespace SunsetHigh
             setName("NAMELESS");
             setMale(true);
             setClique(Clique.None);
-            setPersonID(PersonID.Generic);
+            setPersonID(PersonID.None);
             setMoving(false);
             setDirection(Direction.South);
             if(file != string.Empty)
@@ -152,6 +139,12 @@ namespace SunsetHigh
             bool retVal = base.move(dir, elapsed, collide);
             this.setMoving(retVal);
             return retVal;
+        }
+
+        public void moveToDestination(int x, int y)
+        {
+            movingToDestination = true;
+            destination = new Vector2(x, y);
         }
 
         /// <summary>
@@ -259,9 +252,23 @@ namespace SunsetHigh
         /// <param name="elapsed">Time (in seconds) that has elasped since last update</param>
         public override void update(float elapsed)
         {
+            if (movingToDestination)
+            {
+                if ((new Vector2(this.getX(), this.getY()) - destination).Length() > CLOSE_TO_DESTINATION)
+                {
+                    float angle = (float)Math.Atan2(this.getY() - destination.Y, destination.X - this.getX());
+                    this.move(SunsetUtils.convertAngleToDirection(angle), elapsed, false);
+                }
+                else
+                {
+                    movingToDestination = false;
+                }
+            }
             if (this.isMoving()) //only update walking animation if moving
+                                 //the update must occur AFTER the keyboard listening cycle
             {
                 base.update(elapsed);
+                this.setMoving(false);
             }
         }
     }

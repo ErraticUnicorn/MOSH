@@ -31,6 +31,12 @@ namespace SunsetHigh
             return String.Format("{0:00}:{1:00}:{2:00}", (total.hours), total.minutes, total.seconds);
         }
 
+        public static void renewClock()
+        {
+            gameStartTime = DateTime.Now;
+            previousTime = TimeSpan.Zero;
+        }
+
         public static ClockSave getSaveStructure()
         {
             TimeSpan totalTime = getTotalTimeSpan();

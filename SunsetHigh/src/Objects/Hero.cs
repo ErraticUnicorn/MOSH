@@ -21,6 +21,7 @@ namespace SunsetHigh
         public bool[] monologueSave;
         public int[] reputationSave;
         public string name;
+        public PersonID followerID;
     }
 
     /// <summary>
@@ -28,15 +29,14 @@ namespace SunsetHigh
     /// </summary>
     public sealed class Hero : Character
     {
-        private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
-        private static string PROJECTILE_IMAGE_NAME = Directories.SPRITES + "projectile";
-
         //pickpocket vars
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
 
         //Shooting vars
+        private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
+        private static string PROJECTILE_IMAGE_NAME = Directories.SPRITES + "projectile";
         private List<Projectile> projectiles; //List of all projectiles
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
@@ -52,6 +52,11 @@ namespace SunsetHigh
         private int prepRep;
         private int bullyRep;
         private int slackerRep;
+
+        //Follow vars (special cases where a character follows you)
+        private const int FOLLOW_TRAIL_COUNT = 4;
+        private PersonID follower;
+        private List<Direction> followTrail;
 
         //Static vars
         private static volatile Hero inst;
@@ -114,52 +119,8 @@ namespace SunsetHigh
             prepRep = 0;
             bullyRep = 0;
             slackerRep = 0;
-        }
-
-        public void setReputation(Clique clique, int repPoints)
-        {
-            switch (clique)
-            {
-                case Clique.Nerd: nerdRep += repPoints; break;
-                case Clique.Jock: jockRep += repPoints; break;
-                case Clique.Prep: prepRep += repPoints; break;
-                case Clique.Bully: bullyRep += repPoints; break;
-                case Clique.Slacker: slackerRep += repPoints; break;
-            }
-        }
-
-        // input positive points to increase reputation, negative to decrease
-        public void shiftReputation(Clique clique, int repPoints)
-        {
-            this.setReputation(clique, this.getReputation(clique) + repPoints);
-        }
-
-        public int getReputation(Clique clique)
-        {
-            switch (clique)
-            {
-                case Clique.Nerd: return nerdRep;
-                case Clique.Jock: return jockRep;
-                case Clique.Prep: return prepRep;
-                case Clique.Bully: return bullyRep;
-                case Clique.Slacker: return slackerRep;
-            }
-            return 0;
-        }
-
-        public void converse(Character c)
-        {
-            if (c.script != null)
-            {
-                dialogue.talking = true;
-                dialogue.loadInteraction(c);
-                dialogue.end = false;
-            }
-        }
-
-        public bool isTalking()
-        {
-            return dialogue.talking || dialogue.selfTalking;
+            follower = PersonID.None;
+            followTrail = new List<Direction>();
         }
 
         public override void loadContent(ContentManager content)
@@ -197,25 +158,108 @@ namespace SunsetHigh
             {
                 base.update(elapsed);
             }
+            else
+            {
+                dialogue.update(elapsed);
+            }
 
             if (ppActive)
             {
                 ppSystem.update(this, elapsed);
             }
-
             shootTimer += elapsed;
             if (shootTimer >= RECHARGE_TIME)
                 canShoot = true;
-
-            if (this.isTalking())
-            {
-               dialogue.update(elapsed);
-            }
 
             foreach (Projectile p in projectiles)
             {
                 p.update(elapsed);  //TODO: remove if off the screen
             }
+        }
+
+        public void setReputation(Clique clique, int repPoints)
+        {
+            switch (clique)
+            {
+                case Clique.Nerd: nerdRep += repPoints; break;
+                case Clique.Jock: jockRep += repPoints; break;
+                case Clique.Prep: prepRep += repPoints; break;
+                case Clique.Bully: bullyRep += repPoints; break;
+                case Clique.Slacker: slackerRep += repPoints; break;
+            }
+        }
+
+        public override bool move(Direction dir, float elapsed, bool collide = true)
+        {
+            if (follower != PersonID.None)
+            {
+                bool retVal;
+                retVal = base.move(dir, elapsed, collide);
+                if (retVal)
+                    followTrail.Add(dir);
+                if (followTrail.Count > FOLLOW_TRAIL_COUNT)
+                {
+                    CharacterManager.getCharacter(follower).move(followTrail[0], elapsed, true);
+                    followTrail.RemoveAt(0);
+                }
+                return retVal;
+            }
+            else
+                return base.move(dir, elapsed, collide);
+        }
+
+        // input positive points to increase reputation, negative to decrease
+        public void shiftReputation(Clique clique, int repPoints)
+        {
+            this.setReputation(clique, this.getReputation(clique) + repPoints);
+        }
+
+        public int getReputation(Clique clique)
+        {
+            switch (clique)
+            {
+                case Clique.Nerd: return nerdRep;
+                case Clique.Jock: return jockRep;
+                case Clique.Prep: return prepRep;
+                case Clique.Bully: return bullyRep;
+                case Clique.Slacker: return slackerRep;
+            }
+            return 0;
+        }
+
+        public void converse(Character c)
+        {
+            if (c.script != null)
+            {
+                dialogue.talking = true;
+                dialogue.loadInteraction(c);
+                dialogue.end = false;
+            }
+        }
+
+        public bool isTalking()
+        {
+            return dialogue.talking || dialogue.selfTalking;
+        }
+
+        public bool hasFollower()
+        {
+            return this.follower != PersonID.None;
+        }
+        public PersonID getFollowerID()
+        {
+            return follower;
+        }
+        public void setFollower(PersonID follower)
+        {
+            this.follower = follower;
+            this.followTrail.Clear();
+            CollisionManager.excludeInteractableCollision(CharacterManager.getCharacter(follower));
+        }
+        public void stopFollower()
+        {
+            CollisionManager.includeInteractableCollision(CharacterManager.getCharacter(follower));
+            this.follower = PersonID.None;
         }
 
         public bool isPickpocketing()
@@ -320,6 +364,10 @@ namespace SunsetHigh
                 this.bullyRep = data.reputationSave[3];
                 this.slackerRep = data.reputationSave[4];
             }
+            if (this.follower != PersonID.None)
+            {
+                this.setFollower(follower);
+            }
             this.resetAnimation();
         }
 
@@ -337,6 +385,7 @@ namespace SunsetHigh
             data.inventorySave = this.inventory.getSaveStructure();
             data.monologueSave = this.monologue.getSaveStructure();
             data.reputationSave = new int[] { nerdRep, jockRep, prepRep, bullyRep, slackerRep };
+            data.followerID = follower;
             return data;
         }
 

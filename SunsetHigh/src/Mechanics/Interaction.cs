@@ -162,7 +162,7 @@ namespace SunsetHigh
                         var eventargline = groups["noresponse"].Captures[0].Value.Trim();
                         if (eventargline.EndsWith(","))
                             eventargline = eventargline.Substring(0, eventargline.Length - 1);
-                        System.Diagnostics.Debug.WriteLine(eventargline);
+                        //System.Diagnostics.Debug.WriteLine(eventargline);
 
                         var eventargparts = eventargline.Split(',');
                         for (int j = 0; j < eventargparts.Length; ++j)
@@ -173,7 +173,7 @@ namespace SunsetHigh
                             if (eventargparts[j].EndsWith(")"))
                                 eventargparts[j] = eventargparts[j].Substring(0, eventargparts[j].Length - 1);
                             string[] eventarguments = eventargparts[j].Split(' ');
-                            System.Diagnostics.Debug.WriteLine(eventargparts[j]);
+                            //System.Diagnostics.Debug.WriteLine(eventargparts[j]);
                             switch (eventarguments[0])
                             {
                                 case "End":
@@ -215,7 +215,7 @@ namespace SunsetHigh
                             var responseline = groups["response"].Captures[i].Value.Trim();
                             if (responseline.EndsWith(","))
                                 responseline = responseline.Substring(0, responseline.Length - 1);
-                            System.Diagnostics.Debug.WriteLine(responseline);
+                            //System.Diagnostics.Debug.WriteLine(responseline);
                             var responseparts = responseline.Split(new string[] { " -> " }, StringSplitOptions.None);
 
                             InteractionTreeNode responseNode = new InteractionTreeNode();
@@ -229,7 +229,7 @@ namespace SunsetHigh
                                 if (responsearguments[j].EndsWith(")"))
                                     responsearguments[j] = responsearguments[j].Substring(0, responsearguments[j].Length - 1);
                                 string[] eventarguments = responsearguments[j].Split(' ');
-                                System.Diagnostics.Debug.WriteLine(responsearguments[j]);
+                                //System.Diagnostics.Debug.WriteLine(responsearguments[j]);
                                 switch (eventarguments[0])
                                 {
                                     case "End":

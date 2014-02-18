@@ -17,9 +17,10 @@ namespace SunsetHigh
         public string fileName;             //The file name of this save game data
         public ClockSave playTime;           //The play time logged in this file
         public HeroSave heroData;           //Data about the Hero (Inventory, position, etc.)
-        public string roomName;             //The current room
+        public PlaceID roomName;             //The current room
         public Keys[] inputKeys;            //custom keys for input
         public QuestState[] questStates;        //triggers for how far along in quests we are
+        public CharacterBankSave characterStates;   //the locations of all the NPCs
     }
 
     /// <summary>
@@ -137,8 +138,9 @@ namespace SunsetHigh
             data.heroData = h1.getSaveStructure();
             data.inputKeys = KeyboardManager.getKeyControls();
             data.questStates = Quest.getQuestStateSave();
-            data.roomName = WorldManager.m_currentRoomName;
+            data.roomName = WorldManager.m_currentRoomID;
             data.playTime = GameClock.getSaveStructure();
+            data.characterStates = CharacterManager.getSaveStructure();
             return data;
         }
 
@@ -150,7 +152,47 @@ namespace SunsetHigh
             Quest.loadQuestStateSave(data.questStates);
             WorldManager.setRoomNoTransition(data.roomName);
             GameClock.loadSaveStructure(data.playTime);
+            CharacterManager.loadSaveStructure(data.characterStates);
             InGameMenu.refreshPanelLists();
+        }
+
+        public static void unpackDefaultData()
+        {
+            HeroSave hSave = new HeroSave();
+            hSave.x = 2 * 32;
+            hSave.y = 6 * 32;
+            hSave.dir = Direction.South;
+            hSave.inventorySave = new Inventory().getSaveStructure();
+            hSave.monologueSave = new InnerMonologue().getSaveStructure();
+            hSave.name = "No name";
+            hSave.reputationSave = new int[] { 0, 0, 0, 0, 0 };
+            hSave.followerID = PersonID.None;
+            Hero.instance.loadSaveStructure(hSave);
+
+            KeyboardManager.loadDefaultKeys();
+
+            QuestState[] defQuests = new QuestState[Quest.NUM_QUEST_IDS];   //should all be 0 when initialized
+            defQuests[(int)QuestID.FoodFight] = QuestState.Available;
+            Quest.loadQuestStateSave(defQuests);
+
+            WorldManager.setRoomNoTransition(PlaceID.HallwayWest);
+
+            GameClock.renewClock();
+
+            CharacterBankSave characterSave = new CharacterBankSave();
+            characterSave.char_x = new int[CharacterManager.NUM_PERSON_IDS];
+            characterSave.char_y = new int[CharacterManager.NUM_PERSON_IDS];
+            characterSave.char_room = new PlaceID[CharacterManager.NUM_PERSON_IDS];
+
+            characterSave.char_x[(int)PersonID.Phil] = 23 * 32;
+            characterSave.char_y[(int)PersonID.Phil] = 7 * 32;
+            characterSave.char_room[(int)PersonID.Phil] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Librarian] = 4 * 32;
+            characterSave.char_y[(int)PersonID.Librarian] = 4 * 32;
+            characterSave.char_room[(int)PersonID.Librarian] = PlaceID.Library;
+
+            CharacterManager.loadSaveStructure(characterSave);
         }
 
         public static string generateNewFileName()

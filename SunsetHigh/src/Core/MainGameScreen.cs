@@ -16,29 +16,16 @@ namespace SunsetHigh
         public MainGameScreen()
         {
             h1 = Hero.instance;
-            h1.setX(32 * 2);
-            h1.setY(32 * 6);
-
-            h1.inventory.addItem(Item.PokeBall, 3);
-            h1.inventory.addItem(Item.LunchMoney, 1);
-            h1.inventory.addItem(Item.Hat);
-            h1.inventory.addItem(Item.Shoes);
-            h1.inventory.addItem(Item.Socks);
-            h1.inventory.removeItem(Item.Hat);
 
             InGameMenu.init();
             InGameMenu.refreshPanelLists();
-
-            Quest.setQuestAvailable(QuestID.FoodFight);
         }
 
         public override void loadContent(ContentManager content)
         {
             WorldManager.loadMaps(content);
+            CharacterManager.loadContent(content);
 
-            //In the future, all Sprites will call loadContent(this.Content), and child
-            //classes will override that method to automatically choose the appropriate 
-            //content to load (i.e. both images and sound)
             h1.loadImage(content, "red_spritesheet", 4, 3, 0.25f);
             h1.loadContent(content);
 
@@ -78,9 +65,17 @@ namespace SunsetHigh
 
             //DEBUG
             IInteractable interactable = CollisionManager.collisionWithInteractableAtRelative(Hero.instance, Point.Zero, Hero.instance);
+            IInteractable interactable2 = null;
+            if (Hero.instance.hasFollower()) 
+                interactable2 = CollisionManager.collisionWithInteractableAtRelative(
+                    CharacterManager.getCharacter(Hero.instance.getFollowerID()), Point.Zero, CharacterManager.getCharacter(Hero.instance.getFollowerID()));
             if (interactable != null)
             {
                 interactable.onCollide();
+            }
+            else if (interactable2 != null)
+            {
+                interactable2.onCollide();
             }
             //end DEBUG
         }

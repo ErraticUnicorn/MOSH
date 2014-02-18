@@ -35,8 +35,11 @@ namespace SunsetHigh
         Progress7 = 0x100,
         Progress8 = 0x200,
         Progress9 = 0x400,
-        Progress10 = 0x800,     // these "progress" values specify different points in the quest
-        Complete = 0x1000,
+        Progress10 = 0x800,
+        Progress11 = 0x1000,
+        Progress12 = 0x2000,
+        Progress13 = 0x4000,    //these progress values specify different points in the quest
+        Complete = 0x8000,
     }
 
     public class QuestEventArgs : EventArgs

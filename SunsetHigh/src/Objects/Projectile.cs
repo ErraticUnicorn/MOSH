@@ -101,7 +101,7 @@ namespace SunsetHigh
 
         public Direction getDirection() 
         { 
-            return convertAngleToDirection(this.angle); 
+            return SunsetUtils.convertAngleToDirection(this.angle); 
         }
         public float getAngle()
         {
@@ -110,7 +110,7 @@ namespace SunsetHigh
 
         public void setDirection(Direction dir)
         {
-            this.angle = convertDirectionToAngle(dir);
+            this.angle = SunsetUtils.convertDirectionToAngle(dir);
         }
         public void setAngle(float angle)   // Angle in radians!
         {
@@ -143,36 +143,6 @@ namespace SunsetHigh
             {
                 mEvent();
             }
-        }
-
-        private float convertDirectionToAngle(Direction dir)
-        {
-            switch (dir)
-            {
-                case Direction.North: return (float)Math.PI / 2;
-                case Direction.NorthEast: return (float)Math.PI / 4;
-                case Direction.East: return 0.0f;
-                case Direction.SouthEast: return (float)Math.PI * 7 / 4;
-                case Direction.South: return (float)Math.PI * 3 / 2;
-                case Direction.SouthWest: return (float)Math.PI * 5 / 4;
-                case Direction.West: return (float)Math.PI;
-                case Direction.NorthWest: return (float)Math.PI * 3 / 4;
-            }
-            return 0.0f;
-        }
-
-        private Direction convertAngleToDirection(float angle)
-        {
-            if ((angle <= Math.PI * 2 && angle >= Math.PI * 7 / 4) 
-                || (angle < Math.PI * 1 / 4 && angle >= 0.0f))
-                return Direction.East;
-            if (angle < Math.PI * 3 / 4 && angle >= Math.PI * 1 / 4)
-                return Direction.North;
-            if (angle < Math.PI * 5 / 4 && angle >= Math.PI * 3 / 4)
-                return Direction.West;
-            if (angle < Math.PI * 7 / 4 && angle >= Math.PI * 5 / 4)
-                return Direction.South;
-            return Direction.Undefined;
         }
     }
 }

@@ -11,8 +11,6 @@ namespace SunsetHigh
 {
     public class Cafeteria : Room
     {
-        private Character npcHiding;
-        private Character npcDruggie;
         private Texture2D apple;
         private Texture2D cow;
         private Texture2D hamburger;
@@ -29,8 +27,6 @@ namespace SunsetHigh
 
         public Cafeteria() : base()
         {
-            this.placeID = PlaceID.Cafeteria;
-
             isFoodFight = false;
             FC1timer = 0;
             FC2timer = 0;
@@ -40,16 +36,6 @@ namespace SunsetHigh
             FC4counter = 0;
             FC3Counter = 0;
             foodType = 0;
-            npcHiding = new Character(23 * 32, 7 * 32);
-            npcHiding.inventory.addItem(Item.PokeBall, 5);
-            npcHiding.setScript(Directories.INTERACTIONS + "Lucas.cafeteriaInformationInteraction.txt");
-            this.addObject(npcHiding);
-
-            npcDruggie = new Character(25 * 32, 1 * 32);
-            npcDruggie.inventory.addItem(Item.Meds, 1);
-            npcDruggie.setScript(Directories.INTERACTIONS + "Stoner.druggieInteraction.txt");
-            npcDruggie.setDirection(Direction.South);
-            this.addObject(npcDruggie);
         }
 
         public override void loadContent(ContentManager content, string filename)
@@ -59,16 +45,13 @@ namespace SunsetHigh
             cow = content.Load<Texture2D>(Directories.SPRITES + "cattle");
             hamburger = content.Load<Texture2D>(Directories.SPRITES + "burger");
             cheese = content.Load<Texture2D>(Directories.SPRITES + "cheese");
-
-            npcHiding.loadImage(content, Directories.CHARACTERS + "sprite_sheet_herbert", 4, 3, 0.25f);
-            npcDruggie.loadImage(content, Directories.CHARACTERS_TEMP + "slacker2");
-
         }
+
         public override void updateState()
         {
             base.updateState();
             if (Quest.isQuestAccepted(QuestID.FoodFight) && 
-                Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress1 | QuestState.Progress2))
+                !Quest.isQuestComplete(QuestID.FoodFight))
             {
                 isFoodFight = true;
             }
@@ -76,6 +59,11 @@ namespace SunsetHigh
             {
                 isFoodFight = false;
             }
+
+            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress1)
+                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress2)
+                && !Hero.instance.hasFollower())
+                Hero.instance.setFollower(PersonID.Phil);
         }
 
         public override void update(float elapsed)
@@ -89,7 +77,7 @@ namespace SunsetHigh
                 FC3timer += elapsed;
                 FC4timer += elapsed;
 
-                if (FC1timer > 1)
+                if (FC1timer > 2.5)
                 {
                     foodType++;
                     FC1timer = 0;
@@ -202,12 +190,22 @@ namespace SunsetHigh
                     }
                 }
             }
-
         }
 
         public void foodCollideEvent()
         {
-            WorldManager.setRoom("map_HallwayEast", 19 * 32, 3 * 32, Direction.East);
+            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress1)
+                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress2))
+            {
+                ScreenTransition.requestTransition(delegate()
+                {
+                    WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 24 * TILE_SIZE, 10 * TILE_SIZE, Direction.West);
+                    Hero.instance.setFollower(PersonID.Phil);
+                    CharacterManager.getCharacter(PersonID.Phil).setPosition(25 * TILE_SIZE, 10 * TILE_SIZE);
+                });
+            }
+            else if (Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress1))
+                WorldManager.setRoom(PlaceID.HallwayEast, 19 * TILE_SIZE, 3 * TILE_SIZE, Direction.East);
         }
     }
 }
