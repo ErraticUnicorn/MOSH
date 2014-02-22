@@ -10,9 +10,9 @@
 if Quest FoodFight Accepted and not Progress2
 "Phil, the girl who is stuck in the cafeteria, has purplish hair and goofy specs. Good luck getting her out of there!" -> [End]
 
-if Quest FoodFight Progress2 and not Progress3
+if Quest FoodFight Progress2 and not Complete
 "Oh, thank heavens! Phil came back safe and sound. I admit that I'm a bit protective of her, but she doesn't have too many friends to count on. She's even distant from her own nerd clique..." -> [10]
-"Ah, well, this is not your concern. Thanks again for the help! If you're feeling bold and altruistic, you can always go save more folks in the cafeteria! These food fights take forever." -> [Quest FoodFight Progress3]
+"Ah, well, this is not your concern. Thanks again for the help! If you're feeling bold and altruistic, you can always go save more folks in the cafeteria! These food fights take forever." -> [Quest FoodFight Complete]
 
 default
 "Well, hi there! I'm the librarian, in case you weren't aware. Could I help you find a book?" -> [End]

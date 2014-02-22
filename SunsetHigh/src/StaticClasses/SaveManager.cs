@@ -192,6 +192,34 @@ namespace SunsetHigh
             characterSave.char_y[(int)PersonID.Librarian] = 4 * 32;
             characterSave.char_room[(int)PersonID.Librarian] = PlaceID.Library;
 
+            characterSave.char_x[(int)PersonID.Artie] = 12 * 32;
+            characterSave.char_y[(int)PersonID.Artie] = 8 * 32;
+            characterSave.char_room[(int)PersonID.Artie] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Bill] = 16 * 32;
+            characterSave.char_y[(int)PersonID.Bill] = 14 * 32;
+            characterSave.char_room[(int)PersonID.Bill] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Claude] = 25 * 32;
+            characterSave.char_y[(int)PersonID.Claude] = 18 * 32;
+            characterSave.char_room[(int)PersonID.Claude] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Jay1] = 4 * 32;
+            characterSave.char_y[(int)PersonID.Jay1] = 18 * 32;
+            characterSave.char_room[(int)PersonID.Jay1] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Jay2] = 10 * 32;
+            characterSave.char_y[(int)PersonID.Jay2] = 2 * 32;
+            characterSave.char_room[(int)PersonID.Jay2] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Jay3] = 14 * 32;
+            characterSave.char_y[(int)PersonID.Jay3] = 18 * 32;
+            characterSave.char_room[(int)PersonID.Jay3] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.Jay4] = 20 * 32;
+            characterSave.char_y[(int)PersonID.Jay4] = 2 * 32;
+            characterSave.char_room[(int)PersonID.Jay4] = PlaceID.Cafeteria;
+
             CharacterManager.loadSaveStructure(characterSave);
         }
 

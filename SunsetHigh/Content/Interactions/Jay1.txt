@@ -1,0 +1,7 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress8 and not Progress9
+"Throwing food around makes me feel so alive! You want in on this?" -> ["Yeah, let me join in!" -> 2, "Actually, could you stop?" -> 3]
+"Alright, just grab some food and let it fly!" -> [End]
+"You dweeb. You think asking nicely will stop this food fight? I oughta chuck this burger at you..." -> [End]
+
+default
+"Hello there." -> [End]

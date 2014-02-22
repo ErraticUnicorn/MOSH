@@ -1,2 +1,0 @@
-﻿"Any requests?" -> ["Soulful jazz, please." -> 2, "Yeah. Don't play." -> End]
-"Sorry, I don't know any. I'll play Bach instead." -> [End]

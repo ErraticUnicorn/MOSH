@@ -14,6 +14,13 @@ namespace SunsetHigh
         None = -1,
         Phil = 0,
         Librarian,
+        Bill,
+        Artie,
+        Claude,
+        Jay1,
+        Jay2,
+        Jay3,
+        Jay4
     }
 
     public struct CharacterBankSave
@@ -46,6 +53,38 @@ namespace SunsetHigh
             librarian.loadImage(content, Directories.CHARACTERS_TEMP + "teacher");
             librarian.setScript(Directories.INTERACTIONS + "Librarian.txt");
             mCharMap[PersonID.Librarian] = librarian;
+
+            Character bill = new Character();
+            bill.loadImage(content, Directories.CHARACTERS_TEMP + "jock");
+            bill.setScript(Directories.INTERACTIONS + "Bill.txt");
+            mCharMap[PersonID.Bill] = bill;
+
+            Character artie = new Character();
+            artie.loadImage(content, Directories.CHARACTERS_TEMP + "prep");
+            artie.setScript(Directories.INTERACTIONS + "Artie.txt");
+            mCharMap[PersonID.Artie] = artie;
+
+            Character claude = new Character();
+            claude.loadImage(content, Directories.CHARACTERS_TEMP + "slacker");
+            claude.setScript(Directories.INTERACTIONS + "Claude.txt");
+            mCharMap[PersonID.Claude] = claude;
+
+            Character jay1 = new Character();
+            jay1.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
+            jay1.setScript(Directories.INTERACTIONS + "Jay1.txt");
+            mCharMap[PersonID.Jay1] = jay1;
+            Character jay2 = new Character();
+            jay2.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
+            jay2.setScript(Directories.INTERACTIONS + "Jay2.txt");
+            mCharMap[PersonID.Jay2] = jay2;
+            Character jay3 = new Character();
+            jay3.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
+            jay3.setScript(Directories.INTERACTIONS + "Jay3.txt");
+            mCharMap[PersonID.Jay3] = jay3;
+            Character jay4 = new Character();
+            jay4.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
+            jay4.setScript(Directories.INTERACTIONS + "Jay4.txt");
+            mCharMap[PersonID.Jay4] = jay4;
         }
 
         public static Character getCharacter(PersonID id)
@@ -53,12 +92,20 @@ namespace SunsetHigh
             return mCharMap[id];
         }
 
-        public static void moveCharacterToRoom(PersonID person, PlaceID place)
+        public static void moveCharacterToRoom(PersonID person, PlaceID place, int x, int y)
         {
             Character c1 = mCharMap[person];
             WorldManager.removeObjectFromRoom(c1, mRoomMap[person]);
             WorldManager.addObjectToRoom(c1, place);
             mRoomMap[person] = place;
+            c1.setX(x);
+            c1.setY(y);
+            c1.reset();  
+        }
+
+        public static void moveCharacterToRoom(PersonID person, PlaceID place)
+        {
+            moveCharacterToRoom(person, place, mCharMap[person].getX(), mCharMap[person].getY());
         }
 
         public static CharacterBankSave getSaveStructure()
@@ -79,11 +126,12 @@ namespace SunsetHigh
 
         public static void loadSaveStructure(CharacterBankSave save)
         {
-            for (int i = 0; i < NUM_PERSON_IDS; i++)
+            for (int i = 0; i < NUM_PERSON_IDS && i < save.char_x.Length; i++)
             {
                 Character c1 = mCharMap[(PersonID)i];
                 c1.setX(save.char_x[i]);
                 c1.setY(save.char_y[i]);
+                c1.reset();
                 if (mRoomMap.ContainsKey((PersonID)i))
                     WorldManager.removeObjectFromRoom(c1, mRoomMap[(PersonID)i]);
                 WorldManager.addObjectToRoom(c1, save.char_room[i]);

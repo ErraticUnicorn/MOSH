@@ -1,0 +1,17 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress1
+"Sorry, I'm not Phil." -> [End]
+
+if Location Cafeteria and Quest FoodFight not Progress4
+"I hate the food fights here." -> [End]
+
+if Location Cafeteria and Quest FoodFight Progress4 and not Progress5
+"Hey, do you mind helping me out of here?... Why are you looking at me like that? I may look strong, but I'm not exactly fleet of foot..." -> ["Alright, let's go." -> Quest FoodFight Progress5, "Real men don't need help." -> End]
+
+if Location Cafeteria and Quest FoodFight Progress5 and not Progress6
+"Come on, man, let's get a move on!" -> [End]
+
+if Location HallwayEast and Quest FoodFight Progress5 and not Progress6
+"All right! Back to the gym for me! Catch you later." -> [Quest FoodFight Progress6, Reputation Jock +10]
+
+default
+"Hello there." -> [End]

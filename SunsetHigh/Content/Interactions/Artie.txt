@@ -1,0 +1,17 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress1
+"Who, Phil? Not I... look elsewhere." -> [End]
+
+if Location Cafeteria and Quest FoodFight not Complete
+"Hmm.. I may need some help out of here eventually." -> [End]
+
+if Location Cafeteria and Quest FoodFight Complete and not Progress3
+"The fight's getting more intense... Say, would you mind guiding me out of here? This wasn't how I planned to spend my day." -> ["Yeah, follow me!" -> Quest FoodFight Progress3, "You're on your own, buddy." -> End]
+
+if Location Cafeteria and Quest FoodFight Progress3 and not Progress4
+"Hmph. Don't worry about me, I'm following your every move." -> [End]
+
+if Location HallwayEast and Quest FoodFight Progress3 and not Progress4
+"Phew. Thanks for your assistance. I'll see you around." -> [Quest FoodFight Progress4, Reputation Prep +10]
+
+default
+"Hello there." -> [End]

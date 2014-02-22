@@ -1,0 +1,5 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress8 and not Progress9
+"This is a protest against the terrible cafeteria food!" -> [End]
+
+default
+"Hello there." -> [End]

@@ -39,6 +39,13 @@ namespace SunsetHigh
         private float mAcceleration;
         private float pixelsRemainderX;
         private float pixelsRemainderY;
+        private bool moving;                        //whether sprite is currently in motion
+
+        //"AI" move variables
+        private const float CLOSE_TO_DESTINATION = 5.0f;    //in pixels
+        private Vector2 destination;
+        private bool movingToDestination;
+        private Action destinationAction;
 
         public FreeMovingSprite()
             : this(0, 0, 0, 0) { }
@@ -73,7 +80,7 @@ namespace SunsetHigh
             mStartSpeed = speed;
         }
         public float getSpeed() { return mSpeed; }
-
+        
         /// <summary>
         /// Moves this Sprite a given Direction. Optional parameter sets it to
         /// collide with the scene and characters in the scene.
@@ -87,6 +94,7 @@ namespace SunsetHigh
             this.setSpeed(this.getSpeed() + this.getAcceleration() * elapsed);
             bool moved = this.moveDirectionHelper(dir, this.getSpeed(), elapsed, collide);
             if (!moved) this.setSpeed(mStartSpeed);
+            this.moving = moved;
             return moved;
         }
 
@@ -103,7 +111,19 @@ namespace SunsetHigh
             this.setSpeed(this.getSpeed() + this.getAcceleration() * elapsed);
             bool moved = this.moveAngleHelper(angle, this.getSpeed(), elapsed, collide);
             if (!moved) this.setSpeed(mStartSpeed);
+            this.moving = moved;
             return moved;
+        }
+
+        public void moveToDestination(int x, int y, Action postExecute)
+        {
+            this.movingToDestination = true;
+            this.destination = new Vector2(x, y);
+            this.destinationAction = postExecute;
+        }
+        public void cancelMoveToDestination()
+        {
+            this.movingToDestination = false;
         }
 
         private bool moveDirectionHelper(Direction dir, float speed, float elapsed, bool collide = true)
@@ -210,6 +230,37 @@ namespace SunsetHigh
             else
                 b = this.moveDirectionHelper(Direction.West, Math.Abs(x_speed), elapsed, collide);
             return a || b;
+        }
+
+        public override void reset()
+        {
+            base.reset();
+            this.cancelMoveToDestination();
+        }
+
+        public override void update(float elapsed)
+        {
+            if (movingToDestination)
+            {
+                if ((new Vector2(this.getX(), this.getY()) - destination).Length() > CLOSE_TO_DESTINATION)
+                {
+                    float angle = (float)Math.Atan2(this.getY() - destination.Y, destination.X - this.getX());
+                    this.move(angle, elapsed, false);
+                }
+                else
+                {
+                    movingToDestination = false;
+                    if (this.destinationAction != null)
+                    {
+                        destinationAction();
+                    }
+                }
+            }
+            if (this.moving) //only update walking animation if moving, update must occur AFTER the keyboard listening cycle
+            {
+                base.update(elapsed);
+                this.moving = false;
+            }
         }
     }
 }

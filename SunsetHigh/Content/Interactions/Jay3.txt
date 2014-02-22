@@ -1,0 +1,5 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress8 and not Progress9
+"Gahahahahaha!.. ha. How did you get here? You're quite nimble." -> [End]
+
+default
+"Hello there." -> [End]

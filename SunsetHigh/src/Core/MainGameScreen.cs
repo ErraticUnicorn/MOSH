@@ -53,6 +53,12 @@ namespace SunsetHigh
             }
             if (!h1.isTalking())
                 KeyboardManager.handleInGameMenu();
+            //DEBUG
+            if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.Q))
+                Hero.instance.setSpeed(Hero.instance.getSpeed() * 2);
+            if (KeyboardManager.isKeyPressed(Microsoft.Xna.Framework.Input.Keys.W))
+                Hero.instance.setSpeed(Hero.instance.getSpeed() / 2);
+            //END DEBUG
 
             // Updates based on time
             InGameMenu.update(elapsed);

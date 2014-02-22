@@ -1,3 +1,0 @@
-﻿"Power levels indicate 70 percent charge... Halt! Who goes there?" -> ["What's THAT?" -> 2, "What's with the getup?" -> 3]
-"None of your business! Leave immediately!!" -> [End]
-"I am the Enforcer! And I demand your immediate removal!!" -> [End]

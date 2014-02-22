@@ -239,25 +239,25 @@
     <Content Include="Content\Characters\sprite_sheet_herbert.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\BoringTeacher.npc1.math.txt">
+    <Content Include="Content\Interactions\Bill.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\Bully.npc1.hallwayWest.txt">
+    <Content Include="Content\Interactions\Artie.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\ConfusedDude.npc4.math.txt">
+    <Content Include="Content\Interactions\Claude.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\Enforcer.npc1.magoffice.txt">
+    <Content Include="Content\Interactions\Jay4.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\HungryJock.npc1.hallwayEast.txt">
+    <Content Include="Content\Interactions\Jay3.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\Jock.npc2.science.txt">
+    <Content Include="Content\Interactions\Jay2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Interactions\Jock.npc3.computer.txt">
+    <Content Include="Content\Interactions\Jay1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Interactions\Librarian.txt">
@@ -270,24 +270,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Interactions\Phil.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Interactions\Pianist.npc1.lounge.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Interactions\ShadyNerd.npc1.science.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Interactions\Slacker.npc2.lounge.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Interactions\Stoner.druggieInteraction.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Interactions\Stoner.npc1.bathroom.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Interactions\Stoner.npc1.entrance.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\Tilesets\300px-Pokémon.FRLG.PokémonLabR1.png">

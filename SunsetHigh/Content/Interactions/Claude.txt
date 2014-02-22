@@ -1,0 +1,17 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress1
+"No, I'm not this Phil chick you're looking for." -> [End]
+
+if Location Cafeteria and Quest FoodFight not Progress6
+"Duuude, all dis food." -> [End]
+
+if Location Cafeteria and Quest FoodFight Progress6 and not Progress7
+"Alright, this party's getting old. You feel me? Why don't we head out together?" -> ["Sure thing, bro." -> Quest FoodFight Progress7, "Nah, I'm chilling here." -> End]
+
+if Location Cafeteria and Quest FoodFight Progress7 and not Progress8
+"Let's hop to it. To the left!" -> [End]
+
+if Location HallwayEast and Quest FoodFight Progress7 and not Progress8
+"Niiice. We should hang together some other time, man." -> [Quest FoodFight Progress8, Reputation Slacker +10]
+
+default
+"Hello there." -> [End]

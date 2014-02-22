@@ -33,12 +33,6 @@ namespace SunsetHigh
 
         //mechanics
         private Direction direction;                //which direction the character is facing
-        private bool moving;                        //whether character is currently in motion
-
-        //"AI" move variables
-        private const float CLOSE_TO_DESTINATION = 5.0f;    //in pixels
-        private Vector2 destination;
-        private bool movingToDestination;
 
         //personal data
         private bool male;                          //male or female (male by default)
@@ -80,7 +74,6 @@ namespace SunsetHigh
             setMale(true);
             setClique(Clique.None);
             setPersonID(PersonID.None);
-            setMoving(false);
             setDirection(Direction.South);
             if(file != string.Empty)
                 setScript(file);
@@ -90,11 +83,9 @@ namespace SunsetHigh
         public string getName() { return this.name; }
         public Clique getClique() { return this.clique; }
         public PersonID getPersonID() { return this.personID; }
-        public bool isMoving() { return this.moving; }
         public bool isMale() { return this.male; }
         public bool isFemale() { return !this.male; }
        
-        public void setMoving(bool moving) { this.moving = moving; }
         public void setMale(bool male) { this.male = male; }
         public void setName(string name) { this.name = name; }
         public void setClique(Clique clique) { this.clique = clique; }
@@ -136,15 +127,12 @@ namespace SunsetHigh
         public override bool move(Direction dir, float elapsed, bool collide = true)
         {
             this.setDirection(dir);
-            bool retVal = base.move(dir, elapsed, collide);
-            this.setMoving(retVal);
-            return retVal;
+            return base.move(dir, elapsed, collide);
         }
-
-        public void moveToDestination(int x, int y)
+        public override bool move(float angle, float elapsed, bool collide = true)
         {
-            movingToDestination = true;
-            destination = new Vector2(x, y);
+            this.setDirection(SunsetUtils.convertAngleToDirection(angle));
+            return base.move(angle, elapsed, collide);
         }
 
         /// <summary>
@@ -244,32 +232,6 @@ namespace SunsetHigh
         {
             base.onInteract();
             Hero.instance.converse(this);
-        }
-
-        /// <summary>
-        /// Updates the animation, only if the Character is moving
-        /// </summary>
-        /// <param name="elapsed">Time (in seconds) that has elasped since last update</param>
-        public override void update(float elapsed)
-        {
-            if (movingToDestination)
-            {
-                if ((new Vector2(this.getX(), this.getY()) - destination).Length() > CLOSE_TO_DESTINATION)
-                {
-                    float angle = (float)Math.Atan2(this.getY() - destination.Y, destination.X - this.getX());
-                    this.move(SunsetUtils.convertAngleToDirection(angle), elapsed, false);
-                }
-                else
-                {
-                    movingToDestination = false;
-                }
-            }
-            if (this.isMoving()) //only update walking animation if moving
-                                 //the update must occur AFTER the keyboard listening cycle
-            {
-                base.update(elapsed);
-                this.setMoving(false);
-            }
         }
     }
 }

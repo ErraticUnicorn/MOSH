@@ -89,6 +89,10 @@ namespace SunsetHigh {
         {
             m_excluded.Remove(p_include);
         }
+        public static void resetInteractableCollisions()
+        {
+            m_excluded.Clear();
+        }
 
         /// <summary>
         /// Sets the given Sprite one pixel off the closest side of the given Rectangle

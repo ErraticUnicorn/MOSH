@@ -72,12 +72,14 @@ namespace SunsetHigh
             }
         }
 
-        public virtual void onWarpEnter()
+        public virtual void onEnter()
         {
+            updateState();
         }
 
-        public virtual void onWarpExit()
+        public virtual void onExit()
         {
+            updateState();
         }
 
         /// <summary>

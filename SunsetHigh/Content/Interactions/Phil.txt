@@ -6,7 +6,7 @@ if Location Cafeteria and Quest FoodFight Progress1 and not Progress2
 "I'm right behind you. Are you asking me for help? Um, well, the exit is to the left. But since you got here, I figured you knew that..." -> [End]
 
 if Location HallwayEast and Quest FoodFight Progress1 and not Progress2
-"Um...thanks for the help. I'll go let the librarian know I'm fine. See ya..." -> [Quest FoodFight Progress2]
+"Um...thanks for the help. I'll go let the librarian know I'm fine. See ya..." -> [Quest FoodFight Progress2, Reputation Nerd +10]
 
 default
 "Hey!... How's it going?" -> [End]

@@ -1,0 +1,6 @@
+﻿if Location Cafeteria and Quest FoodFight not Progress8 and not Progress9
+"Don't you like a good food fight?" -> ["Well..." -> 2, "Um..." -> 2]
+"Ha! I can see you're no judge of the quality of a food fight. Maybe you'll understand when you're older." -> [End]
+
+default
+"Hello there." -> [End]

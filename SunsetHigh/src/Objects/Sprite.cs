@@ -272,6 +272,9 @@ namespace SunsetHigh
         public virtual void onCollide()
         {
         }
+        public virtual void reset()
+        {
+        }
         public virtual Rectangle getBoundingRect()
         {
             return new Rectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());

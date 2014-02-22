@@ -41,6 +41,7 @@ namespace SunsetHigh {
         public static Room m_currentRoom { get; private set; }
         public static PlaceID m_currentRoomID { get; private set; }
         public static Point m_currentCameraOffset { get; private set; }
+        private static Room m_oldRoom;
 
         public static event EventHandler<CameraOffsetEventArgs> OffsetChanged;
 
@@ -111,10 +112,13 @@ namespace SunsetHigh {
                     m_currentRoomID = p_roomName;
                     m_currentRoom = m_rooms[p_roomName];
                     m_currentRoom.updateState();
-                    m_currentRoom.onWarpEnter();
+                    if (m_oldRoom != null)
+                        m_oldRoom.onExit();
+                    m_currentRoom.onEnter();
                     Hero.instance.setX(p_newX);
                     Hero.instance.setY(p_newY);
                     Hero.instance.setDirection(p_newDirection);
+                    Hero.instance.reset();
                     updateCameraOffset(Hero.instance);
                     LocationNamePanel.instance.showNewLocation(SunsetUtils.enumToString<PlaceID>(m_currentRoomID));  //trigger header showing new location name
                 });
@@ -131,10 +135,13 @@ namespace SunsetHigh {
             m_currentRoomID = p_roomName;
             m_currentRoom = m_rooms[p_roomName];
             m_currentRoom.updateState();
-            m_currentRoom.onWarpEnter();
+            if (m_oldRoom != null)
+                m_oldRoom.onExit();
+            m_currentRoom.onEnter();
             Hero.instance.setX(p_newX);
             Hero.instance.setY(p_newY);
             Hero.instance.setDirection(p_newDirection);
+            Hero.instance.reset();
             updateCameraOffset(Hero.instance);
             LocationNamePanel.instance.showNewLocation(SunsetUtils.enumToString<PlaceID>(m_currentRoomID));  //trigger header showing new location name
         }
@@ -158,8 +165,7 @@ namespace SunsetHigh {
             MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
 
             if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
-                m_currentRoom.onWarpExit();
-
+                m_oldRoom = m_currentRoom;
                 int l_newX = m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"];
                 int l_newY = m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"];
                 string l_newRoomName = (string)l_collidedObject.Properties["warpMap"];

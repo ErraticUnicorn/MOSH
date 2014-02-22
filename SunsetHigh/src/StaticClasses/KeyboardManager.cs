@@ -253,10 +253,6 @@ namespace SunsetHigh
             {
                 character.move(yaxis, elapsed);
             }
-            else
-            {
-                character.setMoving(false);
-            }
         }
 
         /// <summary>

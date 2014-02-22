@@ -1,4 +1,0 @@
-﻿"This couch is soooo comfy! Come take a seat, bro!" -> ["Alright..." -> 2, "There's no rest for the wicked." -> End]
-"Hmmm, so how is your life today?" -> ["Could be better." -> 3, "Terrible." -> 3]
-"Neat! I'm doing pretty swell myself. Life is good when you're lying on your back." -> ["..err, what?" -> 4, "...(and this is where I leave)" -> End]
-"I've spent the whole day on this couch, pondering the mysteries of life..." -> ["Mmmk, cool, bye." -> End]

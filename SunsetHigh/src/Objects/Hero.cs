@@ -54,9 +54,7 @@ namespace SunsetHigh
         private int slackerRep;
 
         //Follow vars (special cases where a character follows you)
-        private const int FOLLOW_TRAIL_COUNT = 4;
         private PersonID follower;
-        private List<Direction> followTrail;
 
         //Static vars
         private static volatile Hero inst;
@@ -120,7 +118,6 @@ namespace SunsetHigh
             bullyRep = 0;
             slackerRep = 0;
             follower = PersonID.None;
-            followTrail = new List<Direction>();
         }
 
         public override void loadContent(ContentManager content)
@@ -177,6 +174,38 @@ namespace SunsetHigh
             }
         }
 
+        public override void reset()
+        {
+            base.reset();
+            dialogue.talking = false;
+            dialogue.selfTalking = false;
+        }
+
+        public override bool move(Direction dir, float elapsed, bool collide = true)
+        {
+            if (follower != PersonID.None)
+            {
+                bool retVal;
+                retVal = base.move(dir, elapsed, collide);
+                if (retVal)
+                {
+                    Vector2 destPos = new Vector2(this.getX(), this.getY());
+                    switch (this.getDirection())
+                    {
+                        case Direction.North: destPos.Y += 32; break;
+                        case Direction.South: destPos.Y -= 32; break;
+                        case Direction.East: destPos.X -= 32; break;
+                        case Direction.West: destPos.X += 32; break;
+                    }
+                    Character c1 = CharacterManager.getCharacter(follower);
+                    c1.moveToDestination((int)destPos.X, (int)destPos.Y, null);
+                }
+                return retVal;
+            }
+            else
+                return base.move(dir, elapsed, collide);
+        }
+
         public void setReputation(Clique clique, int repPoints)
         {
             switch (clique)
@@ -188,26 +217,6 @@ namespace SunsetHigh
                 case Clique.Slacker: slackerRep += repPoints; break;
             }
         }
-
-        public override bool move(Direction dir, float elapsed, bool collide = true)
-        {
-            if (follower != PersonID.None)
-            {
-                bool retVal;
-                retVal = base.move(dir, elapsed, collide);
-                if (retVal)
-                    followTrail.Add(dir);
-                if (followTrail.Count > FOLLOW_TRAIL_COUNT)
-                {
-                    CharacterManager.getCharacter(follower).move(followTrail[0], elapsed, true);
-                    followTrail.RemoveAt(0);
-                }
-                return retVal;
-            }
-            else
-                return base.move(dir, elapsed, collide);
-        }
-
         // input positive points to increase reputation, negative to decrease
         public void shiftReputation(Clique clique, int repPoints)
         {
@@ -248,17 +257,20 @@ namespace SunsetHigh
         }
         public PersonID getFollowerID()
         {
-            return follower;
+            return this.follower;
         }
         public void setFollower(PersonID follower)
         {
             this.follower = follower;
-            this.followTrail.Clear();
-            CollisionManager.excludeInteractableCollision(CharacterManager.getCharacter(follower));
+            if (this.follower != PersonID.None)
+                CollisionManager.excludeInteractableCollision(CharacterManager.getCharacter(follower));
+            else
+                CollisionManager.resetInteractableCollisions();
         }
         public void stopFollower()
         {
-            CollisionManager.includeInteractableCollision(CharacterManager.getCharacter(follower));
+            if (this.follower != PersonID.None)
+                CollisionManager.includeInteractableCollision(CharacterManager.getCharacter(follower));
             this.follower = PersonID.None;
         }
 
@@ -364,10 +376,7 @@ namespace SunsetHigh
                 this.bullyRep = data.reputationSave[3];
                 this.slackerRep = data.reputationSave[4];
             }
-            if (this.follower != PersonID.None)
-            {
-                this.setFollower(follower);
-            }
+            this.setFollower(data.followerID);
             this.resetAnimation();
         }
 
@@ -538,6 +547,8 @@ namespace SunsetHigh
                     if (end)
                     {
                         talking = false;
+                        // !! update the room state based on what happened in the dialogue
+                        WorldManager.m_currentRoom.updateState();
                         return;
                     }
                     say = end ? "(end)" : buildString();
