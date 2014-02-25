@@ -429,7 +429,13 @@ namespace SunsetHigh
             private Interaction interaction;
             private InteractionLinkedTreeNode current;
             private CursorArrow cursorArrow;
+
             private string say = "...";
+            private int scrollTextIndex = 0;
+            private float responseShowPauseTimer = 0.0f;
+            private Texture2D advanceArrowTexture;
+            private float advanceArrowFlashTimer = 0.0f;
+            private float characterAdvanceTimer = 0.0f;
             public bool end = false;
             public bool talking = false;
             public bool selfTalking = false;
@@ -444,6 +450,12 @@ namespace SunsetHigh
             private const int DIALOGUE_Y = 480 - DIALOGUE_HEIGHT;
             private const int NUM_RESPONSES_ON_PANEL = 2;
             private const int RESPONSE_START_Y = 100;
+            private const float SCROLL_TEXT_TIME = 0.020f;   //seconds for one character
+            private const float PUNCTUATION_TIME_FACTOR = 8.0f;
+            private const float RESPONSE_SHOW_PAUSE_TIME = 0.2f;    //pause between when text is displayed and responses appear
+            private const int ADVANCE_ARROW_DISPLACEMENT = 50;
+            private const float ADVANCE_ARROW_FLASH_SPEED = 3.0f;
+            private const string PUNCTUATION = ".!?,";
 
             public DialoguePanel()
                 : base(DIALOGUE_X, DIALOGUE_Y, DIALOGUE_WIDTH, DIALOGUE_HEIGHT)
@@ -464,7 +476,7 @@ namespace SunsetHigh
                 scrollBar.setInitParameters(RESPONSE_START_Y, this.getHeight() - RESPONSE_START_Y - this.getYMargin());
             }
 
-            public string buildString()
+            private string renewPanelContent()
             {
                 StringBuilder wrappedText = new StringBuilder();
                 wrappedText.Append(SunsetUtils.wordWrapText(interaction.name + ": " + current.line, 
@@ -479,10 +491,13 @@ namespace SunsetHigh
                 }
                 this.clearEntries();
                 this.loadEntries(tempEntries.ToArray());
+                this.hideEntries();
                 this.cursor = 0;
                 this.cursorArrow.updateCursor();
-                this.cursorArrow.setVisible(tempEntries.Count > 0);
-                //this.scrollBar.setVisible(tempEntries.Count > NUM_RESPONSES_ON_PANEL);
+                this.cursorArrow.setVisible(false);
+                this.scrollTextIndex = 2 + interaction.name.Length;
+                this.responseShowPauseTimer = 0.0f;
+                this.advanceArrowFlashTimer = 0.0f;
                 return wrappedText.ToString();
             }
 
@@ -490,73 +505,71 @@ namespace SunsetHigh
             {
                 if (!selfTalking)   //having dialogue instead of thinking
                 {
-                    InteractionTreeNode next = null;
-                    if (current.responses.Count == 0)   //there are no responses to NPC's line
+                    if (scrollTextIndex < say.Length)
                     {
-                        if ((current.eventType & Events.Quest) > 0)
+                        scrollTextIndex = say.Length;
+                    }
+                    else if (responseShowPauseTimer == RESPONSE_SHOW_PAUSE_TIME)
+                    {
+                        if (current.responses.Count == 0)   //there are no responses to NPC's line
                         {
-                            Quest.addQuestState(current.questID, current.questState);
+                            gameStateUpdateHelper(current);
                         }
-                        if ((current.eventType & Events.Reputation) > 0)
+                        else
                         {
-                            Hero.instance.shiftReputation(current.repClique, current.repChange);
+                            InteractionTreeNode next = current.responses[cursor];
+                            gameStateUpdateHelper(next);
                         }
-                        if ((current.eventType & Events.Inventory) > 0)
+                        if (end)
                         {
-                            if (current.itemChange > 0)
-                                Hero.instance.inventory.addItem(current.item, current.itemChange);
-                            else
-                                Hero.instance.inventory.removeItem(current.item, -1 * current.itemChange);
+                            talking = false;
+                            // !! update the room state based on what happened in the dialogue
+                            WorldManager.m_currentRoom.updateState();
                         }
-                        if ((current.eventType & Events.End) > 0 || (current.eventType & Events.NextLine) == 0)
+                        else
                         {
-                            end = true;
-                        }
-                        if ((current.eventType & Events.NextLine) > 0)
-                        {
-                            current = interaction.dialogue.ElementAtOrDefault(current.nextLine - 1) ?? defaultNode;
+                            say = renewPanelContent();
                         }
                     }
-                    else
-                    {
-                        next = current.responses[cursor];
-                        if ((next.eventType & Events.Quest) > 0)
-                        {
-                            Quest.addQuestState(next.questID, next.questState);
-                        }
-                        if ((next.eventType & Events.Reputation) > 0)
-                        {
-                            Hero.instance.shiftReputation(next.repClique, next.repChange);
-                        }
-                        if ((next.eventType & Events.Inventory) > 0)
-                        {
-                            if (next.itemChange > 0)
-                                Hero.instance.inventory.addItem(next.item, next.itemChange);
-                            else
-                                Hero.instance.inventory.removeItem(next.item, -1 * next.itemChange);
-                        }
-                        if ((next.eventType & Events.End) > 0 || (next.eventType & Events.NextLine) == 0)
-                        {
-                            end = true;
-                        }
-                        if ((next.eventType & Events.NextLine) > 0)
-                        {
-                            current = interaction.dialogue.ElementAtOrDefault(next.nextLine - 1) ?? defaultNode;
-                        }
-                    }
-                    if (end)
-                    {
-                        talking = false;
-                        // !! update the room state based on what happened in the dialogue
-                        WorldManager.m_currentRoom.updateState();
-                        return;
-                    }
-                    say = end ? "(end)" : buildString();
                 }
                 else
                 {
-                    selfTalking = false;
+                    if (scrollTextIndex < say.Length)
+                    {
+                        scrollTextIndex = say.Length;
+                    }
+                    else if (responseShowPauseTimer == RESPONSE_SHOW_PAUSE_TIME)
+                    {
+                        selfTalking = false;
+                        end = true;
+                    }
+                }
+            }
+
+            private void gameStateUpdateHelper(InteractionTreeNode node)
+            {
+                if ((node.eventType & Events.Quest) > 0)
+                {
+                    Quest.addQuestState(node.questID, node.questState);
+                }
+                if ((node.eventType & Events.Reputation) > 0)
+                {
+                    Hero.instance.shiftReputation(node.repClique, node.repChange);
+                }
+                if ((node.eventType & Events.Inventory) > 0)
+                {
+                    if (node.itemChange > 0)
+                        Hero.instance.inventory.addItem(node.item, node.itemChange);
+                    else
+                        Hero.instance.inventory.removeItem(node.item, -1 * node.itemChange);
+                }
+                if ((node.eventType & Events.End) > 0 || (node.eventType & Events.NextLine) == 0)
+                {
                     end = true;
+                }
+                if ((node.eventType & Events.NextLine) > 0)
+                {
+                    current = interaction.dialogue.ElementAtOrDefault(node.nextLine - 1) ?? defaultNode;
                 }
             }
 
@@ -571,6 +584,7 @@ namespace SunsetHigh
                 base.loadContent(content);
                 font = content.Load<SpriteFont>(Directories.FONTS + "pf_ronda_seven");
                 cursorArrow.loadContent(content);
+                advanceArrowTexture = content.Load<Texture2D>(Directories.SPRITES + "black_arrow_right");
             }
 
             public override void draw(SpriteBatch sb)
@@ -578,9 +592,15 @@ namespace SunsetHigh
                 if (interaction != null || selfTalking)
                 {
                     base.draw(sb);
-                    sb.DrawString(font, say, new Vector2(this.getX() + this.getXMargin(), this.getY() + this.getYMargin()), 
+                    sb.DrawString(font, say.Substring(0, scrollTextIndex), new Vector2(this.getX() + this.getXMargin(), this.getY() + this.getYMargin()), 
                         Color.Black, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f);
                     cursorArrow.draw(sb);
+                    if (this.entries.Count == 0 && responseShowPauseTimer == RESPONSE_SHOW_PAUSE_TIME)
+                    {
+                        sb.Draw(advanceArrowTexture, 
+                            new Vector2(this.getX() + this.getWidth() - ADVANCE_ARROW_DISPLACEMENT, this.getY() + this.getHeight() - ADVANCE_ARROW_DISPLACEMENT), 
+                            new Color(Color.White, 0.3f*(float)(Math.Cos(advanceArrowFlashTimer * ADVANCE_ARROW_FLASH_SPEED) + 0.8f)));
+                    }
                 }
             }
 
@@ -588,6 +608,33 @@ namespace SunsetHigh
             {
                 base.update(elapsed);
                 cursorArrow.update(elapsed);
+                if (scrollTextIndex < say.Length)
+                {
+                    characterAdvanceTimer += elapsed;
+                    float factor = 1.0f;
+                    if (scrollTextIndex > 0 && scrollTextIndex < say.Length - 2 &&
+                        PUNCTUATION.Contains(say[scrollTextIndex - 1])) factor = PUNCTUATION_TIME_FACTOR;
+                    if (characterAdvanceTimer > SCROLL_TEXT_TIME * factor)
+                    {
+                        scrollTextIndex++;
+                        characterAdvanceTimer = 0.0f;
+                    }
+                    if (scrollTextIndex > say.Length) scrollTextIndex = say.Length;
+                }
+                if (scrollTextIndex == say.Length && responseShowPauseTimer < RESPONSE_SHOW_PAUSE_TIME)
+                {
+                    responseShowPauseTimer += elapsed;
+                    if (responseShowPauseTimer > RESPONSE_SHOW_PAUSE_TIME)
+                    {
+                        responseShowPauseTimer = RESPONSE_SHOW_PAUSE_TIME;
+                        this.unhideEntries();
+                        this.cursorArrow.setVisible(this.entries.Count > 0);
+                    }
+                }
+                if (this.entries.Count == 0 && responseShowPauseTimer == RESPONSE_SHOW_PAUSE_TIME)
+                {
+                    advanceArrowFlashTimer += elapsed;
+                }
             }
 
             public void loadInteraction(Character c)
@@ -596,8 +643,11 @@ namespace SunsetHigh
                 if (interaction != null)
                 {
                     current = interaction.getStartingLine();
-                    say = buildString();
+                    say = renewPanelContent();
                     cursor = 0;   // puts cursor at top
+                    scrollTextIndex = 0;
+                    responseShowPauseTimer = 0.0f;
+                    advanceArrowFlashTimer = 0.0f;
                 }
             }
 
@@ -607,12 +657,16 @@ namespace SunsetHigh
 
                 this.clearEntries();
                 this.cursor = 0;
+                this.scrollTextIndex = 0;
+                this.responseShowPauseTimer = 0.0f;
+                this.advanceArrowFlashTimer = 0.0f;
                 this.cursorArrow.updateCursor();
                 this.cursorArrow.setVisible(false);
                 //this.scrollBar.setVisible(false);
             }
         }
 
+        //dummy class, has no real use
         private class DialogueEntry : MenuEntry
         {
             public DialogueEntry()

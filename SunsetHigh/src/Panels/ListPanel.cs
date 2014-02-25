@@ -15,6 +15,7 @@ namespace SunsetHigh
         protected SpriteFont font;
         private Color entryColor;
         private Color entryHighlightColor;
+        private bool entriesHidden;
 
         //alignment variables
         private bool tempWillAlign;
@@ -42,6 +43,7 @@ namespace SunsetHigh
             this.entries = new List<MenuEntry>();
             this.setEntryColor(Color.Black);
             this.setEntryHighlightedColor(Color.Yellow);
+            this.entriesHidden = false;
 
             this.cursor = 0;
             this.tempWillAlign = false;
@@ -193,6 +195,8 @@ namespace SunsetHigh
         {
             return this.entries;
         }
+        public void hideEntries() { this.entriesHidden = true; }
+        public void unhideEntries() { this.entriesHidden = false; }
 
         public override void onFocus()
         {
@@ -349,19 +353,22 @@ namespace SunsetHigh
             base.draw(sb);
             if ((this.isInFocus() || this.isSmoothMoving()) && this.isVisible())  //i.e. can be seen on screen
             {
-                if (this.isScrolling())
+                if (!this.entriesHidden)
                 {
-                    for (int i = scrollTopRow * cols; i < (scrollTopRow + scrollRowsOnPanel) * cols && i < entries.Count; i++)
+                    if (this.isScrolling())
                     {
-                        drawHelper(sb, i);
+                        for (int i = scrollTopRow * cols; i < (scrollTopRow + scrollRowsOnPanel) * cols && i < entries.Count; i++)
+                        {
+                            drawHelper(sb, i);
+                        }
                     }
-                }
-                else
-                {
-                    //draw all list entries
-                    for (int i = 0; i < this.entries.Count; i++)
+                    else
                     {
-                        drawHelper(sb, i);
+                        //draw all list entries
+                        for (int i = 0; i < this.entries.Count; i++)
+                        {
+                            drawHelper(sb, i);
+                        }
                     }
                 }
                 if (this.isScrolling() && this.rows > this.scrollRowsOnPanel)

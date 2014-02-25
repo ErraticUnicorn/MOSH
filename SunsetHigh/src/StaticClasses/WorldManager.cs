@@ -109,6 +109,7 @@ namespace SunsetHigh {
             {
                 ScreenTransition.requestTransition(delegate()
                 {
+                    Hero.instance.reset();
                     m_currentRoomID = p_roomName;
                     m_currentRoom = m_rooms[p_roomName];
                     m_currentRoom.updateState();
@@ -118,7 +119,6 @@ namespace SunsetHigh {
                     Hero.instance.setX(p_newX);
                     Hero.instance.setY(p_newY);
                     Hero.instance.setDirection(p_newDirection);
-                    Hero.instance.reset();
                     updateCameraOffset(Hero.instance);
                     LocationNamePanel.instance.showNewLocation(SunsetUtils.enumToString<PlaceID>(m_currentRoomID));  //trigger header showing new location name
                 });

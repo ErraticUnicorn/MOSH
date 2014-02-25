@@ -107,10 +107,6 @@ namespace SunsetHigh
         /// Invoked when this panel is exiting the user's view
         /// </summary>
         public virtual void onExit() { this.setHighlighted(false);  }
-        /// <summary>
-        /// Invoked when game resets
-        /// </summary>
-        public virtual void reset() { }
 
         public override void loadContent(ContentManager content)
         {
