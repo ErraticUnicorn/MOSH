@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Core\StartScreen.cs" />
     <Compile Include="src\Panels\CluePanel.cs" />
+    <Compile Include="src\Panels\NotificationPanel.cs" />
     <Compile Include="src\Panels\CursorArrow.cs" />
     <Compile Include="src\Panels\DialogEntries.cs" />
     <Compile Include="src\Panels\DialogPanel.cs" />

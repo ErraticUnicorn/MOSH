@@ -31,6 +31,7 @@ namespace SunsetHigh
 
             InGameMenu.loadContent(content);
             LocationNamePanel.instance.loadContent(content);
+            NotificationPanel.instance.loadContent(content);
         }
 
         public override void update(float elapsed)
@@ -65,6 +66,7 @@ namespace SunsetHigh
             if (!InGameMenu.isOpen())
             {
                 LocationNamePanel.instance.update(elapsed);
+                NotificationPanel.instance.update(elapsed);
                 h1.update(elapsed);
                 WorldManager.update(elapsed);
             }
@@ -93,6 +95,7 @@ namespace SunsetHigh
             h1.draw(sb);
 
             LocationNamePanel.instance.draw(sb);
+            NotificationPanel.instance.draw(sb);
             InGameMenu.draw(sb);
         }
 
