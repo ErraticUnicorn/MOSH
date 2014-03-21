@@ -1,0 +1,2 @@
+default
+"Wait, do we have school today?" -> [End]

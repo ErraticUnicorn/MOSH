@@ -16,9 +16,9 @@ namespace SunsetHigh
         /// </summary>
         void onInteract();
         /// <summary>
-        /// Invoked when Hero collides with this object (separate from collision detection!)
+        /// Invoked when something else collides with this object (separate from collision detection!)
         /// </summary>
-        void onCollide();
+        void onCollide(IInteractable collider);
         /// <summary>
         /// Returns the bounding rectangle of this object, for collision/interaction purposes
         /// </summary>
@@ -30,17 +30,22 @@ namespace SunsetHigh
     {
         public const int TILE_SIZE = 32;
         public static int NUM_PLACE_IDS = Enum.GetValues(typeof(PlaceID)).Length - 1;
+        private const int OFFSCREEN_OFFSET = 100;
 
         public Map background;
         public List<Sprite> Sprites { private set; get; }
         public List<Character> CharList { private set; get; }
         public List<IInteractable> Interactables { private set; get; }
+        private List<object> addItemsSink;
+        private List<object> removeItemsSink;
 
         public Room()
         {
             Sprites = new List<Sprite>();
             CharList = new List<Character>();
             Interactables = new List<IInteractable>();
+            addItemsSink = new List<object>();
+            removeItemsSink = new List<object>();
         }
 
         public virtual void loadContent(ContentManager content, String filename)
@@ -53,7 +58,7 @@ namespace SunsetHigh
 
         public virtual void updateState()
         {
-
+            drainSinks();
         }
 
         public virtual void update(float elapsed)
@@ -62,6 +67,22 @@ namespace SunsetHigh
             {
                 a.update(elapsed);
             }
+            //cleanup of projectiles offscreen, somewhat naive removal
+            foreach (IInteractable i in new List<IInteractable>(this.Interactables))
+            {
+                if (i is Projectile)
+                {
+                    Projectile p = (Projectile)i;
+                    if (p.getY() >  this.background.Height * this.background.TileHeight + OFFSCREEN_OFFSET || 
+                        p.getY() < 0 - OFFSCREEN_OFFSET ||
+                        p.getX() > this.background.Width * this.background.TileWidth + OFFSCREEN_OFFSET ||
+                        p.getX() < 0 - OFFSCREEN_OFFSET)
+                    {
+                        this.removeObject(p);
+                    }
+                }
+            }
+            drainSinks();
         }
 
         public virtual void draw(SpriteBatch sb)
@@ -82,12 +103,38 @@ namespace SunsetHigh
             updateState();
         }
 
+        private void drainSinks()
+        {
+            //drain sinks
+            if (addItemsSink.Count > 0)
+            {
+                foreach (object o in addItemsSink)
+                {
+                    this.addObject(o);
+                }
+                addItemsSink.Clear();
+            }
+            if (removeItemsSink.Count > 0)
+            {
+                foreach (object o in removeItemsSink)
+                {
+                    this.removeObject(o);
+                }
+                removeItemsSink.Clear();
+            }
+        }
+
         /// <summary>
         /// Adds the object o to any appropriate lists if
         /// it is an instance of Sprite, Character, or IInteractable.
         /// Use this method to modify the lists.
         /// </summary>
         /// <param name="o">The object this room contains.</param>
+        public void enqueueObject(object o)
+        {
+            addItemsSink.Add(o);
+        }
+
         public void addObject(object o)
         {
             if (o is Sprite)
@@ -102,6 +149,11 @@ namespace SunsetHigh
         /// Removes the object of from any lists it is in
         /// </summary>
         /// <param name="o"></param>
+        public void dequeueObject(object o)
+        {
+            removeItemsSink.Add(o);
+        }
+
         public void removeObject(object o)
         {
             if (o is Sprite)
@@ -110,6 +162,28 @@ namespace SunsetHigh
                 CharList.Remove((Character)o);
             if (o is IInteractable)
                 Interactables.Remove((IInteractable)o);
+        }
+
+        //Used when resetting the game
+        public void clearLists()
+        {
+            Sprites.Clear();
+            CharList.Clear();
+            Interactables.Clear();
+            addItemsSink.Clear();
+            removeItemsSink.Clear();
+        }
+
+        protected void clearProjectiles()
+        {
+            foreach (IInteractable i in new List<IInteractable>(Interactables))
+            {
+                if (i is Projectile)
+                {
+                    Interactables.Remove(i);
+                    Sprites.Remove((Sprite)i);
+                }
+            }
         }
     }
 }

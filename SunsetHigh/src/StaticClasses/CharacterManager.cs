@@ -20,7 +20,19 @@ namespace SunsetHigh
         Jay1,
         Jay2,
         Jay3,
-        Jay4
+        Jay4,
+        BraceFace,
+        Fitz,
+        ROB,
+        Enforcer,
+        Tyke,
+        Dyke,
+        Shaq,
+        Herbert,
+        Avery,
+        Boris,
+        Jarvis,
+        Zeke
     }
 
     public struct CharacterBankSave
@@ -85,6 +97,67 @@ namespace SunsetHigh
             jay4.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
             jay4.setScript(Directories.INTERACTIONS + "Jay4.txt");
             mCharMap[PersonID.Jay4] = jay4;
+
+            Character braceface = new BraceFace();
+            braceface.loadContent(content);
+            braceface.loadImage(content, Directories.CHARACTERS + "sprite_brace_face_temp");
+            braceface.setScript(Directories.INTERACTIONS + "BraceFace.txt");
+            mCharMap[PersonID.BraceFace] = braceface;
+
+            Character fitz = new Character();
+            fitz.loadImage(content, Directories.CHARACTERS_TEMP + "nerd");
+            fitz.setScript(Directories.INTERACTIONS + "Fitz.txt");
+            mCharMap[PersonID.Fitz] = fitz;
+
+            Character rob = new Character();
+            rob.loadImage(content, Directories.CHARACTERS_TEMP + "nerd2");
+            rob.setScript(Directories.INTERACTIONS + "ROB.txt");
+            mCharMap[PersonID.ROB] = rob;
+
+            Character enforcer = new Character();
+            enforcer.loadImage(content, Directories.CHARACTERS + "sprite_enforcer");
+            enforcer.setScript(Directories.INTERACTIONS + "Enforcer.txt");
+            mCharMap[PersonID.Enforcer] = enforcer;
+
+            Character tyke = new Character();
+            tyke.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
+            tyke.setScript(Directories.INTERACTIONS + "Tyke.txt");
+            mCharMap[PersonID.Tyke] = tyke;
+
+            Character dyke = new Character();
+            dyke.loadImage(content, Directories.CHARACTERS_TEMP + "bully2");
+            dyke.setScript(Directories.INTERACTIONS + "Dyke.txt");
+            mCharMap[PersonID.Dyke] = dyke;
+
+            Character shaq = new Character();
+            shaq.loadImage(content, Directories.CHARACTERS_TEMP + "jock");
+            shaq.setScript(Directories.INTERACTIONS + "Shaq.txt");
+            mCharMap[PersonID.Shaq] = shaq;
+
+            Character herbert = new Character();
+            herbert.loadImage(content, Directories.CHARACTERS + "sprite_herbert_front");
+            herbert.setScript(Directories.INTERACTIONS + "Herbert.txt");
+            mCharMap[PersonID.Herbert] = herbert;
+
+            Character avery = new Character();
+            avery.loadImage(content, Directories.CHARACTERS_TEMP + "prep");
+            avery.setScript(Directories.INTERACTIONS + "Avery.txt");
+            mCharMap[PersonID.Avery] = avery;
+
+            Character boris = new Character();
+            boris.loadImage(content, Directories.CHARACTERS_TEMP + "prep2");
+            boris.setScript(Directories.INTERACTIONS + "Boris.txt");
+            mCharMap[PersonID.Boris] = boris;
+
+            Character jarvis = new Character();
+            jarvis.loadImage(content, Directories.CHARACTERS_TEMP + "slacker");
+            jarvis.setScript(Directories.INTERACTIONS + "Jarvis.txt");
+            mCharMap[PersonID.Jarvis] = jarvis;
+
+            Character zeke = new Character();
+            zeke.loadImage(content, Directories.CHARACTERS_TEMP + "slacker2");
+            zeke.setScript(Directories.INTERACTIONS + "Zeke.txt");
+            mCharMap[PersonID.Zeke] = zeke;
         }
 
         public static Character getCharacter(PersonID id)

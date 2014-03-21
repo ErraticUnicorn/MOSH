@@ -33,11 +33,11 @@ namespace SunsetHigh
         private bool ppActive;  //if currently pickpocketing
         private Character ppTarget;     //the target of the pickpocket
         private PickpocketSystem ppSystem;  //the graphics associated with the pickpocket minigame
+        //private const float MAX_PICKPOCKET_DISTANCE = 50;
 
         //Shooting vars
         private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
         private static string PROJECTILE_IMAGE_NAME = Directories.SPRITES + "projectile";
-        private List<Projectile> projectiles; //List of all projectiles
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
         private bool canShoot;      // whether player can shoot a projectile
@@ -55,6 +55,12 @@ namespace SunsetHigh
 
         //Follow vars (special cases where a character follows you)
         private PersonID follower;
+
+        //Battle vars
+        private const int DEFAULT_MAX_HEALTH = 300;
+        private int health;
+        private bool healthBarVisible;
+        private HealthBarTexture healthBar;
 
         //Static vars
         private static volatile Hero inst;
@@ -107,7 +113,6 @@ namespace SunsetHigh
         {
             ppSystem = new PickpocketSystem();
             ppActive = false;
-            projectiles = new List<Projectile>();
             canShoot = true;
             shootTimer = 0.0f;
             dialogue = new DialoguePanel();
@@ -117,6 +122,8 @@ namespace SunsetHigh
             prepRep = 0;
             bullyRep = 0;
             slackerRep = 0;
+            healthBar = new HealthBarTexture();
+            this.setHealth(DEFAULT_MAX_HEALTH);
             follower = PersonID.None;
         }
 
@@ -125,6 +132,7 @@ namespace SunsetHigh
             base.loadContent(content);
             ppSystem.loadContent(content);
             dialogue.loadContent(content);
+            healthBar.loadContent(content);
             SoundFX.loadSound(content, Directories.SOUNDS + "LTTP_Rupee1");
             Sprite.loadCommonImage(content, PROJECTILE_IMAGE_NAME);
             monologue.loadEntriesFromFile(Directories.TEXTDATA + "MonologueLines.txt");
@@ -142,11 +150,8 @@ namespace SunsetHigh
             {
                 dialogue.draw(sb);
             }
-
-            foreach(Projectile p in projectiles)
-            {
-                p.draw(sb);
-            }
+            if (healthBarVisible)
+                healthBar.draw(sb);
         }
 
         public override void update(float elapsed) 
@@ -167,11 +172,6 @@ namespace SunsetHigh
             shootTimer += elapsed;
             if (shootTimer >= RECHARGE_TIME)
                 canShoot = true;
-
-            foreach (Projectile p in projectiles)
-            {
-                p.update(elapsed);  //TODO: remove if off the screen
-            }
         }
 
         public override void reset()
@@ -179,6 +179,7 @@ namespace SunsetHigh
             base.reset();
             dialogue.talking = false;
             dialogue.selfTalking = false;
+            this.setHealth(DEFAULT_MAX_HEALTH);
         }
 
         public override bool move(Direction dir, float elapsed, bool collide = true)
@@ -235,6 +236,14 @@ namespace SunsetHigh
             }
             return 0;
         }
+
+        public void setHealthBarVisible(bool visible) { healthBarVisible = visible; }
+        public void setHealth(int health) { 
+            this.health = health;
+            this.healthBar.setFullRatio((float)health / DEFAULT_MAX_HEALTH);
+        }
+        public int getHealth() { return this.health; }
+        public void shiftHealth(int dhp) { this.setHealth(this.getHealth() + dhp); }
 
         public void converse(Character c)
         {
@@ -349,10 +358,21 @@ namespace SunsetHigh
 
                 Projectile bullet = new Projectile(this.getX() + x, this.getY() + y, 300.0f, this.getDirection());
                 bullet.setImage(Sprite.getCommonImage(PROJECTILE_IMAGE_NAME));
-                projectiles.Add(bullet);
-                
+                bullet.addCollideEvent(new ProjectileCollideEvent(heroBulletCollideEvent));
+                WorldManager.enqueueObjectToCurrentRoom(bullet);
+
                 canShoot = false;
                 shootTimer = 0.0f;
+            }
+        }
+
+        private void heroBulletCollideEvent(IInteractable collider)
+        {
+            if (collider is BraceFace)
+            {
+                BraceFace b1 = (BraceFace)collider;
+                b1.shiftHealth(-1);
+                //dec health
             }
         }
 
@@ -680,7 +700,45 @@ namespace SunsetHigh
             }
         }
 
-        
+        private class HealthBarTexture  //A container for the health bar texture
+        {
+            private const int X_OFFSET = 50;
+            private const int Y_OFFSET = 50;
+            private const int OUTLINE_THICKNESS = 5;
+            private const int BAR_WIDTH = 100;
+            private const int BAR_HEIGHT = 100 / 3;
+            private Texture2D box;
+            private int mX = 0;
+            private int mY = 0;
+            private float mFullRatio = 1.0f;
+
+            public HealthBarTexture()
+            {
+                WorldManager.OffsetChanged += updateOffsets;
+            }
+            public void loadContent(ContentManager content)
+            {
+                box = content.Load<Texture2D>(Directories.SPRITES + "InGameMenuBackground");
+            }
+            public void setFullRatio(float fullRatio)
+            {
+                mFullRatio = fullRatio;
+            }
+            public void draw(SpriteBatch sb)
+            {
+                sb.Draw(box, new Rectangle(mX + X_OFFSET, mY + Y_OFFSET, (int)(mFullRatio * BAR_WIDTH), BAR_HEIGHT), Color.Green);
+                sb.Draw(box, new Rectangle(mX + X_OFFSET - OUTLINE_THICKNESS, mY + Y_OFFSET - OUTLINE_THICKNESS, BAR_WIDTH + OUTLINE_THICKNESS * 2, OUTLINE_THICKNESS), Color.Black);
+                sb.Draw(box, new Rectangle(mX + X_OFFSET- OUTLINE_THICKNESS, mY + Y_OFFSET - OUTLINE_THICKNESS, OUTLINE_THICKNESS, BAR_HEIGHT + OUTLINE_THICKNESS * 2), Color.Black);
+                sb.Draw(box, new Rectangle(mX + X_OFFSET + BAR_WIDTH, mY + Y_OFFSET - OUTLINE_THICKNESS, OUTLINE_THICKNESS, BAR_HEIGHT + OUTLINE_THICKNESS * 2), Color.Black);
+                sb.Draw(box, new Rectangle(mX + X_OFFSET - OUTLINE_THICKNESS, mY + Y_OFFSET + BAR_HEIGHT, BAR_WIDTH + OUTLINE_THICKNESS * 2, OUTLINE_THICKNESS), Color.Black);
+            }
+            private void updateOffsets(object sender, CameraOffsetEventArgs e)
+            {
+                mX += e.dx_offset;
+                mY += e.dy_offset;
+            }
+        }
+
         private class PickpocketSystem  //A container for three sprites
         {
             private const int NEGATIVE_WIDTH = 100;

@@ -81,6 +81,26 @@ namespace SunsetHigh {
             return l_collidedObject;
         }
 
+        public static void checkProjectileCollisions()
+        {
+            //DEBUG
+            IInteractable interactable = CollisionManager.collisionWithInteractableAtRelative(Hero.instance, Point.Zero, Hero.instance);
+            if (interactable != null)
+            {
+                interactable.onCollide(Hero.instance);
+            }
+            //end DEBUG
+            foreach (Character character in WorldManager.m_currentRoom.CharList)
+            {
+                IInteractable interactable2 = null;
+                interactable2 = CollisionManager.collisionWithInteractableAtRelative(character, Point.Zero, character);
+                if (interactable2 != null)
+                {
+                    interactable2.onCollide(character);
+                }
+            }
+        }
+
         public static void excludeInteractableCollision(IInteractable p_exclude)
         {
             m_excluded.Add(p_exclude);

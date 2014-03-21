@@ -1,0 +1,2 @@
+default
+"I have a manicure in an hour." -> [End]

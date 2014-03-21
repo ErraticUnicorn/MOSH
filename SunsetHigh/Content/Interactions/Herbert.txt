@@ -1,0 +1,5 @@
+if Quest FoodFight Complete
+"Brace Face is going crazy in the math classroom! Someone needs to stop him. You know, with the old one-two punch! I would do it, but I've got a date in a couple minutes." -> [End]
+
+default
+"I think the hottest girl in the school likes me, hehehe..." -> [End]

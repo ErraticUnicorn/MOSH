@@ -31,8 +31,9 @@ namespace SunsetHigh
         private static bool playing = false;
         private static bool paused = false;
         private static Timer transitionTimer;
-        private static string queuedSongName;
+        private static string queuedSongName = "";
         private static double queuedFadeTime;
+        private static string currentSongName = "";
 
         /// <summary>
         /// Begins playing a song with the specified file name. Only .mp3, .wma, and .m4a are supported.
@@ -40,11 +41,15 @@ namespace SunsetHigh
         /// <param name="fileName">File name of the song in the "Content" directory</param>
         public static void playSong(string fileName)
         {
-            if (playing)
-                stopSong(); //cut off current song
-
             if (fileName.StartsWith(Directories.MUSIC))
                 fileName = fileName.Substring(Directories.MUSIC.Length);
+
+            if (fileName.Equals(currentSongName))
+                return;
+
+            currentSongName = fileName;
+            if (playing)
+                stopSong(); //cut off current song
 
             if (!tryAllFileTypes(fileName))
             {
@@ -65,6 +70,7 @@ namespace SunsetHigh
                 wavePlayer.Play();
                 playing = true;
             }
+            queuedSongName = "";
         }
 
         /// <summary>
@@ -75,6 +81,8 @@ namespace SunsetHigh
         /// <param name="lagTime">Lag time between the two songs (excluding fade time), in milliseconds</param>
         public static void transitionToSong(string fileName, double fadeTime, double lagTime)
         {
+            if (currentSongName.Equals(fileName))
+                return;
             queuedSongName = fileName;
             fadeOut(fadeTime);
             transitionTimer = new Timer(fadeTime + lagTime);
@@ -100,6 +108,8 @@ namespace SunsetHigh
         /// <param name="lagTime">Lag time between the two songs (excluding fade time), in milliseconds</param>
         public static void transitionToSongWithFadeIn(string fileName, double fadeTime, double lagTime)
         {
+            if (currentSongName.Equals(fileName))
+                return;
             queuedSongName = fileName;
             queuedFadeTime = fadeTime;
             fadeOut(fadeTime);

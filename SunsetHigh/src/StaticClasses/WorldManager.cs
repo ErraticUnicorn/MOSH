@@ -14,7 +14,7 @@ namespace SunsetHigh {
     /// </summary>
     public enum PlaceID
     {
-        Generic = -1,
+        Nowhere = -1,
         Cafeteria = 0,
         ComputerLab,
         Entrance,
@@ -41,7 +41,6 @@ namespace SunsetHigh {
         public static Room m_currentRoom { get; private set; }
         public static PlaceID m_currentRoomID { get; private set; }
         public static Point m_currentCameraOffset { get; private set; }
-        private static Room m_oldRoom;
 
         public static event EventHandler<CameraOffsetEventArgs> OffsetChanged;
 
@@ -111,10 +110,8 @@ namespace SunsetHigh {
                 {
                     Hero.instance.reset();
                     m_currentRoomID = p_roomName;
+                    m_currentRoom.onExit();
                     m_currentRoom = m_rooms[p_roomName];
-                    m_currentRoom.updateState();
-                    if (m_oldRoom != null)
-                        m_oldRoom.onExit();
                     m_currentRoom.onEnter();
                     Hero.instance.setX(p_newX);
                     Hero.instance.setY(p_newY);
@@ -133,10 +130,8 @@ namespace SunsetHigh {
         public static void setRoomNoTransition(PlaceID p_roomName, int p_newX, int p_newY, Direction p_newDirection)
         {
             m_currentRoomID = p_roomName;
+            m_currentRoom.onExit();
             m_currentRoom = m_rooms[p_roomName];
-            m_currentRoom.updateState();
-            if (m_oldRoom != null)
-                m_oldRoom.onExit();
             m_currentRoom.onEnter();
             Hero.instance.setX(p_newX);
             Hero.instance.setY(p_newY);
@@ -159,13 +154,27 @@ namespace SunsetHigh {
         {
             m_rooms[p_room].removeObject(p_obj);
         }
+        public static void enqueueObjectToCurrentRoom(IInteractable p_obj)
+        {
+            m_rooms[m_currentRoomID].enqueueObject(p_obj);
+        }
+        public static void dequeueObjectToCurrentRoom(IInteractable p_obj)
+        {
+            m_rooms[m_currentRoomID].dequeueObject(p_obj);
+        }
+        public static void clearMaps()
+        {
+            foreach (Room room in m_rooms.Values)
+            {
+                room.clearLists();
+            }
+        }
 
         public static void handleWarp(Hero p_hero) {
             Rectangle l_heroBounds = new Rectangle(p_hero.getX(), p_hero.getY(), p_hero.getWidth() - 4, p_hero.getHeight() - 4); //NOTE!! warp collision boxes must be bigger
             MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
 
             if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
-                m_oldRoom = m_currentRoom;
                 int l_newX = m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"];
                 int l_newY = m_currentRoom.background.TileHeight * (int) l_collidedObject.Properties["warpY"];
                 string l_newRoomName = (string)l_collidedObject.Properties["warpMap"];

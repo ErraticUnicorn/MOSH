@@ -1,0 +1,2 @@
+default
+"Do my math homework, or else." -> [End]

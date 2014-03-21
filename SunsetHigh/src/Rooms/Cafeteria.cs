@@ -257,65 +257,56 @@ namespace SunsetHigh
                     }
                 }
             }
-
-            //cleanup of projectiles offscreen
-            foreach (IInteractable i in new List<IInteractable>(this.Interactables))
-            {
-                if (i is Projectile)
-                {
-                    Projectile p = (Projectile)i;
-                    if (p.getY() > 21 * 32 + 100 || p.getY() < 0 - 100)
-                    {
-                        this.removeObject(p);
-                    }
-                }
-            }
         }
 
-        public void foodCollideEvent()
+        public void foodCollideEvent(IInteractable collider)    //we ignore the argument and assume the collider is the hero
         {
-            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress1)
-                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress2))
+            if (collider is Hero
+                || (Hero.instance.hasFollower() && CharacterManager.getCharacter(Hero.instance.getFollowerID()) == collider))
             {
-                ScreenTransition.requestTransition(delegate()
+                if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress1)
+                    && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress2))
                 {
-                    WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 24 * TILE_SIZE, 10 * TILE_SIZE, Direction.West);
-                    CharacterManager.getCharacter(PersonID.Phil).setPosition(25 * TILE_SIZE, 10 * TILE_SIZE);
-                    CharacterManager.getCharacter(PersonID.Phil).reset();
-                });
-            }
-            else if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress3)
-            && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress4))
-            {
-                ScreenTransition.requestTransition(delegate()
+                    ScreenTransition.requestTransition(delegate()
+                    {
+                        WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 24 * TILE_SIZE, 10 * TILE_SIZE, Direction.West);
+                        CharacterManager.getCharacter(PersonID.Phil).setPosition(25 * TILE_SIZE, 10 * TILE_SIZE);
+                        CharacterManager.getCharacter(PersonID.Phil).reset();
+                    });
+                }
+                else if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress3)
+                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress4))
                 {
-                    WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 12 * TILE_SIZE, 9 * TILE_SIZE, Direction.West);
-                    CharacterManager.getCharacter(PersonID.Artie).setPosition(12 * TILE_SIZE, 8 * TILE_SIZE);
-                    CharacterManager.getCharacter(PersonID.Artie).reset();
-                });
-            }
-            else if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress5)
-            && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress6))
-            {
-                ScreenTransition.requestTransition(delegate()
+                    ScreenTransition.requestTransition(delegate()
+                    {
+                        WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 12 * TILE_SIZE, 9 * TILE_SIZE, Direction.West);
+                        CharacterManager.getCharacter(PersonID.Artie).setPosition(12 * TILE_SIZE, 8 * TILE_SIZE);
+                        CharacterManager.getCharacter(PersonID.Artie).reset();
+                    });
+                }
+                else if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress5)
+                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress6))
                 {
-                    WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 17 * TILE_SIZE, 14 * TILE_SIZE, Direction.West);
-                    CharacterManager.getCharacter(PersonID.Bill).setPosition(16 * TILE_SIZE, 14 * TILE_SIZE);
-                    CharacterManager.getCharacter(PersonID.Bill).reset();
-                });
-            }
-            else if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress7)
-            && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress8))
-            {
-                ScreenTransition.requestTransition(delegate()
+                    ScreenTransition.requestTransition(delegate()
+                    {
+                        WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 17 * TILE_SIZE, 14 * TILE_SIZE, Direction.West);
+                        CharacterManager.getCharacter(PersonID.Bill).setPosition(16 * TILE_SIZE, 14 * TILE_SIZE);
+                        CharacterManager.getCharacter(PersonID.Bill).reset();
+                    });
+                }
+                else if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress7)
+                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress8))
                 {
-                    WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 24 * TILE_SIZE, 18 * TILE_SIZE, Direction.West);
-                    CharacterManager.getCharacter(PersonID.Claude).setPosition(25 * TILE_SIZE, 18 * TILE_SIZE);
-                    CharacterManager.getCharacter(PersonID.Claude).reset();
-                });
+                    ScreenTransition.requestTransition(delegate()
+                    {
+                        WorldManager.setRoomNoTransition(PlaceID.Cafeteria, 24 * TILE_SIZE, 18 * TILE_SIZE, Direction.West);
+                        CharacterManager.getCharacter(PersonID.Claude).setPosition(25 * TILE_SIZE, 18 * TILE_SIZE);
+                        CharacterManager.getCharacter(PersonID.Claude).reset();
+                    });
+                }
+                else
+                    WorldManager.setRoom(PlaceID.HallwayEast, 19 * TILE_SIZE, 3 * TILE_SIZE, Direction.East);
             }
-            else
-                WorldManager.setRoom(PlaceID.HallwayEast, 19 * TILE_SIZE, 3 * TILE_SIZE, Direction.East);
         }
     }
 }

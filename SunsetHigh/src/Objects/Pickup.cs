@@ -91,9 +91,9 @@ namespace SunsetHigh
         /// <summary>
         /// We assume whenever the Hero collides with a pickup he picks it up.
         /// </summary>
-        public override void onCollide()
+        public override void onCollide(IInteractable other)
         {
-            base.onCollide();
+            base.onCollide(other);
             Hero.instance.pickup(this);     //roundabout.. change later
         }
     }

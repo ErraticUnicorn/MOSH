@@ -1,0 +1,4 @@
+default
+"What are you looking at? You want to fight?" -> ["Sure do!" -> 2, "Ack!" -> 3]
+"Ha! You better run, midget, or you're going to be begging for your lunch money." -> [End]
+"Hehehehe. *snort* You're not worth my time." -> [End]

@@ -150,6 +150,7 @@ namespace SunsetHigh
             h1.loadSaveStructure(data.heroData);
             KeyboardManager.loadKeyControls(data.inputKeys);
             Quest.loadQuestStateSave(data.questStates);
+            WorldManager.clearMaps();
             WorldManager.setRoomNoTransition(data.roomName);
             GameClock.loadSaveStructure(data.playTime);
             CharacterManager.loadSaveStructure(data.characterStates);
@@ -175,6 +176,7 @@ namespace SunsetHigh
             defQuests[(int)QuestID.FoodFight] = QuestState.Available;
             Quest.loadQuestStateSave(defQuests);
 
+            WorldManager.clearMaps();
             WorldManager.setRoomNoTransition(PlaceID.HallwayWest);
 
             GameClock.renewClock();
@@ -219,6 +221,68 @@ namespace SunsetHigh
             characterSave.char_x[(int)PersonID.Jay4] = 20 * 32;
             characterSave.char_y[(int)PersonID.Jay4] = 2 * 32;
             characterSave.char_room[(int)PersonID.Jay4] = PlaceID.Cafeteria;
+
+            characterSave.char_x[(int)PersonID.BraceFace] = 10 * 32;
+            characterSave.char_y[(int)PersonID.BraceFace] = 10 * 32;
+            characterSave.char_room[(int)PersonID.BraceFace] = PlaceID.Math;
+
+            characterSave.char_x[(int)PersonID.Fitz] = 19 * 32;
+            characterSave.char_y[(int)PersonID.Fitz] = 13 * 32;
+            characterSave.char_room[(int)PersonID.Fitz] = PlaceID.ComputerLab;
+
+            characterSave.char_x[(int)PersonID.ROB] = 8 * 32;
+            characterSave.char_y[(int)PersonID.ROB] = 11 * 32;
+            characterSave.char_room[(int)PersonID.ROB] = PlaceID.Science;
+
+            characterSave.char_x[(int)PersonID.Enforcer] = 11 * 32;
+            characterSave.char_y[(int)PersonID.Enforcer] = 49 * 32;
+            characterSave.char_room[(int)PersonID.Enforcer] = PlaceID.HallwayWest;
+
+            characterSave.char_x[(int)PersonID.Tyke] = 11 * 32;
+            characterSave.char_y[(int)PersonID.Tyke] = 6 * 32;
+            characterSave.char_room[(int)PersonID.Tyke] = PlaceID.Entrance;
+
+            characterSave.char_x[(int)PersonID.Dyke] = 18 * 32;
+            characterSave.char_y[(int)PersonID.Dyke] = 11 * 32;
+            characterSave.char_room[(int)PersonID.Dyke] = PlaceID.StudentLounge;
+
+            characterSave.char_x[(int)PersonID.Shaq] = 23 * 32;
+            characterSave.char_y[(int)PersonID.Shaq] = 3 * 32;
+            characterSave.char_room[(int)PersonID.Shaq] = PlaceID.HallwayEast;
+
+            characterSave.char_x[(int)PersonID.Herbert] = 3 * 32;
+            characterSave.char_y[(int)PersonID.Herbert] = 40 * 32;
+            characterSave.char_room[(int)PersonID.Herbert] = PlaceID.HallwayWest;
+
+            characterSave.char_x[(int)PersonID.Avery] = 8 * 32;
+            characterSave.char_y[(int)PersonID.Avery] = 7 * 32;
+            characterSave.char_room[(int)PersonID.Avery] = PlaceID.StudentLounge;
+
+            characterSave.char_x[(int)PersonID.Boris] = 25 * 32;
+            characterSave.char_y[(int)PersonID.Boris] = 5 * 32;
+            characterSave.char_room[(int)PersonID.Boris] = PlaceID.Entrance;
+
+            characterSave.char_x[(int)PersonID.Jarvis] = 17 * 32;
+            characterSave.char_y[(int)PersonID.Jarvis] = 15 * 32;
+            characterSave.char_room[(int)PersonID.Jarvis] = PlaceID.Entrance;
+
+            characterSave.char_x[(int)PersonID.Zeke] = 10 * 32;
+            characterSave.char_y[(int)PersonID.Zeke] = 4 * 32;
+            characterSave.char_room[(int)PersonID.Zeke] = PlaceID.Bathroom;
+
+            /*
+        Fitz,
+        ROB,
+        Enforcer,
+        Tyke,
+        Dyke,
+        Shaq,
+        Herbert,
+        Avery,
+        Boris,
+        Jarvis,
+        Zeke
+             */
 
             CharacterManager.loadSaveStructure(characterSave);
         }

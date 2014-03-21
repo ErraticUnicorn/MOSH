@@ -70,22 +70,7 @@ namespace SunsetHigh
                 h1.update(elapsed);
                 WorldManager.update(elapsed);
             }
-
-            //DEBUG
-            IInteractable interactable = CollisionManager.collisionWithInteractableAtRelative(Hero.instance, Point.Zero, Hero.instance);
-            IInteractable interactable2 = null;
-            if (Hero.instance.hasFollower()) 
-                interactable2 = CollisionManager.collisionWithInteractableAtRelative(
-                    CharacterManager.getCharacter(Hero.instance.getFollowerID()), Point.Zero, CharacterManager.getCharacter(Hero.instance.getFollowerID()));
-            if (interactable != null)
-            {
-                interactable.onCollide();
-            }
-            else if (interactable2 != null)
-            {
-                interactable2.onCollide();
-            }
-            //end DEBUG
+            CollisionManager.checkProjectileCollisions();
         }
 
         public override void draw(SpriteBatch sb)

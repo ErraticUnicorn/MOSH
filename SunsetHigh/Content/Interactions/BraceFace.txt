@@ -1,0 +1,5 @@
+﻿if Quest FoodFight Complete
+"Feel my wrath!" -> [End]
+
+default
+"..." -> [End]

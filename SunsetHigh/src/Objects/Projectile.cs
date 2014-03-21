@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace SunsetHigh
 {
-    public delegate void ProjectileCollideEvent();
+    public delegate void ProjectileCollideEvent(IInteractable collider);
 
     public class Projectile : FreeMovingSprite
     {
@@ -136,12 +136,12 @@ namespace SunsetHigh
             this.move(this.getAngle(), elapsed, false);
         }
 
-        public override void onCollide()
+        public override void onCollide(IInteractable other)
         {
-            base.onCollide();
+            base.onCollide(other);
             if (mEvent != null)
             {
-                mEvent();
+                mEvent(other);
             }
         }
     }

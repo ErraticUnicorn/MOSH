@@ -187,7 +187,7 @@ namespace SunsetHigh
             IInteractable interactObj = CollisionManager.collisionWithInteractableAtRelative(this, l_offset, this);
             if (interactObj != null)
             {
-                interactObj.onCollide();
+                interactObj.onCollide(this);
                 if (interactObj is Character)
                 {
                     if ((l_offset.X == 0) != (l_offset.Y == 0))     //only one offset is zero (multiple cannot be handled yet)

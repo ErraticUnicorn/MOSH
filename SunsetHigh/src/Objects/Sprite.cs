@@ -269,7 +269,7 @@ namespace SunsetHigh
         public virtual void onInteract()
         {
         }
-        public virtual void onCollide()
+        public virtual void onCollide(IInteractable other)
         {
         }
         public virtual void reset()
