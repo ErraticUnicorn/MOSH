@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="75" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="3591Final-Football-ss04" tilewidth="32" tileheight="32">
+  <image source="../Tiles/3591Final-Football-ss04.png" width="316" height="240"/>
+ </tileset>
+ <tileset firstgid="64" name="sprite_parking_lot_1" tilewidth="32" tileheight="32">
+  <image source="../Tiles/sprite_parking_lot_1.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="65" name="sprite_parking_lot_2" tilewidth="32" tileheight="32">
+  <image source="../Tiles/sprite_parking_lot_2.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="66" name="Backgrounds Variety" tilewidth="32" tileheight="32">
+  <image source="Tilesets/Backgrounds Variety.png" width="896" height="1385"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="50" height="75">
+  <data encoding="base64" compression="zlib">
+   eJztwYEAAAAAw6D5Ux/hAlUBAAAAAAAAAAAAAAAAAMA3OpgAAQ==
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="50" height="75">
+  <data encoding="base64" compression="zlib">
+   eJztld1Kw0AQRudGFLX+YLW9UDdRVFLFSosoiqLv/1J+wV0MQxUp7bKEc+AwUyZpMiQfMYOS2ZRba6wb7PFvBnJb7sjd+HtP7ssDebiC+SDDHifySA7lsQxy5Prg5v7YVOtOP5YX8jJeI8cep/JMnsf7qFwf3Nwfm+qk09dxj7uMe1zJa3kT76NxfXBzf2yqE9fnfh73ciof7Oe9SP0s1u58umDe1rnrcz8Pn4/KlsvH2MrKR2PL5aO2svIxsn7ko7K/8zFcMC8xH431Ix8z60c+VvX9uJWPmfZor/sm3+37nX+Rr7F/ks/2+/ejO0+ZSOfPO/8bMuzR8iE/11wBAAAAAAAAAAAAAAAAAAAAAAAAAAAASuALhqsyew==
+  </data>
+ </layer>
+ <imagelayer name="Image Layer 1" width="50" height="75"/>
+</map>
