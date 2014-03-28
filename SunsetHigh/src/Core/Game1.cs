@@ -90,7 +90,7 @@ namespace SunsetHigh
 
             //play title song first
             BGMusic.playSong("sunset high menu track.mp3");
-            BGMusic.setPaused(true);
+            //BGMusic.setPaused(true);
 
             ScreenTransition.loadContent(Content);
             foreach (AbstractScreen screen in gameScreens)
@@ -119,7 +119,13 @@ namespace SunsetHigh
         {
             KeyboardManager.update();
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;   //time elapsed since last update
-
+            //debug
+            if (KeyboardManager.isKeyDown(Keys.E))
+            {
+                BGMusic.fadeOut();
+                BGMusic.fadeIn();
+            }
+            //end debug
             if (refreshRequested)
             {
                 refreshRequested = false;

@@ -9,13 +9,17 @@
 (Hmm.. nothing too appetizing here..)
 #end
 
-#if Location not Cafeteria and Quest FoodFight Accepted and not Progress1 and not Progress2
-(I need to find Lucas in the cafeteria.)
-(Wonder if Lucas is safe?)
+#if Location not Cafeteria and Quest FoodFight Accepted and not Progress1
+(I need to find Phil in the cafeteria.)
+(Wonder if Phil is safe?)
 #end
 
-#if Location Cafeteria and Quest FoodFight Accepted and not Progress1 and not Progress2
-(Lucas must on the other side of this battlefield.)
+#if Location Cafeteria and Quest FoodFight Accepted and not Progress1
+(Phil must on the other side of this battlefield.)
+#end
+
+#if Location Cafeteria and Quest FoodFight Accepted and Progress1 and not Progress2
+(Now, the long walk back.)
 #end
 
 #if Quest FoodFight Complete

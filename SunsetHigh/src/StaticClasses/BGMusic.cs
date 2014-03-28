@@ -30,8 +30,9 @@ namespace SunsetHigh
         private static SampleToWaveProvider sampleToWave;
         private static bool playing = false;
         private static bool paused = false;
-        private static Timer transitionTimer;
-        private static string queuedSongName = "";
+        private static volatile bool fadingOut = false;
+        private static Timer transitionTimer, transitionTimer2;
+        private static volatile string queuedSongName = "";
         private static double queuedFadeTime;
         private static string currentSongName = "";
 
@@ -44,10 +45,16 @@ namespace SunsetHigh
             if (fileName.StartsWith(Directories.MUSIC))
                 fileName = fileName.Substring(Directories.MUSIC.Length);
 
+            System.Diagnostics.Debug.WriteLine(fileName);
             if (fileName.Equals(currentSongName))
+            {
+                if (fadingOut)
+                {
+                    fadeIn();
+                    System.Diagnostics.Debug.WriteLine("FADE in");
+                }
                 return;
-
-            currentSongName = fileName;
+            }
             if (playing)
                 stopSong(); //cut off current song
 
@@ -70,7 +77,7 @@ namespace SunsetHigh
                 wavePlayer.Play();
                 playing = true;
             }
-            queuedSongName = "";
+            currentSongName = fileName;
         }
 
         /// <summary>
@@ -81,13 +88,23 @@ namespace SunsetHigh
         /// <param name="lagTime">Lag time between the two songs (excluding fade time), in milliseconds</param>
         public static void transitionToSong(string fileName, double fadeTime, double lagTime)
         {
-            if (currentSongName.Equals(fileName))
+            if (queuedSongName.Equals(fileName))
                 return;
+            if (fadingOut)
+            {
+                queuedSongName = fileName;
+                return;
+            }
             queuedSongName = fileName;
             fadeOut(fadeTime);
-            transitionTimer = new Timer(fadeTime + lagTime);
-            transitionTimer.Elapsed += new ElapsedEventHandler(OnFadeOver);
+            if (transitionTimer == null)
+            {
+                transitionTimer = new Timer();
+                transitionTimer.Elapsed += new ElapsedEventHandler(OnFadeOver);
+            }
+            transitionTimer.Interval = fadeTime + lagTime;
             transitionTimer.Start();
+            fadingOut = true;
         }
 
         /// <summary>
@@ -108,14 +125,25 @@ namespace SunsetHigh
         /// <param name="lagTime">Lag time between the two songs (excluding fade time), in milliseconds</param>
         public static void transitionToSongWithFadeIn(string fileName, double fadeTime, double lagTime)
         {
-            if (currentSongName.Equals(fileName))
+            if (queuedSongName.Equals(fileName))
                 return;
+            if (fadingOut)
+            {
+                queuedSongName = fileName;
+                queuedFadeTime = fadeTime;
+                return;
+            }
             queuedSongName = fileName;
             queuedFadeTime = fadeTime;
             fadeOut(fadeTime);
-            transitionTimer = new Timer(fadeTime + lagTime);
-            transitionTimer.Elapsed += new ElapsedEventHandler(OnFadeOverFadeIn);
-            transitionTimer.Start();
+            if (transitionTimer2 == null)
+            {
+                transitionTimer2 = new Timer();
+                transitionTimer2.Elapsed += new ElapsedEventHandler(OnFadeOverFadeIn);
+            }
+            transitionTimer2.Interval = fadeTime + lagTime;
+            transitionTimer2.Start();
+            fadingOut = true;
         }
 
         /// <summary>
@@ -291,14 +319,18 @@ namespace SunsetHigh
             transitionTimer.Stop(); //event is single fire
             stopSong(); //dispose of old song
             playSong(queuedSongName);
+            fadingOut = false;
+            //queuedSongName = "";
         }
 
         private static void OnFadeOverFadeIn(object source, ElapsedEventArgs e)
         {
-            transitionTimer.Stop(); //event is single fire
+            transitionTimer2.Stop(); //event is single fire
             stopSong(); //dispose of old song
             playSong(queuedSongName);
+            fadingOut = false;
             fadeInOut.BeginFadeIn(queuedFadeTime);
+            //queuedSongName = "";
         }
 
         /// <summary>

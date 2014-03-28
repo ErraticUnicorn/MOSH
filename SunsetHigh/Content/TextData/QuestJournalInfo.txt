@@ -1,18 +1,18 @@
 ﻿#entry FoodFight
 #title Food Fight!
 
-Accepted Phil's plea to rescue her friend Lucas from the dangerous cafeteria. Head over ASAP!
+Accepted the Librarian's plea to rescue her student Phil from the dangerous cafeteria. Head over ASAP!
 
-#if Progress1	
-Braved flying apples and burgers to reach Lucas, who told you that the head nerds might have some interesting information about dat girl's disappearance...
+#if Progress1 and not Progress2
+Reached Phil... now head out of the cafeteria!
 #end
 
 #if Progress2
-Braved flying apples and burgers to reach Lucas, who did not reveal any interesting information. At least he is safe now.
+Braved flying apples and burgers to reach Phil, who followed you back out of the cafeteria. She seems unrattled by the whole incident.
 #end
 
 #if Complete
-Reported back to Phil, who showered you with praise. Few are the people who would navigate a food fight to rescue a nerd.
+Reported back to the Librarian, who showered you with praise. Few are the people who would navigate a food fight to rescue a nerd.
 #end
 
 #end

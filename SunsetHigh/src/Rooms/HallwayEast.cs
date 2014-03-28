@@ -18,6 +18,35 @@ namespace SunsetHigh
             base.loadContent(content, filename);
         }
 
+        public override void updateState()
+        {
+            base.updateState();
+            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress2))
+            {
+                Character c1 = CharacterManager.getCharacter(PersonID.Phil);
+                if (this.CharList.Contains(c1))
+                    c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
+            }
+            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress4))
+            {
+                Character c1 = CharacterManager.getCharacter(PersonID.Artie);
+                if (this.CharList.Contains(c1))
+                    c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
+            }
+            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress6))
+            {
+                Character c1 = CharacterManager.getCharacter(PersonID.Bill);
+                if (this.CharList.Contains(c1))
+                    c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
+            }
+            if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress8))
+            {
+                Character c1 = CharacterManager.getCharacter(PersonID.Claude);
+                if (this.CharList.Contains(c1))
+                    c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
+            }
+        }
+
         public override void onEnter()
         {
             base.onEnter();
@@ -26,7 +55,6 @@ namespace SunsetHigh
             {
                 CharacterManager.moveCharacterToRoom(PersonID.Phil, PlaceID.HallwayEast, 20 * TILE_SIZE, 3 * TILE_SIZE);
                 Character c1 = CharacterManager.getCharacter(PersonID.Phil);
-                c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
                 Hero.instance.stopFollower();
                 Hero.instance.converse(c1);
             }
@@ -35,7 +63,6 @@ namespace SunsetHigh
             {
                 CharacterManager.moveCharacterToRoom(PersonID.Artie, PlaceID.HallwayEast, 20 * TILE_SIZE, 3 * TILE_SIZE);
                 Character c1 = CharacterManager.getCharacter(PersonID.Artie);
-                c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
                 Hero.instance.stopFollower();
                 Hero.instance.converse(c1);
             }
@@ -44,16 +71,14 @@ namespace SunsetHigh
             {
                 CharacterManager.moveCharacterToRoom(PersonID.Bill, PlaceID.HallwayEast, 20 * TILE_SIZE, 3 * TILE_SIZE);
                 Character c1 = CharacterManager.getCharacter(PersonID.Bill);
-                c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
                 Hero.instance.stopFollower();
                 Hero.instance.converse(c1);
             }
             if (Quest.isQuestStateActive(QuestID.FoodFight, QuestState.Progress7)
-             && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress8))
+                && Quest.isQuestStateInactive(QuestID.FoodFight, QuestState.Progress8))
             {
                 CharacterManager.moveCharacterToRoom(PersonID.Claude, PlaceID.HallwayEast, 20 * TILE_SIZE, 3 * TILE_SIZE);
                 Character c1 = CharacterManager.getCharacter(PersonID.Claude);
-                c1.moveToDestination(20 * TILE_SIZE, -2 * TILE_SIZE, null);
                 Hero.instance.stopFollower();
                 Hero.instance.converse(c1);
             }

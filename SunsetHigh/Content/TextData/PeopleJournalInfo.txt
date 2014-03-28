@@ -3,7 +3,7 @@
 A somewhat frenetic female nerd always clinging to her fanfic.
 
 #if Quest FoodFight Complete
-She concerns herself with the well-being of Lucas, although it can't really be said that they are friends.
+She doesn't have too many friends, but seems to be scheming something behind the scenes.
 #end
 
 #end

@@ -59,6 +59,7 @@ namespace SunsetHigh
             Character phil = new Character();
             phil.loadImage(content, Directories.CHARACTERS + "sprite_ffwriter");
             phil.setScript(Directories.INTERACTIONS + "Phil.txt");
+            phil.inventory.addItem(Item.PokeBall);
             mCharMap[PersonID.Phil] = phil;
 
             Character librarian = new Character();
@@ -69,16 +70,19 @@ namespace SunsetHigh
             Character bill = new Character();
             bill.loadImage(content, Directories.CHARACTERS_TEMP + "jock");
             bill.setScript(Directories.INTERACTIONS + "Bill.txt");
+            bill.inventory.addItem(Item.SmallDumbell);
             mCharMap[PersonID.Bill] = bill;
 
             Character artie = new Character();
             artie.loadImage(content, Directories.CHARACTERS_TEMP + "prep");
             artie.setScript(Directories.INTERACTIONS + "Artie.txt");
+            artie.inventory.addItem(Item.Cologne);
             mCharMap[PersonID.Artie] = artie;
 
             Character claude = new Character();
             claude.loadImage(content, Directories.CHARACTERS_TEMP + "slacker");
             claude.setScript(Directories.INTERACTIONS + "Claude.txt");
+            claude.inventory.addItem(Item.SomeSubstance);
             mCharMap[PersonID.Claude] = claude;
 
             Character jay1 = new Character();
@@ -102,61 +106,73 @@ namespace SunsetHigh
             braceface.loadContent(content);
             braceface.loadImage(content, Directories.CHARACTERS + "sprite_brace_face_temp");
             braceface.setScript(Directories.INTERACTIONS + "BraceFace.txt");
+            braceface.inventory.addItem(Item.PokeBall);
             mCharMap[PersonID.BraceFace] = braceface;
 
             Character fitz = new Character();
             fitz.loadImage(content, Directories.CHARACTERS_TEMP + "nerd");
             fitz.setScript(Directories.INTERACTIONS + "Fitz.txt");
+            fitz.inventory.addItem(Item.PokeBall);
             mCharMap[PersonID.Fitz] = fitz;
 
             Character rob = new Character();
             rob.loadImage(content, Directories.CHARACTERS_TEMP + "nerd2");
             rob.setScript(Directories.INTERACTIONS + "ROB.txt");
+            rob.inventory.addItem(Item.PokeBall);
             mCharMap[PersonID.ROB] = rob;
 
             Character enforcer = new Character();
             enforcer.loadImage(content, Directories.CHARACTERS + "sprite_enforcer");
             enforcer.setScript(Directories.INTERACTIONS + "Enforcer.txt");
+            enforcer.inventory.addItem(Item.LightSaber);
             mCharMap[PersonID.Enforcer] = enforcer;
 
             Character tyke = new Character();
             tyke.loadImage(content, Directories.CHARACTERS_TEMP + "bully");
             tyke.setScript(Directories.INTERACTIONS + "Tyke.txt");
+            tyke.inventory.addItem(Item.LunchMoney);
             mCharMap[PersonID.Tyke] = tyke;
 
             Character dyke = new Character();
             dyke.loadImage(content, Directories.CHARACTERS_TEMP + "bully2");
             dyke.setScript(Directories.INTERACTIONS + "Dyke.txt");
+            dyke.inventory.addItem(Item.LunchMoney);
             mCharMap[PersonID.Dyke] = dyke;
 
             Character shaq = new Character();
             shaq.loadImage(content, Directories.CHARACTERS_TEMP + "jock");
             shaq.setScript(Directories.INTERACTIONS + "Shaq.txt");
+            shaq.inventory.addItem(Item.SmallDumbell);
             mCharMap[PersonID.Shaq] = shaq;
 
             Character herbert = new Character();
             herbert.loadImage(content, Directories.CHARACTERS + "sprite_herbert_front");
             herbert.setScript(Directories.INTERACTIONS + "Herbert.txt");
+            herbert.inventory.addItem(Item.PokeBall);
             mCharMap[PersonID.Herbert] = herbert;
 
             Character avery = new Character();
             avery.loadImage(content, Directories.CHARACTERS_TEMP + "prep");
             avery.setScript(Directories.INTERACTIONS + "Avery.txt");
+            avery.inventory.addItem(Item.Cologne);
             mCharMap[PersonID.Avery] = avery;
 
             Character boris = new Character();
             boris.loadImage(content, Directories.CHARACTERS_TEMP + "prep2");
             boris.setScript(Directories.INTERACTIONS + "Boris.txt");
+            boris.inventory.addItem(Item.Cologne);
             mCharMap[PersonID.Boris] = boris;
 
             Character jarvis = new Character();
             jarvis.loadImage(content, Directories.CHARACTERS_TEMP + "slacker");
             jarvis.setScript(Directories.INTERACTIONS + "Jarvis.txt");
+            jarvis.inventory.addItem(Item.SomeSubstance);
             mCharMap[PersonID.Jarvis] = jarvis;
 
             Character zeke = new Character();
             zeke.loadImage(content, Directories.CHARACTERS_TEMP + "slacker2");
             zeke.setScript(Directories.INTERACTIONS + "Zeke.txt");
+            zeke.inventory.addItem(Item.SomeSubstance);
             mCharMap[PersonID.Zeke] = zeke;
         }
 

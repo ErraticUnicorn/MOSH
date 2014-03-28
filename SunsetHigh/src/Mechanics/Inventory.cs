@@ -14,12 +14,12 @@ namespace SunsetHigh
     {
         Nothing = -1,   //used for showing steal failed (like a null type)
 
-        Shoes = 0,      //any possible items go here! (comma delimited)
-        Socks,
-        Hat,
+        PokeBall = 0,      //any possible items go here! (comma delimited)
+        LightSaber,
         LunchMoney,
-        PokeBall,
-        Meds,
+        SmallDumbell,
+        Cologne,
+        SomeSubstance,
     };
 
     public struct InventorySave
