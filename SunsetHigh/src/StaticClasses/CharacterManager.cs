@@ -184,8 +184,10 @@ namespace SunsetHigh
         public static void moveCharacterToRoom(PersonID person, PlaceID place, int x, int y)
         {
             Character c1 = mCharMap[person];
-            WorldManager.removeObjectFromRoom(c1, mRoomMap[person]);
-            WorldManager.addObjectToRoom(c1, place);
+            if (mRoomMap[person] != PlaceID.Nowhere)
+                WorldManager.removeObjectFromRoom(c1, mRoomMap[person]);
+            if (place != PlaceID.Nowhere)
+                WorldManager.addObjectToRoom(c1, place);
             mRoomMap[person] = place;
             c1.setX(x);
             c1.setY(y);

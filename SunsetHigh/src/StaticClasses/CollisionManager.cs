@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TiledLib;
+using TiledPipelineExtensions;
 
 namespace SunsetHigh {
 
@@ -11,27 +11,59 @@ namespace SunsetHigh {
         public static readonly Point K_ZERO_OFFSET = new Point(0, 0);
         private static HashSet<IInteractable> m_excluded = new HashSet<IInteractable>();
 
-        // returns whether the specified sprite is currently colliding with a solid object
-        public static bool collisionWithSolid(Sprite p_sprite) {
+        /// <summary>
+        /// Returns whether the specified sprite is currently colliding with a solid object
+        /// </summary>
+        /// <param name="p_sprite"></param>
+        /// <returns></returns>
+        public static bool collisionWithSolid(IInteractable p_sprite) {
             return collisionWithSolidAtRelative(p_sprite, K_ZERO_OFFSET);
         }
 
-        // returns whether the specified sprite collides with a solid object if its position were changed
-        public static bool collisionWithSolidAtRelative(Sprite p_sprite, Point p_offset) {
+        /// <summary>
+        /// Returns whether the specified sprite collides with a solid object if its position were changed
+        /// </summary>
+        /// <param name="p_sprite"></param>
+        /// <param name="p_offset"></param>
+        /// <returns></returns>
+        public static bool collisionWithSolidAtRelative(IInteractable p_sprite, Point p_offset) {
             return collisionWithObjectAtRelative(p_sprite, p_offset, "Solid") != null;
+        }
+
+        /// <summary>
+        /// Returns whether the specified sprite is currently colliding with a teleport zone
+        /// </summary>
+        /// <param name="p_sprite"></param>
+        /// <returns></returns>
+        public static MapObject collisionWithTeleport(IInteractable p_sprite)
+        {
+            return collisionWithTeleportAtRelative(p_sprite, K_ZERO_OFFSET);
+        }
+
+        /// <summary>
+        /// Returns whether the specified sprite collides with a teleport zone if its position were changed
+        /// </summary>
+        /// <param name="p_sprite"></param>
+        /// <param name="p_offset"></param>
+        /// <returns></returns>
+        public static MapObject collisionWithTeleportAtRelative(IInteractable p_sprite, Point p_offset)
+        {
+            return collisionWithObjectAtRelative(p_sprite, p_offset, "Teleport");
         }
 
         // returns an object in the specified Tiled map object layer that the given sprite collides with
         // throws exception if the specified layer does not exist!
-        public static MapObject collisionWithObjectAtRelative(Sprite p_sprite, Point p_offset, String p_layer) {
+        public static MapObject collisionWithObjectAtRelative(IInteractable p_interactable, Point p_offset, String p_layer) {
             MapObject l_collidedObject = null;
             
             foreach (MapObject m in ((MapObjectLayer) WorldManager.m_currentRoom.background.GetLayer(p_layer)).Objects) {
-                Rectangle l_spriteBounds = new Rectangle(
-                    p_sprite.getX() + p_offset.X,
-                    p_sprite.getY() + p_offset.Y,
-                    p_sprite.getWidth(),
-                    p_sprite.getHeight());
+                Rectangle l_copy = p_interactable.getBoundingRect();    //preserve this just in case
+                Rectangle l_spriteBounds;
+                l_spriteBounds.X = l_copy.X + p_offset.X;
+                l_spriteBounds.Y = l_copy.Y + p_offset.Y;
+                l_spriteBounds.Width = l_copy.Width;
+                l_spriteBounds.Height = l_copy.Height;
+
                 if (l_spriteBounds.Intersects(m.Bounds)) {
                     l_collidedObject = m;
                     break;

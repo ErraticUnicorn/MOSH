@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TiledLib;
+using TiledPipelineExtensions;
 
 namespace SunsetHigh {
 
@@ -172,7 +172,7 @@ namespace SunsetHigh {
 
         public static void handleWarp(Hero p_hero) {
             Rectangle l_heroBounds = new Rectangle(p_hero.getX(), p_hero.getY(), p_hero.getWidth() - 4, p_hero.getHeight() - 4); //NOTE!! warp collision boxes must be bigger
-            MapObject l_collidedObject = CollisionManager.collisionWithObjectAtRelative(p_hero, CollisionManager.K_ZERO_OFFSET, "Teleport");
+            MapObject l_collidedObject = CollisionManager.collisionWithTeleport(p_hero);
 
             if (l_collidedObject != null && l_collidedObject.Bounds.Contains(l_heroBounds)) {
                 int l_newX = m_currentRoom.background.TileWidth * (int) l_collidedObject.Properties["warpX"];

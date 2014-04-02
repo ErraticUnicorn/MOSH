@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using TiledLib;
+using TiledPipelineExtensions;
 
 namespace SunsetHigh
 {
@@ -53,7 +53,9 @@ namespace SunsetHigh
             if (filename.StartsWith(Directories.MAPS))
                 filename = filename.Substring(Directories.MAPS.Length);
 
-            background = content.Load<Map>(Directories.MAPS + filename);
+            //background = content.Load<Map>(Directories.MAPS + filename);
+            //System.Diagnostics.Debug.WriteLine(filename);
+            background = TmxImporter.Import(Directories.MAPS + filename + ".tmx", content);
         }
 
         public virtual void updateState()
