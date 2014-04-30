@@ -39,6 +39,8 @@ namespace SunsetHigh
         //for use when eventType is Events.Inventory
         public Item item;
         public int itemChange; 
+        //for use when eventType is Events.Special
+        public string specialEvent;
 
         //for use when eventType is Events.NextLine (indicating the NPC will talk more)
         public int nextLine;        
@@ -199,6 +201,7 @@ namespace SunsetHigh
                                     break;
                                 case "Event":
                                     interactionNode.eventType |= Events.Special;
+                                    interactionNode.specialEvent = eventarguments[1];
                                     break;
                                 default:
                                     interactionNode.eventType |= Events.NextLine;
@@ -257,6 +260,7 @@ namespace SunsetHigh
                                         break;
                                     case "Event":
                                         responseNode.eventType |= Events.Special;
+                                        responseNode.specialEvent = eventarguments[1];
                                         break;
                                     default:
                                         responseNode.eventType |= Events.NextLine;

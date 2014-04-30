@@ -36,7 +36,7 @@ namespace SunsetHigh
         //private const float MAX_PICKPOCKET_DISTANCE = 50;
 
         //Shooting vars
-        private const float RECHARGE_TIME = 1.0f;   //time between shots in seconds
+        private const float RECHARGE_TIME = 0.5f;   //time between shots in seconds
         private static string PROJECTILE_IMAGE_NAME = Directories.SPRITES + "projectile";
         //private Texture2D paperball; //paperball texture
         private float shootTimer;   // For recharge time
@@ -55,6 +55,7 @@ namespace SunsetHigh
 
         //Follow vars (special cases where a character follows you)
         private PersonID follower;
+        private const float FOLLOW_TIME = 0.2f;
 
         //Battle vars
         private const int DEFAULT_MAX_HEALTH = 300;
@@ -126,6 +127,11 @@ namespace SunsetHigh
             this.setHealth(DEFAULT_MAX_HEALTH);
             follower = PersonID.None;
         }
+
+        //public override Rectangle getBoundingRect()
+        //{
+        //   return new Rectangle(this.getX(), this.getY() + Room.TILE_SIZE, Room.TILE_SIZE, Room.TILE_SIZE);
+        //}
 
         public override void loadContent(ContentManager content)
         {
@@ -582,6 +588,10 @@ namespace SunsetHigh
                         Hero.instance.inventory.addItem(node.item, node.itemChange);
                     else
                         Hero.instance.inventory.removeItem(node.item, -1 * node.itemChange);
+                }
+                if ((node.eventType & Events.Special) > 0)
+                {
+                    DialogueEventParser.parseEvent(node.specialEvent);
                 }
                 if ((node.eventType & Events.End) > 0 || (node.eventType & Events.NextLine) == 0)
                 {

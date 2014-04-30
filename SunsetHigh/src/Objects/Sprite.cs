@@ -31,6 +31,7 @@ namespace SunsetHigh
         private int frameRow;                       //the current row of the sheet we are drawing; 0 for static pictures
         private float animationTime;                //speed at which to animate sprite; arbitrary time for static pictures
         private float frameElapsed;                 //personal timer for animation purposes
+        private bool animatingRight;                //specifies direction of animation along the sprite sheet
         private bool visible;                       //sprite visibility
         private Color color;                        //Color to add to this sprite (white for default color)
         private bool useTextureDimensions;          //used for matching width and height to texture's dimensions
@@ -299,12 +300,33 @@ namespace SunsetHigh
         /// <param name="elapsed">Time (in seconds) that has elapsed since the last update</param>
         public virtual void update(float elapsed)
         {
-            this.frameElapsed += elapsed;
-            if (this.frameElapsed > this.animationTime)
+            if (this.imageColumns > 1)
             {
-                this.frameColumn++;
-                this.frameColumn = this.frameColumn % this.imageColumns;
-                this.frameElapsed -= this.animationTime;
+                this.frameElapsed += elapsed;
+                if (this.frameElapsed > this.animationTime)
+                {
+                    if (animatingRight)
+                    {
+                        this.frameColumn++;
+                        if (this.frameColumn >= this.imageColumns)
+                        {
+                            this.frameColumn = 1;
+                            animatingRight = false;
+                        }
+                    }
+                    else
+                    {
+                        this.frameColumn--;
+                        if (this.frameColumn < 0)
+                        {
+                            this.frameColumn = 1;
+                            animatingRight = true;
+                        }
+                    }
+                    ///clean this up later
+                    //this.frameColumn = this.frameColumn % this.imageColumns;
+                    this.frameElapsed -= this.animationTime;
+                }
             }
         }
 

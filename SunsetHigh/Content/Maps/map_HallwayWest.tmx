@@ -74,7 +74,6 @@
   <object x="960" y="32" width="32" height="352"/>
   <object x="32" y="1856" width="64" height="64"/>
   <object x="96" y="1888" width="128" height="32"/>
-  <object x="96" y="0" width="160" height="32"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="Teleport" width="30" height="60">
   <object x="640" y="352" width="96" height="32">
@@ -131,6 +130,13 @@
     <property name="warpMap" value="map_Entrance"/>
     <property name="warpX" value="1"/>
     <property name="warpY" value="7"/>
+   </properties>
+  </object>
+  <object x="96" y="0" width="160" height="64">
+   <properties>
+    <property name="warpMap" value="map_FootballField"/>
+    <property name="warpX" value="24"/>
+    <property name="warpY" value="16"/>
    </properties>
   </object>
  </objectgroup>

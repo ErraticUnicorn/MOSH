@@ -50,8 +50,8 @@ namespace SunsetHigh
             {
                 if (fadingOut)
                 {
-                    fadeIn();
-                    System.Diagnostics.Debug.WriteLine("FADE in");
+                   fadeIn();
+                   System.Diagnostics.Debug.WriteLine("FADE in");
                 }
                 return;
             }
@@ -317,7 +317,7 @@ namespace SunsetHigh
         private static void OnFadeOver(object source, ElapsedEventArgs e)
         {
             transitionTimer.Stop(); //event is single fire
-            stopSong(); //dispose of old song
+            //stopSong(); //dispose of old song
             playSong(queuedSongName);
             fadingOut = false;
             //queuedSongName = "";
@@ -326,7 +326,7 @@ namespace SunsetHigh
         private static void OnFadeOverFadeIn(object source, ElapsedEventArgs e)
         {
             transitionTimer2.Stop(); //event is single fire
-            stopSong(); //dispose of old song
+            //stopSong(); //dispose of old song
             playSong(queuedSongName);
             fadingOut = false;
             fadeInOut.BeginFadeIn(queuedFadeTime);

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="75" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="3591Final-Football-ss04" tilewidth="32" tileheight="32">
-  <image source="../Tiles/3591Final-Football-ss04.png" width="316" height="240"/>
+  <image source="Tilesets/3591Final-Football-ss04.png" width="316" height="240"/>
  </tileset>
  <tileset firstgid="64" name="sprite_parking_lot_1" tilewidth="32" tileheight="32">
-  <image source="../Tiles/sprite_parking_lot_1.png" width="32" height="32"/>
+  <image source="Tilesets/sprite_parking_lot_1.png" width="32" height="32"/>
  </tileset>
  <tileset firstgid="65" name="sprite_parking_lot_2" tilewidth="32" tileheight="32">
-  <image source="../Tiles/sprite_parking_lot_2.png" width="32" height="32"/>
+  <image source="Tilesets/sprite_parking_lot_2.png" width="32" height="32"/>
  </tileset>
  <tileset firstgid="66" name="Backgrounds Variety" tilewidth="32" tileheight="32">
   <image source="Tilesets/Backgrounds Variety.png" width="896" height="1385"/>
@@ -23,4 +23,20 @@
   </data>
  </layer>
  <imagelayer name="Image Layer 1" width="50" height="75"/>
+ <objectgroup name="Teleport" width="50" height="75">
+  <object name="toHall" x="416" y="512" width="128" height="64">
+   <properties>
+    <property name="warpMap" value="map_HallwayWest"/>
+    <property name="warpX" value="5"/>
+    <property name="warpY" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Solid" width="50" height="75">
+  <object x="96" y="128" width="831" height="14"/>
+  <object x="82" y="145" width="12" height="398"/>
+  <object x="81" y="545" width="46" height="29"/>
+  <object x="128" y="577" width="800" height="27"/>
+  <object x="929" y="128" width="29" height="476"/>
+ </objectgroup>
 </map>

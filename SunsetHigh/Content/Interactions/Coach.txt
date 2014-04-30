@@ -1,0 +1,2 @@
+﻿default
+"Which play should we run?" -> ["Run" -> Event FootballRun, "Pass" -> Event FootballPass]

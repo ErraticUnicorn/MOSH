@@ -26,6 +26,7 @@ namespace SunsetHigh {
         Science,
         StudentLounge,
         Bathroom,
+        FootballField,
         //TODO: put other rooms here later
     }
 
@@ -68,6 +69,7 @@ namespace SunsetHigh {
             Room math = new MathClassroom();
             Room science = new ScienceClassroom();
             Room studentLounge = new StudentLounge();
+            Room footballField = new FootballField();
             //Room questHall = new Room();
             //Room questHallEnd = new Room();
 
@@ -82,6 +84,7 @@ namespace SunsetHigh {
             math.loadContent(p_content, Directories.MAPS + "map_Math");
             science.loadContent(p_content, Directories.MAPS + "map_Science");
             studentLounge.loadContent(p_content, Directories.MAPS + "map_StudentLounge");
+            footballField.loadContent(p_content, Directories.MAPS + "footballfielddraft");
             //questHall.loadContent(p_content, "map_longhallwaymission");
             //questHallEnd.loadContent(p_content, "map_longhallwayend");
 
@@ -96,11 +99,19 @@ namespace SunsetHigh {
             m_rooms.Add(PlaceID.Math, math);
             m_rooms.Add(PlaceID.Science, science);
             m_rooms.Add(PlaceID.StudentLounge, studentLounge);
+            m_rooms.Add(PlaceID.FootballField, footballField);
             //m_rooms.Add("map_longhallwaymission", questHall);
             //m_rooms.Add("map_longhallwayend", questHallEnd);
 
-            m_currentRoom = m_rooms[PlaceID.HallwayWest];
+            m_currentRoom = m_rooms[PlaceID.StudentLounge];
             m_currentRoomID = PlaceID.HallwayWest;
+        }
+
+        public static Room getRoom(PlaceID p_roomName)
+        {
+            if (p_roomName != PlaceID.Nowhere)
+                return m_rooms[p_roomName];
+            return null;
         }
 
         public static void setRoom(PlaceID p_roomName, int p_newX, int p_newY, Direction p_newDirection) {
@@ -129,14 +140,14 @@ namespace SunsetHigh {
 
         public static void setRoomNoTransition(PlaceID p_roomName, int p_newX, int p_newY, Direction p_newDirection)
         {
+            Hero.instance.reset();
             m_currentRoomID = p_roomName;
             m_currentRoom.onExit();
-            m_currentRoom = m_rooms[p_roomName];
+            m_currentRoom = m_rooms[p_roomName]; 
             m_currentRoom.onEnter();
             Hero.instance.setX(p_newX);
             Hero.instance.setY(p_newY);
             Hero.instance.setDirection(p_newDirection);
-            Hero.instance.reset();
             updateCameraOffset(Hero.instance);
             LocationNamePanel.instance.showNewLocation(SunsetUtils.enumToString<PlaceID>(m_currentRoomID));  //trigger header showing new location name
         }

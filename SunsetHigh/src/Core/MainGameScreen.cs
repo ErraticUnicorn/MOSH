@@ -26,7 +26,7 @@ namespace SunsetHigh
             WorldManager.loadMaps(content);
             CharacterManager.loadContent(content);
 
-            h1.loadImage(content, "red_spritesheet", 4, 3, 0.25f);
+            h1.loadImage(content, "sprite_sheet_protagonist", 4, 3, 0.25f);
             h1.loadContent(content);
 
             InGameMenu.loadContent(content);

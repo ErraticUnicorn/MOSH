@@ -160,9 +160,9 @@ namespace SunsetHigh
         public static void unpackDefaultData()
         {
             HeroSave hSave = new HeroSave();
-            hSave.x = 2 * 32;
-            hSave.y = 6 * 32;
-            hSave.dir = Direction.South;
+            hSave.x = 25 * 32;
+            hSave.y = 4 * 32;
+            hSave.dir = Direction.North;
             hSave.inventorySave = new Inventory().getSaveStructure();
             hSave.monologueSave = new InnerMonologue().getSaveStructure();
             hSave.name = "No name";
@@ -177,7 +177,7 @@ namespace SunsetHigh
             Quest.loadQuestStateSave(defQuests);
 
             WorldManager.clearMaps();
-            WorldManager.setRoomNoTransition(PlaceID.HallwayWest);
+            WorldManager.setRoomNoTransition(PlaceID.StudentLounge);
 
             GameClock.renewClock();
 

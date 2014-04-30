@@ -57,6 +57,19 @@ namespace SunsetHigh
             cheese = content.Load<Texture2D>(Directories.SPRITES + "cheese");
         }
 
+        public override void onEnter()
+        {
+            base.onEnter();
+            if (isFoodFight)
+                BGMusic.transitionToSong("chipjank loop 2");
+        }
+
+        public override void onExit()
+        {
+            base.onExit();
+            BGMusic.transitionToSong("sunset high ambient");
+        }
+
         public override void updateState()
         {
             base.updateState();
@@ -259,7 +272,7 @@ namespace SunsetHigh
             }
         }
 
-        public void foodCollideEvent(IInteractable collider)    //we ignore the argument and assume the collider is the hero
+        public void foodCollideEvent(IInteractable collider)
         {
             if (collider is Hero
                 || (Hero.instance.hasFollower() && CharacterManager.getCharacter(Hero.instance.getFollowerID()) == collider))
@@ -305,7 +318,7 @@ namespace SunsetHigh
                     });
                 }
                 else
-                    WorldManager.setRoom(PlaceID.HallwayEast, 19 * TILE_SIZE, 3 * TILE_SIZE, Direction.East);
+                    WorldManager.setRoom(PlaceID.Cafeteria, 1 * TILE_SIZE, 8 * TILE_SIZE, Direction.East);
             }
         }
     }

@@ -46,6 +46,7 @@ namespace SunsetHigh
         private Vector2 destination;
         private bool movingToDestination;
         private Action destinationAction;
+        private bool collideWhileMoving;
 
         public FreeMovingSprite()
             : this(0, 0, 0, 0) { }
@@ -115,11 +116,21 @@ namespace SunsetHigh
             return moved;
         }
 
-        public void moveToDestination(int x, int y, Action postExecute)
+        public void moveToDestination(int x, int y, Action postExecute, bool collide = false)
         {
             this.movingToDestination = true;
             this.destination = new Vector2(x, y);
             this.destinationAction = postExecute;
+            this.collideWhileMoving = collide;
+        }
+        public void moveToDestination(int x, int y, float time, Action postExecute, bool collide = false)
+        {
+            this.movingToDestination = true;
+            this.destination = new Vector2(x, y);
+            this.destinationAction = postExecute;
+            this.collideWhileMoving = collide;
+            float dist = (destination - new Vector2(this.getX(), this.getY())).Length();
+            this.setSpeed(dist / time);
         }
         public void cancelMoveToDestination()
         {
@@ -245,7 +256,7 @@ namespace SunsetHigh
                 if ((new Vector2(this.getX(), this.getY()) - destination).Length() > CLOSE_TO_DESTINATION)
                 {
                     float angle = (float)Math.Atan2(this.getY() - destination.Y, destination.X - this.getX());
-                    this.move(angle, elapsed, false);
+                    this.move(angle, elapsed, collideWhileMoving);
                 }
                 else
                 {

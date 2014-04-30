@@ -89,7 +89,7 @@ namespace SunsetHigh
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //play title song first
-            //BGMusic.playSong("sunset high menu track.mp3");
+            BGMusic.playSong("sunset high menu track.mp3");
             //BGMusic.setPaused(true);
 
             ScreenTransition.loadContent(Content);
